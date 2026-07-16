@@ -222,9 +222,9 @@ Hooks.once("init", () => {
       return `${MODULE_PATH}/templates/character-sheet.hbs`;
     }
 
-    async getData(options = {}) {
+  async getData(options = {}) {
       const sheetData = await super.getData(options);
-      const galleryOverrides = game.settings.get(MODULE_ID, "partyGallery") ?? {};
+      const galleryOverrides = this._getGalleryOverrides();
       const appearance = {
         ...DEFAULT_APPEARANCE,
         ...(game.settings.get(MODULE_ID, "appearance") ?? {})
@@ -254,7 +254,7 @@ Hooks.once("init", () => {
       sheetData.t20ga = {
         campaign: appearance.campaign,
         groupName: appearance.groupName,
-        unlinkedToken: Boolean((this.token?.document ?? this.token)?.actorLink === false),
+        unlinkedToken: this._isUnlinkedTokenSheet(),
         appearance,
         logo: `${MODULE_PATH}/assets/branding/tormenta20-logo.webp`,
         eye: `${MODULE_PATH}/assets/branding/olho-tormenta.png`,
@@ -271,6 +271,35 @@ Hooks.once("init", () => {
         ...DEFAULT_APPEARANCE,
         ...(game.settings.get(MODULE_ID, "appearance") ?? {})
       };
+    }
+
+    _galleryActorKey() {
+      return this.actor?.uuid ?? this.actor?.id ?? "unknown-actor";
+    }
+
+    _getGalleryOverrides() {
+      const stored = game.settings.get(MODULE_ID, "partyGallery") ?? {};
+      if (stored.schema !== 2) return {};
+      return foundry.utils.deepClone(stored.actors?.[this._galleryActorKey()] ?? {});
+    }
+
+    async _saveGalleryOverrides(overrides) {
+      const stored = game.settings.get(MODULE_ID, "partyGallery") ?? {};
+      const actors = stored.schema === 2 ? foundry.utils.deepClone(stored.actors ?? {}) : {};
+      actors[this._galleryActorKey()] = overrides;
+      await savePersistentSetting("partyGallery", { schema: 2, actors });
+    }
+
+    _isUnlinkedTokenSheet() {
+      const sheetToken = this.token?.document
+        ?? this.token
+        ?? this.actor?.token?.document
+        ?? this.actor?.token;
+      const tokenContext = Boolean(this.token || this.actor?.isToken || this.actor?.token);
+      const actorLink = sheetToken?.actorLink
+        ?? sheetToken?.data?.actorLink
+        ?? this.actor?.prototypeToken?.actorLink;
+      return tokenContext && actorLink === false;
     }
 
     _applyAppearance(html, appearance) {
@@ -580,7 +609,7 @@ Hooks.once("init", () => {
         return;
       }
 
-      const overrides = game.settings.get(MODULE_ID, "partyGallery") ?? {};
+      const overrides = this._getGalleryOverrides();
       const members = PARTY_ART.map((member) => ({ ...member, ...(overrides[member.id] ?? {}) }));
       const rows = members.map((member) => `
         <div class="t20ga-gallery-row" data-member-id="${escapeHtml(member.id)}">
@@ -624,7 +653,7 @@ Hooks.once("init", () => {
                     accent: String(element.find('[data-field="accent"]').val() ?? "#d1a243")
                   };
                 });
-                await savePersistentSetting("partyGallery", next);
+                await this._saveGalleryOverrides(next);
                 this.render(false);
               }
             },
