@@ -375,8 +375,8 @@
 .t20ga-window .t20ga-character-header {
   position: relative;
   flex: 0 0 auto;
-  min-height: 86px;
-  padding: 9px 11px 7px 17px;
+  min-height: 92px;
+  padding: 14px 11px 7px 17px;
   background:
     linear-gradient(100deg, rgba(255, 255, 255, 0.6), transparent 60%),
     linear-gradient(180deg, #f7f0df, #e6dac0);
@@ -470,8 +470,11 @@
 .t20ga-window .t20ga-character-header .header-exp .charlevel {
   gap: 5px;
   height: auto;
+  min-height: 30px;
+  overflow: visible;
   color: var(--t20ga-ink);
   align-items: center;
+  line-height: normal;
 }
 
 .t20ga-window .t20ga-character-header .header-exp .charlevel > * {
@@ -520,6 +523,7 @@
   font-family: "Palatino Linotype", Georgia, serif;
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.1;
   text-transform: uppercase;
   background: linear-gradient(180deg, #861724, #4e0d14);
   border: 1px solid var(--t20ga-gold);
