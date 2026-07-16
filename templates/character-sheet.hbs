@@ -1,0 +1,190 @@
+<form class="tormenta20 tabbed t20ga-sheet" autocomplete="off">
+  <div class="t20ga-shell">
+    <aside class="t20ga-hero-panel">
+      <div class="t20ga-brand">
+        <button class="t20ga-brand-config" type="button" title="Editar campanha e tema da ficha">
+          <img src="{{t20ga.logo}}" alt="Tormenta20" />
+        </button>
+        <span class="t20ga-brand-caption">{{t20ga.campaign}}</span>
+      </div>
+
+      <div class="t20ga-hero-frame">
+        <img class="t20ga-eye-mark" src="{{t20ga.eye}}" alt="" aria-hidden="true" />
+        <img
+          class="profile t20ga-hero-art"
+          src="{{actor.img}}"
+          alt="{{actor.name}}"
+          title="Clique para trocar a imagem selecionada"
+        />
+        <div class="t20ga-art-vignette" aria-hidden="true"></div>
+        <div class="t20ga-preview-notice" hidden>
+          Prévia da galeria
+        </div>
+      </div>
+
+      <div class="t20ga-hero-caption">
+        <span class="t20ga-preview-label">{{actor.name}}</span>
+        <div class="t20ga-art-controls">
+          <button
+            class="t20ga-art-switch"
+            type="button"
+            role="switch"
+            aria-checked="false"
+            data-avatar="{{t20ga.avatarArt}}"
+            data-token="{{t20ga.tokenArt}}"
+            title="Alternar entre avatar e token"
+          >
+            <span class="t20ga-switch-label">Avatar</span>
+            <span class="t20ga-switch-track" aria-hidden="true">
+              <img src="{{t20ga.eye}}" alt="" />
+            </span>
+            <span class="t20ga-switch-label">Token</span>
+          </button>
+          <button class="t20ga-art-adjust" type="button" title="Ajustar posição e escala da arte">
+            <i class="fa-solid fa-sliders"></i>
+            Ajustar
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="t20ga-main">
+      <header class="sheet-header t20ga-character-header flexrow">
+        <section class="header-details flexcol">
+          <div class="general-information flexrow">
+            <div class="t20ga-name-block">
+              <span class="t20ga-kicker">Clube da Mariana</span>
+              <h1 class="charname">
+                <input
+                  name="name"
+                  type="text"
+                  value="{{actor.name}}"
+                  placeholder="{{localize 'T20.Name'}}"
+                />
+              </h1>
+            </div>
+
+            <aside class="header-exp flexcol">
+              <div class="charlevel flexrow">
+                <a class="config-button" data-action="resources" title="{{localize 'T20.Edit'}}">
+                  <i class="fa-solid fa-heart-pulse"></i>
+                </a>
+                <a class="config-button" data-action="rest" title="{{localize 'T20.Rest'}}">
+                  <i class="fa-solid fa-campground"></i>
+                </a>
+                <div class="level">{{localize 'T20.Level'}} {{system.attributes.nivel.value}}</div>
+              </div>
+
+              {{#unless disableExperience}}
+              <div class="experience flexrow">
+                <input
+                  type="text"
+                  placeholder="0"
+                  data-dtype="Number"
+                  name="system.attributes.nivel.xp.value"
+                  value="{{system.attributes.nivel.xp.value}}"
+                />
+                <span class="sep">/</span>
+                <span class="max-xp">{{system.attributes.nivel.xp.proximo}}</span>
+              </div>
+              <div class="xpbar" title="Experiência">
+                <span class="bar" style="width: {{system.attributes.nivel.xp.pct}}%"></span>
+              </div>
+              {{/unless}}
+            </aside>
+          </div>
+
+          {{> "tormenta20.sheet-header-summary" }}
+        </section>
+      </header>
+
+      <section class="t20ga-vitals">
+        <div class="t20ga-abilities">
+          {{> "tormenta20.abilities"}}
+        </div>
+        <ul class="attributes t20ga-resources flexrow">
+          {{> "tormenta20.resources"}}
+          {{> "tormenta20.defense"}}
+        </ul>
+      </section>
+
+      {{> "tormenta20.nav-bar"}}
+
+      <section class="sheet-body t20ga-sheet-body">
+        <div class="tab attributes t20ga-dashboard flexrow" data-group="primary" data-tab="attributes">
+          <section class="t20ga-card t20ga-skills-card">
+            <div class="t20ga-section-ribbon">Perícias</div>
+            {{> "tormenta20.list-skills"}}
+          </section>
+
+          <div class="t20ga-dashboard-side flexcol">
+            <section class="t20ga-card t20ga-traits-card">
+              <div class="t20ga-section-ribbon">Traços e detalhes</div>
+              <div class="traits">
+                {{> "tormenta20.traits"}}
+                <textarea name="system.detalhes.info" rows="8">{{system.detalhes.info}}</textarea>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="tab inventory t20ga-card" data-group="primary" data-tab="inventory">
+          {{> "tormenta20.list-inventory"}}
+        </div>
+
+        <div class="tab powers t20ga-card" data-group="primary" data-tab="powers">
+          {{> "tormenta20.list-powers-tabbed"}}
+        </div>
+
+        <div class="tab spells t20ga-card" data-group="primary" data-tab="spells">
+          {{> "tormenta20.list-spells"}}
+        </div>
+
+        <div class="tab journal t20ga-card flexrow flex-between" data-group="primary" data-tab="journal">
+          {{> "tormenta20.journal"}}
+        </div>
+
+        <div class="tab modifiers t20ga-card" data-group="primary" data-tab="modifiers">
+          {{> "tormenta20.modifiers"}}
+        </div>
+
+        <div class="tab effects t20ga-card" data-group="primary" data-tab="effects">
+          {{> "tormenta20.active-effects"}}
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="t20ga-party-rail{{#if t20ga.galleryCollapsed}} is-collapsed{{/if}}" aria-label="Galeria das personagens da campanha">
+    <div class="t20ga-party-tools">
+      <button
+        class="t20ga-party-toggle"
+        type="button"
+        title="{{#if t20ga.galleryCollapsed}}Expandir galeria de personagens{{else}}Minimizar galeria de personagens{{/if}}"
+        aria-label="{{#if t20ga.galleryCollapsed}}Expandir galeria de personagens{{else}}Minimizar galeria de personagens{{/if}}"
+        aria-expanded="{{#if t20ga.galleryCollapsed}}false{{else}}true{{/if}}"
+      >
+        <img src="{{t20ga.eye}}" alt="" aria-hidden="true" />
+        <i class="fa-solid {{#if t20ga.galleryCollapsed}}fa-chevron-up{{else}}fa-chevron-down{{/if}}" aria-hidden="true"></i>
+      </button>
+      <button class="t20ga-party-config" type="button" title="Personalizar galeria" aria-label="Personalizar galeria">
+        <i class="fa-solid fa-gear" aria-hidden="true"></i>
+      </button>
+    </div>
+    {{#each t20ga.party as |member|}}
+    <button
+      class="t20ga-party-member"
+      type="button"
+      data-art="{{member.src}}"
+      data-label="{{member.label}}"
+      title="Ver {{member.label}} na moldura"
+      aria-label="Ver {{member.label}} na moldura"
+      aria-pressed="false"
+      style="--member-accent: {{member.accent}}"
+    >
+      <img src="{{member.src}}" alt="" />
+      <span>{{member.label}}</span>
+    </button>
+    {{/each}}
+  </footer>
+</form>
