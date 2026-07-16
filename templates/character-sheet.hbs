@@ -182,8 +182,12 @@
       aria-pressed="false"
       style="--member-accent: {{member.accent}}"
     >
+      {{#if member.src}}
       <img src="{{member.src}}" alt="" />
-      <span>{{member.label}}</span>
+      {{else}}
+      <span class="t20ga-party-empty"><i class="fa-solid fa-image" aria-hidden="true"></i></span>
+      {{/if}}
+      {{#if member.label}}<span>{{member.label}}</span>{{/if}}
     </button>
     {{/each}}
   </footer>

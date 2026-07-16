@@ -1215,6 +1215,17 @@
   transition: transform 150ms ease, filter 150ms ease;
 }
 
+.t20ga-window .t20ga-party-member .t20ga-party-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 248, 231, 0.72) !important;
+  font-size: 23px;
+  background: rgba(0, 0, 0, 0.14);
+}
+
 .t20ga-window .t20ga-party-member span {
   position: absolute;
   right: 2px;

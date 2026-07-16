@@ -63,39 +63,39 @@ async function restorePersistentSettings() {
 
 const PARTY_ART = Object.freeze([
   {
-    id: "goblin-shooter",
-    label: "Goblin Atiradora",
-    src: `${MODULE_PATH}/assets/party/goblin-shooter.webp`,
+    id: "slot-1",
+    label: "",
+    src: "",
     accent: "#a6b84a"
   },
   {
-    id: "galokk",
-    label: "Galokk Burguesa",
-    src: `${MODULE_PATH}/assets/party/galokk.webp`,
+    id: "slot-2",
+    label: "",
+    src: "",
     accent: "#d39a45"
   },
   {
-    id: "dhalan",
-    label: "Dahllan",
-    src: `${MODULE_PATH}/assets/party/dhalan.webp`,
+    id: "slot-3",
+    label: "",
+    src: "",
     accent: "#bd6d93"
   },
   {
-    id: "lefou",
-    label: "Lefou Feiticeira",
-    src: `${MODULE_PATH}/assets/party/lefou.webp`,
+    id: "slot-4",
+    label: "",
+    src: "",
     accent: "#db4f9c"
   },
   {
-    id: "osteon",
-    label: "Osteon Druida",
-    src: `${MODULE_PATH}/assets/party/osteon.webp`,
+    id: "slot-5",
+    label: "",
+    src: "",
     accent: "#6951c8"
   },
   {
-    id: "gata-alquimista",
-    label: "Gata Alquimista",
-    src: `${MODULE_PATH}/assets/party/gata-alquimista.webp`,
+    id: "slot-6",
+    label: "",
+    src: "",
     accent: "#91a83b"
   }
 ]);
@@ -583,7 +583,9 @@ Hooks.once("init", () => {
       const members = PARTY_ART.map((member) => ({ ...member, ...(overrides[member.id] ?? {}) }));
       const rows = members.map((member) => `
         <div class="t20ga-gallery-row" data-member-id="${escapeHtml(member.id)}">
-          <img src="${escapeHtml(member.src)}" alt="">
+          <div class="t20ga-gallery-preview">
+            ${member.src ? `<img src="${escapeHtml(member.src)}" alt="">` : '<i class="fa-solid fa-image" aria-hidden="true"></i>'}
+          </div>
           <div class="t20ga-gallery-fields">
             <label>Nome <input data-field="label" type="text" value="${escapeHtml(member.label)}"></label>
             <label>Imagem
@@ -598,9 +600,9 @@ Hooks.once("init", () => {
 
       const content = `
         <form class="t20ga-gallery-form">
-          <p class="t20ga-dialog-help">Personalize os seis atalhos da galeria. A posição de cada arte pode ser ajustada clicando na imagem grande depois de selecioná-la.</p>
+          <p class="t20ga-dialog-help">Configure as seis artes da galeria. Ao clicar em uma arte configurada, ela será aplicada ao token da personagem aberta.</p>
           <div class="t20ga-gallery-list">${rows}</div>
-          <button class="t20ga-gallery-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Restaurar galeria original</button>
+          <button class="t20ga-gallery-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Limpar galeria</button>
         </form>`;
 
       new DialogClass(
@@ -635,24 +637,38 @@ Hooks.once("init", () => {
             html.find('[data-action="browse"]').on("click", (event) => {
               const row = $(event.currentTarget).closest(".t20ga-gallery-row");
               const input = row.find('[data-field="src"]');
-              const PickerClass = globalThis.FilePicker;
+              const PickerClass = globalThis.foundry?.applications?.apps?.FilePicker?.implementation
+                ?? globalThis.FilePicker;
               if (!PickerClass) {
                 ui.notifications.warn("O seletor de arquivos não está disponível.");
                 return;
               }
-              new PickerClass({
+              const updatePreview = (path) => {
+                const preview = row.find(".t20ga-gallery-preview");
+                preview.empty();
+                if (path) preview.append($(`<img src="${escapeHtml(path)}" alt="">`));
+                else preview.append('<i class="fa-solid fa-image" aria-hidden="true"></i>');
+              };
+              const callback = (path) => {
+                input.val(path);
+                updatePreview(path);
+              };
+              const picker = new PickerClass({
                 type: "image",
                 current: input.val(),
-                callback: (path) => {
-                  input.val(path);
-                  row.find("img").attr("src", path);
-                }
-              }).browse();
+                callback
+              });
+              if (typeof picker.browse === "function") picker.browse();
+              else picker.render({ force: true });
             });
 
             html.find('[data-field="src"]').on("change", (event) => {
               const row = $(event.currentTarget).closest(".t20ga-gallery-row");
-              row.find("img").attr("src", event.currentTarget.value);
+              const path = String(event.currentTarget.value ?? "").trim();
+              const preview = row.find(".t20ga-gallery-preview");
+              preview.empty();
+              if (path) preview.append($(`<img src="${escapeHtml(path)}" alt="">`));
+              else preview.append('<i class="fa-solid fa-image" aria-hidden="true"></i>');
             });
 
             html.find(".t20ga-gallery-reset").on("click", () => {
@@ -660,10 +676,10 @@ Hooks.once("init", () => {
                 const element = $(row);
                 const original = PARTY_ART.find((member) => member.id === element.data("memberId"));
                 if (!original) return;
-                element.find('[data-field="label"]').val(original.label);
-                element.find('[data-field="src"]').val(original.src);
+                element.find('[data-field="label"]').val("");
+                element.find('[data-field="src"]').val("");
                 element.find('[data-field="accent"]').val(original.accent);
-                element.find("img").attr("src", original.src);
+                element.find(".t20ga-gallery-preview").html('<i class="fa-solid fa-image" aria-hidden="true"></i>');
               });
             });
           }
@@ -731,9 +747,21 @@ Hooks.once("init", () => {
         initialMode
       );
 
-      partyButtons.on("click", (event) => {
+      partyButtons.on("click", async (event) => {
         const button = event.currentTarget;
-        showArt(button.dataset.art, button.dataset.label, button);
+        const src = String(button.dataset.art ?? "").trim();
+        if (!src) {
+          ui.notifications.info("Configure esta arte pela engrenagem da galeria antes de usá-la.");
+          return;
+        }
+        try {
+          await this._updateCharacterArt("token", src);
+          showArt(src, button.dataset.label || "Imagem do token", button);
+          ui.notifications.info("Imagem do token atualizada.");
+        } catch (error) {
+          console.error(`${MODULE_ID} | Não foi possível aplicar a arte da galeria ao token.`, error);
+          ui.notifications.error("Não foi possível atualizar a imagem do token.");
+        }
       });
 
       artSwitch.on("click", () => {
