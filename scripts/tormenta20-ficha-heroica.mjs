@@ -160,7 +160,7 @@ function buildPalette(appearance) {
 
 Hooks.once("init", () => {
   game.settings.register(MODULE_ID, "galleryCollapsed", {
-    name: "Minimizar galeria de personagens",
+    name: "Minimizar galeria de tokens",
     scope: "client",
     config: false,
     type: Boolean,
@@ -607,7 +607,7 @@ Hooks.once("init", () => {
 
       new DialogClass(
         {
-          title: "Personalizar galeria de personagens",
+          title: "Personalizar galeria de tokens",
           content,
           buttons: {
             save: {
@@ -810,7 +810,7 @@ Hooks.once("init", () => {
         button.attr("aria-expanded", String(!collapsed));
         button.attr(
           "title",
-          collapsed ? "Expandir galeria de personagens" : "Minimizar galeria de personagens"
+          collapsed ? "Expandir galeria de tokens" : "Minimizar galeria de tokens"
         );
         button.find("i")
           .toggleClass("fa-chevron-up", collapsed)

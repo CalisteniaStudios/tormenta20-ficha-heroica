@@ -1518,7 +1518,7 @@
 }
 
 .t20ga-window .t20ga-resources > .health {
-  background: linear-gradient(150deg, var(--t20ga-red), var(--t20ga-theme-dark, #65121b));
+  background: linear-gradient(150deg, #b8202e, #65121b);
 }
 
 .t20ga-window .t20ga-section-ribbon {
