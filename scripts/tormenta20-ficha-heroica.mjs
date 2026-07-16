@@ -103,6 +103,7 @@ const PARTY_ART = Object.freeze([
 const DEFAULT_ART_POSITION = Object.freeze({ x: 0, y: 0, scale: 1 });
 const DEFAULT_APPEARANCE = Object.freeze({
   campaign: "Jornada Heroica:",
+  groupName: "Nome do Grupo",
   theme: "crimson",
   customColor: "#75111b"
 });
@@ -252,6 +253,7 @@ Hooks.once("init", () => {
 
       sheetData.t20ga = {
         campaign: appearance.campaign,
+        groupName: appearance.groupName,
         appearance,
         logo: `${MODULE_PATH}/assets/branding/tormenta20-logo.webp`,
         eye: `${MODULE_PATH}/assets/branding/olho-tormenta.png`,
@@ -307,10 +309,14 @@ Hooks.once("init", () => {
         .join("");
       const content = `
         <form class="t20ga-theme-form">
-          <p class="t20ga-dialog-help">Altere o título da campanha e escolha a identidade de cores da ficha.</p>
+          <p class="t20ga-dialog-help">Altere o nome da campanha, o nome do grupo e escolha a identidade de cores da ficha.</p>
           <label class="t20ga-theme-title">
             <span>Texto abaixo da logo</span>
             <input type="text" name="campaign" maxlength="80" value="${escapeHtml(original.campaign)}">
+          </label>
+          <label class="t20ga-theme-title">
+            <span>Nome do grupo</span>
+            <input type="text" name="groupName" maxlength="80" value="${escapeHtml(original.groupName)}">
           </label>
           <div class="t20ga-theme-grid">
             <label>
@@ -332,6 +338,8 @@ Hooks.once("init", () => {
       const readAppearance = (dialogHtml) => ({
         campaign: String(dialogHtml.find('[name="campaign"]').val() ?? "").trim()
           || DEFAULT_APPEARANCE.campaign,
+        groupName: String(dialogHtml.find('[name="groupName"]').val() ?? "").trim()
+          || DEFAULT_APPEARANCE.groupName,
         theme: String(dialogHtml.find('[name="theme"]').val() ?? DEFAULT_APPEARANCE.theme),
         customColor: normalizeHex(dialogHtml.find('[name="customColor"]').val())
       });
@@ -373,6 +381,7 @@ Hooks.once("init", () => {
             dialogHtml.find('input, select').on("input change", () => updatePreview(dialogHtml));
             dialogHtml.find(".t20ga-theme-reset").on("click", () => {
               dialogHtml.find('[name="campaign"]').val(DEFAULT_APPEARANCE.campaign);
+              dialogHtml.find('[name="groupName"]').val(DEFAULT_APPEARANCE.groupName);
               dialogHtml.find('[name="theme"]').val(DEFAULT_APPEARANCE.theme);
               dialogHtml.find('[name="customColor"]').val(DEFAULT_APPEARANCE.customColor);
               updatePreview(dialogHtml);
