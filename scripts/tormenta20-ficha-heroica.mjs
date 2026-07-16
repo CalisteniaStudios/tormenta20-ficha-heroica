@@ -254,6 +254,7 @@ Hooks.once("init", () => {
       sheetData.t20ga = {
         campaign: appearance.campaign,
         groupName: appearance.groupName,
+        unlinkedToken: Boolean((this.token?.document ?? this.token)?.actorLink === false),
         appearance,
         logo: `${MODULE_PATH}/assets/branding/tormenta20-logo.webp`,
         eye: `${MODULE_PATH}/assets/branding/olho-tormenta.png`,

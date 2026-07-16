@@ -433,6 +433,22 @@
   text-transform: uppercase;
 }
 
+.t20ga-window .t20ga-link-warning {
+  display: block;
+  margin: -3px 0 2px;
+  color: #9c241e;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 12px;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.t20ga-window .t20ga-link-warning i {
+  margin-right: 3px;
+  color: #c8871c;
+}
+
 .t20ga-window .t20ga-character-header h1.charname {
   height: auto;
   margin: 0;

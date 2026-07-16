@@ -53,6 +53,12 @@
         <section class="header-details flexcol">
           <div class="general-information flexrow">
             <div class="t20ga-name-block">
+              {{#if t20ga.unlinkedToken}}
+              <span class="t20ga-link-warning" title="Este token não está vinculado aos dados do ator.">
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                Ficha não vinculada ao ator — mudanças podem ser perdidas
+              </span>
+              {{/if}}
               <span class="t20ga-kicker">{{t20ga.groupName}}</span>
               <h1 class="charname">
                 <input
