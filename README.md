@@ -1,6 +1,6 @@
 # Tormenta20: Ficha Heroica
 
-Ficha alternativa de personagem para o sistema **Tormenta20 by @CS 1.6.004**, no **Foundry VTT 14.365**.
+Ficha alternativa de personagem para **Tormenta20 1.5.015 ou superior**, compatível com **Foundry VTT 13 e 14**.
 
 O módulo mantém as rolagens, recursos, inventário, poderes, magias, efeitos e automações da ficha oficial. Ele apenas registra uma nova apresentação visual, sem substituir arquivos do sistema.
 
@@ -26,6 +26,6 @@ Na configuração da ficha da personagem, selecione novamente **Ficha de Persona
 
 ## Observações
 
-- Compatibilidade alvo: Foundry VTT 14.365 e Tormenta20 by @CS 1.6.004.
+- Compatibilidade alvo: Foundry VTT 13–14 e Tormenta20 1.5.015 ou superior.
 - A ficha foi criada como módulo separado para não ser sobrescrita por atualizações do sistema.
 - As artes e marcas incluídas foram fornecidas como material de referência para uso nesta mesa. Verifique as permissões dos respectivos autores antes de redistribuir publicamente o módulo.
