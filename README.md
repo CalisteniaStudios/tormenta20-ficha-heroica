@@ -2,6 +2,8 @@
 
 Ficha alternativa de personagem para **Tormenta20 1.5.015 ou superior**, compatível com **Foundry VTT 13 e 14**.
 
+Os componentes visuais internos da ficha são cópias isoladas da ficha oficial do Tormenta20 **v1.5.015**, criada por Victor Hugo Paiva. Isso evita que módulos que substituam os templates globais da ficha padrão alterem também a Ficha Heroica. Os dados, rolagens, itens e automações continuam sendo processados pelo sistema Tormenta20 instalado.
+
 O módulo mantém as rolagens, recursos, inventário, poderes, magias, efeitos e automações da ficha oficial. Ele apenas registra uma nova apresentação visual, sem substituir arquivos do sistema.
 
 ## Instalação

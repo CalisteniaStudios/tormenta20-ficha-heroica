@@ -1,5 +1,32 @@
 const MODULE_ID = "tormenta20-ficha-heroica";
 const MODULE_PATH = `modules/${MODULE_ID}`;
+const VENDORED_T20_VERSION = "1.5.015";
+const VENDORED_TEMPLATE_ROOT = `${MODULE_PATH}/templates/vendor/tormenta20-${VENDORED_T20_VERSION}`;
+// Capture the system sheet before other modules can replace the global registration.
+const ORIGINAL_SYSTEM_SHEET = globalThis.tormenta20?.applications?.ActorSheetT20CharacterTabbed;
+let vendoredTemplatesReady = Promise.resolve();
+const VENDORED_TEMPLATES = Object.freeze({
+  "t20ga.abilities": `${VENDORED_TEMPLATE_ROOT}/abilities.hbs`,
+  "t20ga.active-effects": `${VENDORED_TEMPLATE_ROOT}/partials/active-effects.hbs`,
+  "t20ga.actor-item-controls": `${VENDORED_TEMPLATE_ROOT}/lists/actor-item-controls.hbs`,
+  "t20ga.currency": `${VENDORED_TEMPLATE_ROOT}/currency.hbs`,
+  "t20ga.defense": `${VENDORED_TEMPLATE_ROOT}/defense.hbs`,
+  "t20ga.encumbrance": `${VENDORED_TEMPLATE_ROOT}/encumbrance.hbs`,
+  "t20ga.journal": `${VENDORED_TEMPLATE_ROOT}/journal.hbs`,
+  "t20ga.list-consumable": `${VENDORED_TEMPLATE_ROOT}/lists/list-consumable.hbs`,
+  "t20ga.list-equipment": `${VENDORED_TEMPLATE_ROOT}/lists/list-equipment.hbs`,
+  "t20ga.list-inventory": `${VENDORED_TEMPLATE_ROOT}/lists/list-inventory.hbs`,
+  "t20ga.list-loot": `${VENDORED_TEMPLATE_ROOT}/lists/list-loot.hbs`,
+  "t20ga.list-powers-tabbed": `${VENDORED_TEMPLATE_ROOT}/lists/list-powers-tabbed.hbs`,
+  "t20ga.list-skills": `${VENDORED_TEMPLATE_ROOT}/lists/list-skills.hbs`,
+  "t20ga.list-spells": `${VENDORED_TEMPLATE_ROOT}/lists/list-spells.hbs`,
+  "t20ga.list-weapon": `${VENDORED_TEMPLATE_ROOT}/lists/list-weapon.hbs`,
+  "t20ga.modifiers": `${VENDORED_TEMPLATE_ROOT}/modifiers.hbs`,
+  "t20ga.nav-bar": `${VENDORED_TEMPLATE_ROOT}/partials/nav-bar.hbs`,
+  "t20ga.resources": `${VENDORED_TEMPLATE_ROOT}/resources.hbs`,
+  "t20ga.sheet-header-summary": `${VENDORED_TEMPLATE_ROOT}/headers/sheet-header-summary.hbs`,
+  "t20ga.traits": `${VENDORED_TEMPLATE_ROOT}/traits.hbs`
+});
 const PREFERENCES_FLAG = "persistentPreferences";
 const PERSISTENT_SETTING_KEYS = Object.freeze([
   "galleryCollapsed",
@@ -159,6 +186,22 @@ function buildPalette(appearance) {
 }
 
 Hooks.once("init", () => {
+  const loadTemplates = globalThis.foundry?.applications?.handlebars?.loadTemplates
+    ?? globalThis.loadTemplates;
+  if (typeof loadTemplates !== "function") {
+    console.error(`${MODULE_ID} | O carregador de templates do Foundry não foi encontrado.`);
+    return;
+  }
+
+  vendoredTemplatesReady = loadTemplates(VENDORED_TEMPLATES)
+    .then(() => {
+      console.log(`${MODULE_ID} | Templates oficiais Tormenta20 ${VENDORED_T20_VERSION} carregados com nomes isolados.`);
+    })
+    .catch((error) => {
+      console.error(`${MODULE_ID} | Não foi possível carregar os templates isolados da ficha.`, error);
+      throw error;
+    });
+
   game.settings.register(MODULE_ID, "galleryCollapsed", {
     name: "Minimizar galeria de tokens",
     scope: "client",
@@ -191,7 +234,8 @@ Hooks.once("init", () => {
     default: DEFAULT_APPEARANCE
   });
 
-  const BaseSheet = globalThis.tormenta20?.applications?.ActorSheetT20CharacterTabbed;
+  const BaseSheet = ORIGINAL_SYSTEM_SHEET
+    ?? globalThis.tormenta20?.applications?.ActorSheetT20CharacterTabbed;
 
   if (!BaseSheet) {
     console.error(`${MODULE_ID} | A ficha de personagem do sistema Tormenta20 não foi encontrada.`);
@@ -222,7 +266,8 @@ Hooks.once("init", () => {
       return `${MODULE_PATH}/templates/character-sheet.hbs`;
     }
 
-  async getData(options = {}) {
+    async getData(options = {}) {
+      await vendoredTemplatesReady;
       const sheetData = await super.getData(options);
       const galleryOverrides = this._getGalleryOverrides();
       const appearance = {
