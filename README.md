@@ -20,6 +20,8 @@ Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como
 - Clique na logo **Tormenta20** para editar o texto da campanha e escolher entre os temas Rubro, Arcano, Azul, Esmeralda, Ouro ou uma cor personalizada.
 - O botão com o Olho da Tormenta no rodapé minimiza ou expande a galeria.
 - A engrenagem abaixo dele abre a personalização dos seis atalhos: nome, arquivo de imagem e cor.
+- A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
+- Cada cartão do Diário possui um botão para expandir a anotação e usar toda a área da ficha.
 - As preferências visuais ficam salvas individualmente para cada usuário.
 
 ## Desinstalação ou retorno à ficha padrão

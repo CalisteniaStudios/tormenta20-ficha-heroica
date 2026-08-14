@@ -778,6 +778,8 @@ Hooks.once("init", () => {
       const partyConfig = html.find(".t20ga-party-config");
       const artSwitch = html.find(".t20ga-art-switch");
       const brandConfig = html.find(".t20ga-brand-config");
+      const journalTab = html.find(".tab.journal");
+      const journalExpandButtons = journalTab.find(".t20ga-journal-expand");
       const avatarArt = String(artSwitch.attr("data-avatar") ?? this.actor.img);
       const rawTokenArt = String(artSwitch.attr("data-token") ?? avatarArt);
       const tokenArt = rawTokenArt.includes("*") ? avatarArt : rawTokenArt;
@@ -892,6 +894,34 @@ Hooks.once("init", () => {
           .toggleClass("fa-chevron-down", !collapsed);
 
         await savePersistentSetting("galleryCollapsed", collapsed);
+      });
+
+      journalExpandButtons.on("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const button = $(event.currentTarget);
+        const article = button.closest("article");
+        const shouldExpand = !article.hasClass("is-expanded");
+
+        journalTab.find("article.is-expanded").removeClass("is-expanded");
+        journalExpandButtons
+          .attr("aria-expanded", "false")
+          .attr("aria-label", "Expandir anotação")
+          .attr("title", "Expandir anotação")
+          .find("i")
+          .removeClass("fa-compress")
+          .addClass("fa-expand");
+
+        journalTab.toggleClass("has-expanded", shouldExpand);
+        if (!shouldExpand) return;
+
+        article.addClass("is-expanded");
+        button
+          .attr("aria-expanded", "true")
+          .attr("aria-label", "Recolher anotação")
+          .attr("title", "Recolher anotação");
+        button.find("i").removeClass("fa-expand").addClass("fa-compress");
       });
     }
   }
