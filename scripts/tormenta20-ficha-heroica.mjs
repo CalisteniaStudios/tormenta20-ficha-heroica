@@ -785,8 +785,10 @@ Hooks.once("init", () => {
       const tokenArt = rawTokenArt.includes("*") ? avatarArt : rawTokenArt;
       const artSources = { avatar: avatarArt, token: tokenArt };
 
-      const syncArtMode = (src) => {
-        const isPartyArt = partyButtons.toArray().some((button) => button.dataset.art === src);
+      const syncArtMode = (src, mode, button) => {
+        const isPartyArt = mode === null
+          && Boolean(button)
+          && partyButtons.toArray().some((partyButton) => partyButton === button && partyButton.dataset.art === src);
         heroFrame.toggleClass("is-party-art", isPartyArt);
       };
 
@@ -804,7 +806,7 @@ Hooks.once("init", () => {
         heroArt.src = src;
         heroArt.alt = label;
         this._t20gaCurrentArt = src;
-        syncArtMode(src);
+        syncArtMode(src, mode, button);
         this._applyArtPosition(heroArt, src);
         if (previewLabel) previewLabel.textContent = label;
         if (previewNotice) previewNotice.hidden = mode !== null;

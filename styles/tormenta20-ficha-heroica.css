@@ -214,15 +214,15 @@
   top: calc(var(--t20ga-art-base-top, 0%) + var(--t20ga-art-y, 0%));
   left: calc(50% + var(--t20ga-art-x, 0%));
   z-index: 2;
-  width: 175%;
-  height: 102%;
+  width: 100%;
+  height: 100%;
   max-width: none;
-  object-fit: contain;
-  object-position: center bottom;
+  object-fit: cover;
+  object-position: center center;
   border: 0;
   cursor: pointer;
   transform: translateX(-50%) scale(var(--t20ga-art-scale, 1));
-  transform-origin: center bottom;
+  transform-origin: center center;
   filter: drop-shadow(0 8px 8px rgba(7, 1, 3, 0.7));
   transition: filter 160ms ease, transform 180ms ease;
 }
@@ -236,7 +236,9 @@
   --t20ga-art-base-top: 3%;
   width: 142%;
   height: 94%;
+  object-fit: contain;
   object-position: center bottom;
+  transform-origin: center bottom;
 }
 
 .t20ga-window .t20ga-art-vignette {
@@ -2136,8 +2138,41 @@
 
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded > .editor,
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded > prose-mirror {
+  display: flex !important;
+  flex: 1 1 0 !important;
+  flex-direction: column !important;
   min-height: 0 !important;
+  height: auto !important;
   max-height: none !important;
+}
+
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded > *:not(.section-titles) {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded .editor-container {
+  display: flex !important;
+  flex: 1 1 0 !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded .editor-content,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded .ProseMirror,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded textarea {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .note-entries > article.is-expanded .editor-menu {
+  flex: 0 0 auto !important;
 }
 
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active .editor-content,
