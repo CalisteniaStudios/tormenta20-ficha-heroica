@@ -22,6 +22,8 @@ Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como
 - A engrenagem abaixo dele abre a personalização dos seis atalhos: nome, arquivo de imagem e cor.
 - A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
 - Cada cartão do Diário possui um botão para expandir a anotação e usar toda a área da ficha.
+- Ao expandir uma anotação, o campo de edição também cresce e aproveita todo o espaço disponível.
+- As artes de avatar e token preenchem a moldura lateral com enquadramento centralizado por padrão.
 - As preferências visuais ficam salvas individualmente para cada usuário.
 
 ## Desinstalação ou retorno à ficha padrão

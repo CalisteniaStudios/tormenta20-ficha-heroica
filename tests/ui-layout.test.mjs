@@ -11,7 +11,12 @@ assert.match(css, /nav\.sheet-tabs\s*\{[^}]*flex-wrap:\s*nowrap;/s, "category bu
 assert.match(css, /nav\.sheet-tabs \.item\s*\{[^}]*flex:\s*0 1 160px;/s, "category buttons form a centered group");
 assert.equal((journal.match(/class="t20ga-journal-expand"/g) ?? []).length, 6, "every character journal card has an expand button");
 assert.match(css, /article\.is-expanded\s*\{[^}]*position:\s*absolute !important;[^}]*inset:\s*0 !important;/s, "expanded journal cards occupy the panel");
+assert.match(css, /article\.is-expanded > \*:not\(\.section-titles\)\s*\{[^}]*flex:\s*1 1 0 !important;[^}]*height:\s*auto !important;/s, "expanded journal editor roots grow with the card");
+assert.match(css, /article\.is-expanded \.editor-container\s*\{[^}]*display:\s*flex !important;[^}]*flex-direction:\s*column !important;/s, "Foundry editor containers can use the expanded height");
+assert.match(css, /\.t20ga-hero-art\s*\{[^}]*width:\s*100%;[^}]*height:\s*100%;[^}]*object-fit:\s*cover;[^}]*object-position:\s*center center;/s, "avatar and token art fill the frame from the center");
+assert.match(css, /\.t20ga-hero-frame\.is-party-art \.t20ga-hero-art\s*\{[^}]*object-fit:\s*contain;/s, "gallery previews keep their full-body presentation");
+assert.match(script, /syncArtMode\(src, mode, button\)/, "avatar and token modes do not inherit gallery preview fitting");
 assert.match(script, /journalExpandButtons\.on\("click"/, "journal expand buttons are interactive");
-assert.equal(manifest.version, "1.6.4", "manifest version is updated");
+assert.equal(manifest.version, "1.6.5", "manifest version is updated");
 
 console.log("Ficha Heroica UI regression checks passed");
