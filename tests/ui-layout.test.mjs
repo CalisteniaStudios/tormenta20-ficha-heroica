@@ -3,6 +3,7 @@ import fs from "node:fs";
 
 const css = fs.readFileSync(new URL("../styles/tormenta20-ficha-heroica.css", import.meta.url), "utf8");
 const journal = fs.readFileSync(new URL("../templates/vendor/tormenta20-1.5.015/journal.hbs", import.meta.url), "utf8");
+const characterSheet = fs.readFileSync(new URL("../templates/character-sheet.hbs", import.meta.url), "utf8");
 const script = fs.readFileSync(new URL("../scripts/tormenta20-ficha-heroica.mjs", import.meta.url), "utf8");
 const manifest = JSON.parse(fs.readFileSync(new URL("../module.json", import.meta.url), "utf8"));
 
@@ -14,13 +15,17 @@ assert.match(css, /article\.is-expanded\s*\{[^}]*position:\s*absolute !important
 assert.match(css, /article\.is-expanded > \*:not\(\.section-titles\)\s*\{[^}]*flex:\s*1 1 0 !important;[^}]*height:\s*auto !important;/s, "expanded journal editor roots grow with the card");
 assert.match(css, /article\.is-expanded \.editor-container\s*\{[^}]*display:\s*flex !important;[^}]*flex-direction:\s*column !important;/s, "Foundry editor containers can use the expanded height");
 assert.match(css, /\.t20ga-hero-art\s*\{[^}]*width:\s*100%;[^}]*height:\s*100%;[^}]*object-fit:\s*contain;[^}]*object-position:\s*center center;/s, "avatar and token art always show completely");
+assert.match(characterSheet, /class="t20ga-hero-art-backdrop"/, "the hero frame has a full-bleed backdrop");
+assert.match(css, /\.t20ga-hero-art-backdrop\s*\{[^}]*object-fit:\s*cover;[^}]*filter:\s*blur\(12px\)[^;]*brightness\(0\.52\);/s, "the backdrop fills the frame without cropping the foreground art");
 assert.match(css, /\.t20ga-hero-frame\.is-party-art \.t20ga-hero-art\s*\{[^}]*object-fit:\s*contain;/s, "gallery previews keep their full-body presentation");
 assert.match(script, /DEFAULT_ART_POSITION = Object\.freeze\(\{ x: 0, y: 0, scale: 1 \}\)/, "art adjustment keeps the original scale and position controls");
 assert.doesNotMatch(script, /name="fit"/, "the art dialog does not expose a cropping mode");
 assert.match(css, /\.t20ga-dialog-art\s*\{[^}]*object-fit:\s*contain;/s, "the adjustment preview always shows the complete image");
+assert.match(script, /class="t20ga-dialog-art-backdrop"/, "the adjustment preview shows the same filled-frame treatment");
+assert.match(script, /if \(heroArtBackdrop\) heroArtBackdrop\.src = src;/, "the backdrop follows avatar, token, and gallery changes");
 assert.match(css, /#context-menu \.context-item[^}]*color:\s*#fff7e4 !important;/s, "context menu labels remain readable on the dark menu");
 assert.match(script, /syncArtMode\(src, mode, button\)/, "avatar and token modes do not inherit gallery preview fitting");
 assert.match(script, /journalExpandButtons\.on\("click"/, "journal expand buttons are interactive");
-assert.equal(manifest.version, "1.6.7", "manifest version is updated");
+assert.equal(manifest.version, "1.6.8", "manifest version is updated");
 
 console.log("Ficha Heroica UI regression checks passed");

@@ -23,7 +23,7 @@ Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como
 - A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
 - Cada cartão do Diário possui um botão para expandir a anotação e usar toda a área da ficha.
 - Ao expandir uma anotação, o campo de edição também cresce e aproveita todo o espaço disponível.
-- As artes de avatar e token aparecem sempre inteiras e centralizadas, sem um modo de preenchimento que corte a imagem.
+- A moldura permanece totalmente preenchida por um fundo integrado à própria arte, enquanto o avatar ou token aparece completo e nítido por cima, sem recorte automático.
 - As preferências visuais ficam salvas individualmente para cada usuário.
 
 ## Desinstalação ou retorno à ficha padrão

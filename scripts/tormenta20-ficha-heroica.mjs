@@ -575,6 +575,7 @@ Hooks.once("init", () => {
         <form class="t20ga-art-position-form">
           <p class="t20ga-dialog-help">Ajuste como <strong>${safeLabel}</strong> aparece na moldura lateral.</p>
           <div class="t20ga-dialog-art-stage">
+            <img class="t20ga-dialog-art-backdrop" src="${safeSrc}" alt="" aria-hidden="true">
             <img class="t20ga-dialog-art" src="${safeSrc}" alt="${safeLabel}">
           </div>
           <label>
@@ -771,6 +772,7 @@ Hooks.once("init", () => {
       this._applyAppearance(html, this._getAppearance());
 
       const heroArt = html.find(".t20ga-hero-art")[0];
+      const heroArtBackdrop = html.find(".t20ga-hero-art-backdrop")[0];
       const heroFrame = html.find(".t20ga-hero-frame");
       const previewLabel = html.find(".t20ga-preview-label")[0];
       const previewNotice = html.find(".t20ga-preview-notice")[0];
@@ -807,6 +809,7 @@ Hooks.once("init", () => {
         if (!heroArt) return;
         heroArt.src = src;
         heroArt.alt = label;
+        if (heroArtBackdrop) heroArtBackdrop.src = src;
         this._t20gaCurrentArt = src;
         syncArtMode(src, mode, button);
         this._applyArtPosition(heroArt, src);
