@@ -16,14 +16,14 @@ O módulo mantém as rolagens, recursos, inventário, poderes, magias, efeitos e
 Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como imagem da ficha. As seis artes fornecidas também aparecem na galeria inferior; clicar nelas mostra uma prévia na moldura sem alterar a imagem salva da personagem.
 
 - O seletor **Avatar/Token**, com o Olho da Tormenta deslizante, alterna entre a imagem da personagem e a imagem configurada no protótipo do token.
-- Clique na imagem grande ou no botão **Ajustar** para configurar o encaixe, a escala e a posição horizontal/vertical. Cada imagem mantém seu próprio enquadramento.
+- Clique na imagem grande ou no botão **Ajustar** para configurar a escala e a posição horizontal/vertical. Cada imagem mantém seu próprio enquadramento.
 - Clique na logo **Tormenta20** para editar o texto da campanha e escolher entre os temas Rubro, Arcano, Azul, Esmeralda, Ouro ou uma cor personalizada.
 - O botão com o Olho da Tormenta no rodapé minimiza ou expande a galeria.
 - A engrenagem abaixo dele abre a personalização dos seis atalhos: nome, arquivo de imagem e cor.
 - A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
 - Cada cartão do Diário possui um botão para expandir a anotação e usar toda a área da ficha.
 - Ao expandir uma anotação, o campo de edição também cresce e aproveita todo o espaço disponível.
-- As artes de avatar e token aparecem inteiras e centralizadas por padrão; o painel **Ajustar** permite escolher **Preencher moldura** quando o recorte for desejado.
+- As artes de avatar e token aparecem sempre inteiras e centralizadas, sem um modo de preenchimento que corte a imagem.
 - As preferências visuais ficam salvas individualmente para cada usuário.
 
 ## Desinstalação ou retorno à ficha padrão

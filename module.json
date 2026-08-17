@@ -2,10 +2,10 @@
   "id": "tormenta20-ficha-heroica",
   "title": "Tormenta20: Ficha Heroica",
   "description": "Uma ficha de personagem alternativa e personalizável para Tormenta20 no Foundry VTT, com visual heroico, temas configuráveis, galeria do grupo e exibição das artes de avatar e token.",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "url": "https://github.com/CalisteniaStudios/tormenta20-ficha-heroica",
   "manifest": "https://raw.githubusercontent.com/CalisteniaStudios/tormenta20-ficha-heroica/main/module.json",
-  "download": "https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/download/v1.6.6/tormenta20-ficha-heroica-v1.6.6.zip",
+  "download": "https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/download/v1.6.7/tormenta20-ficha-heroica-v1.6.7.zip",
   "compatibility": {
     "minimum": "13",
     "verified": "14.365",

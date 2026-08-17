@@ -127,7 +127,7 @@ const PARTY_ART = Object.freeze([
   }
 ]);
 
-const DEFAULT_ART_POSITION = Object.freeze({ x: 0, y: 0, scale: 1, fit: "contain" });
+const DEFAULT_ART_POSITION = Object.freeze({ x: 0, y: 0, scale: 1 });
 const DEFAULT_APPEARANCE = Object.freeze({
   campaign: "Jornada Heroica:",
   groupName: "Nome do Grupo",
@@ -477,12 +477,12 @@ Hooks.once("init", () => {
 
     _getArtPosition(src) {
       const positions = game.settings.get(MODULE_ID, "artPositions") ?? {};
-      const position = {
-        ...DEFAULT_ART_POSITION,
-        ...(positions[this._artPositionKey(src)] ?? {})
+      const saved = positions[this._artPositionKey(src)] ?? {};
+      return {
+        x: saved.x ?? DEFAULT_ART_POSITION.x,
+        y: saved.y ?? DEFAULT_ART_POSITION.y,
+        scale: saved.scale ?? DEFAULT_ART_POSITION.scale
       };
-      position.fit = position.fit === "cover" ? "cover" : "contain";
-      return position;
     }
 
     async _saveArtPosition(src, position) {
@@ -499,7 +499,6 @@ Hooks.once("init", () => {
       heroArt.style.setProperty("--t20ga-art-x", `${clamp(position.x, -45, 45)}%`);
       heroArt.style.setProperty("--t20ga-art-y", `${clamp(position.y, -30, 30)}%`);
       heroArt.style.setProperty("--t20ga-art-scale", clamp(position.scale, 0.6, 1.8));
-      heroArt.style.setProperty("--t20ga-art-fit", position.fit === "cover" ? "cover" : "contain");
     }
 
     async _updateCharacterArt(mode, path) {
@@ -579,13 +578,6 @@ Hooks.once("init", () => {
             <img class="t20ga-dialog-art" src="${safeSrc}" alt="${safeLabel}">
           </div>
           <label>
-            <span>Encaixe da imagem</span>
-            <select name="fit">
-              <option value="contain"${original.fit === "contain" ? " selected" : ""}>Mostrar imagem inteira</option>
-              <option value="cover"${original.fit === "cover" ? " selected" : ""}>Preencher moldura (pode cortar)</option>
-            </select>
-          </label>
-          <label>
             <span>Escala <output data-output="scale">${Number(original.scale).toFixed(2)}×</output></span>
             <input type="range" name="scale" min="0.6" max="1.8" step="0.01" value="${original.scale}">
           </label>
@@ -603,8 +595,7 @@ Hooks.once("init", () => {
       const readPosition = (html) => ({
         scale: clamp(html.find('[name="scale"]').val(), 0.6, 1.8),
         x: clamp(html.find('[name="x"]').val(), -45, 45),
-        y: clamp(html.find('[name="y"]').val(), -30, 30),
-        fit: html.find('[name="fit"]').val() === "cover" ? "cover" : "contain"
+        y: clamp(html.find('[name="y"]').val(), -30, 30)
       });
 
       const updatePreview = (html) => {
@@ -613,7 +604,6 @@ Hooks.once("init", () => {
         preview.css("--dialog-art-scale", position.scale);
         preview.css("--dialog-art-x", `${position.x}%`);
         preview.css("--dialog-art-y", `${position.y}%`);
-        preview.css("--dialog-art-fit", position.fit);
         html.find('[data-output="scale"]').text(`${position.scale.toFixed(2)}×`);
         html.find('[data-output="x"]').text(position.x);
         html.find('[data-output="y"]').text(position.y);
@@ -642,12 +632,11 @@ Hooks.once("init", () => {
           },
           default: "save",
           render: (html) => {
-            html.find('input[type="range"], select[name="fit"]').on("input change", () => updatePreview(html));
+            html.find('input[type="range"]').on("input change", () => updatePreview(html));
             html.find(".t20ga-dialog-reset").on("click", () => {
               html.find('[name="scale"]').val(DEFAULT_ART_POSITION.scale);
               html.find('[name="x"]').val(DEFAULT_ART_POSITION.x);
               html.find('[name="y"]').val(DEFAULT_ART_POSITION.y);
-              html.find('[name="fit"]').val(DEFAULT_ART_POSITION.fit);
               updatePreview(html);
             });
             updatePreview(html);
