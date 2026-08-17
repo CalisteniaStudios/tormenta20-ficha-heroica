@@ -8,6 +8,10 @@ O módulo mantém as rolagens, recursos, inventário, poderes, magias, efeitos e
 
 ## Instalação
 
+Manifesto para instalação pelo Foundry VTT:
+
+`https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/latest/download/module.json`
+
 1. Feche o Foundry VTT.
 2. Copie a pasta `tormenta20-ficha-heroica` para `Data/modules` dentro da pasta de dados do Foundry.
 3. Abra o mundo de Tormenta20 e ative **Tormenta20: Ficha Heroica** em **Gerenciar Módulos**.

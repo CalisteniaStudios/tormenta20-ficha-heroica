@@ -26,6 +26,11 @@ assert.match(script, /if \(heroArtBackdrop\) heroArtBackdrop\.src = src;/, "the 
 assert.match(css, /#context-menu \.context-item[^}]*color:\s*#fff7e4 !important;/s, "context menu labels remain readable on the dark menu");
 assert.match(script, /syncArtMode\(src, mode, button\)/, "avatar and token modes do not inherit gallery preview fitting");
 assert.match(script, /journalExpandButtons\.on\("click"/, "journal expand buttons are interactive");
-assert.equal(manifest.version, "1.6.8", "manifest version is updated");
+assert.equal(manifest.version, "1.6.9", "manifest version is updated");
+assert.equal(
+  manifest.manifest,
+  "https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/latest/download/module.json",
+  "manifest updates avoid the raw GitHub endpoint"
+);
 
 console.log("Ficha Heroica UI regression checks passed");
