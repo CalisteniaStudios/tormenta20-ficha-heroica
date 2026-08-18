@@ -498,7 +498,43 @@ Hooks.once("init", () => {
       const position = override ?? this._getArtPosition(src);
       heroArt.style.setProperty("--t20ga-art-x", `${clamp(position.x, -45, 45)}%`);
       heroArt.style.setProperty("--t20ga-art-y", `${clamp(position.y, -30, 30)}%`);
-      heroArt.style.setProperty("--t20ga-art-scale", clamp(position.scale, 0.6, 1.8));
+      heroArt.style.setProperty("--t20ga-art-scale", clamp(position.scale, 0.25, 1.8));
+    }
+
+    _fitArtToStage(image, stage, widthVariable, heightVariable) {
+      if (!image || !stage) return () => {};
+
+      const fit = () => {
+        const stageWidth = stage.clientWidth;
+        const stageHeight = stage.clientHeight;
+        const imageWidth = image.naturalWidth;
+        const imageHeight = image.naturalHeight;
+        if (!stageWidth || !stageHeight || !imageWidth || !imageHeight) return;
+
+        const coverScale = Math.max(stageWidth / imageWidth, stageHeight / imageHeight);
+        image.style.setProperty(widthVariable, `${Math.ceil(imageWidth * coverScale)}px`);
+        image.style.setProperty(heightVariable, `${Math.ceil(imageHeight * coverScale)}px`);
+      };
+
+      if (image.complete && image.naturalWidth) fit();
+      else image.addEventListener("load", fit, { once: true });
+      return fit;
+    }
+
+    _fitHeroArt(heroArt, heroFrame) {
+      if (!heroArt || !heroFrame) return;
+      if (heroFrame.classList.contains("is-party-art")) {
+        heroArt.style.removeProperty("--t20ga-art-fit-width");
+        heroArt.style.removeProperty("--t20ga-art-fit-height");
+        return;
+      }
+
+      this._fitArtToStage(
+        heroArt,
+        heroFrame,
+        "--t20ga-art-fit-width",
+        "--t20ga-art-fit-height"
+      )();
     }
 
     async _updateCharacterArt(mode, path) {
@@ -580,7 +616,7 @@ Hooks.once("init", () => {
           </div>
           <label>
             <span>Escala <output data-output="scale">${Number(original.scale).toFixed(2)}×</output></span>
-            <input type="range" name="scale" min="0.6" max="1.8" step="0.01" value="${original.scale}">
+            <input type="range" name="scale" min="0.25" max="1.8" step="0.01" value="${original.scale}">
           </label>
           <label>
             <span>Posição horizontal <output data-output="x">${original.x}</output></span>
@@ -594,7 +630,7 @@ Hooks.once("init", () => {
         </form>`;
 
       const readPosition = (html) => ({
-        scale: clamp(html.find('[name="scale"]').val(), 0.6, 1.8),
+        scale: clamp(html.find('[name="scale"]').val(), 0.25, 1.8),
         x: clamp(html.find('[name="x"]').val(), -45, 45),
         y: clamp(html.find('[name="y"]').val(), -30, 30)
       });
@@ -633,6 +669,14 @@ Hooks.once("init", () => {
           },
           default: "save",
           render: (html) => {
+            const preview = html.find(".t20ga-dialog-art")[0];
+            const stage = html.find(".t20ga-dialog-art-stage")[0];
+            this._fitArtToStage(
+              preview,
+              stage,
+              "--dialog-art-fit-width",
+              "--dialog-art-fit-height"
+            );
             html.find('input[type="range"]').on("input change", () => updatePreview(html));
             html.find(".t20ga-dialog-reset").on("click", () => {
               html.find('[name="scale"]').val(DEFAULT_ART_POSITION.scale);
@@ -774,6 +818,7 @@ Hooks.once("init", () => {
       const heroArt = html.find(".t20ga-hero-art")[0];
       const heroArtBackdrop = html.find(".t20ga-hero-art-backdrop")[0];
       const heroFrame = html.find(".t20ga-hero-frame");
+      const heroFrameElement = heroFrame[0];
       const previewLabel = html.find(".t20ga-preview-label")[0];
       const previewNotice = html.find(".t20ga-preview-notice")[0];
       const partyButtons = html.find(".t20ga-party-member");
@@ -812,6 +857,7 @@ Hooks.once("init", () => {
         if (heroArtBackdrop) heroArtBackdrop.src = src;
         this._t20gaCurrentArt = src;
         syncArtMode(src, mode, button);
+        this._fitHeroArt(heroArt, heroFrameElement);
         this._applyArtPosition(heroArt, src);
         if (previewLabel) previewLabel.textContent = label;
         if (previewNotice) previewNotice.hidden = mode !== null;
@@ -830,6 +876,14 @@ Hooks.once("init", () => {
         null,
         initialMode
       );
+
+      this._t20gaArtResizeObserver?.disconnect?.();
+      if (globalThis.ResizeObserver && heroFrameElement) {
+        this._t20gaArtResizeObserver = new ResizeObserver(() => {
+          this._fitHeroArt(heroArt, heroFrameElement);
+        });
+        this._t20gaArtResizeObserver.observe(heroFrameElement);
+      }
 
       partyButtons.on("click", async (event) => {
         const button = event.currentTarget;
