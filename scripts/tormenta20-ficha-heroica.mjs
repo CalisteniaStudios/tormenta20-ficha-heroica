@@ -244,7 +244,15 @@ Hooks.once("init", () => {
 
   class ActorSheetT20FichaHeroica extends BaseSheet {
     static get defaultOptions() {
-      return foundry.utils.mergeObject(super.defaultOptions, {
+      const baseOptions = super.defaultOptions;
+      const scrollY = [
+        ...(baseOptions.scrollY ?? []),
+        ".skills-list",
+        ".t20ga-dashboard-side",
+        ".t20ga-sheet-body > .tab"
+      ];
+
+      return foundry.utils.mergeObject(baseOptions, {
         classes: [
           "tormenta20",
           "sheet",
@@ -255,7 +263,8 @@ Hooks.once("init", () => {
         ],
         width: 1160,
         height: 820,
-        resizable: true
+        resizable: true,
+        scrollY: [...new Set(scrollY)]
       });
     }
 

@@ -29,7 +29,11 @@ assert.match(script, /if \(heroArtBackdrop\) heroArtBackdrop\.src = src;/, "the 
 assert.match(css, /#context-menu \.context-item[^}]*color:\s*#fff7e4 !important;/s, "context menu labels remain readable on the dark menu");
 assert.match(script, /syncArtMode\(src, mode, button\)/, "avatar and token modes do not inherit gallery preview fitting");
 assert.match(script, /journalExpandButtons\.on\("click"/, "journal expand buttons are interactive");
-assert.equal(manifest.version, "1.6.10", "manifest version is updated");
+assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic sheet retains the system scroll containers");
+assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
+assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
+assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
+assert.equal(manifest.version, "1.6.11", "manifest version is updated");
 assert.equal(
   manifest.manifest,
   "https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/latest/download/module.json",
