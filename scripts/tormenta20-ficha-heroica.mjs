@@ -15,6 +15,8 @@ const VENDORED_TEMPLATES = Object.freeze({
   "t20ga.journal": `${VENDORED_TEMPLATE_ROOT}/journal.hbs`,
   "t20ga.list-consumable": `${VENDORED_TEMPLATE_ROOT}/lists/list-consumable.hbs`,
   "t20ga.list-equipment": `${VENDORED_TEMPLATE_ROOT}/lists/list-equipment.hbs`,
+  "t20ga.list-favorites": `${VENDORED_TEMPLATE_ROOT}/lists/list-favorites.hbs`,
+  "t20ga.list-header-element": `${VENDORED_TEMPLATE_ROOT}/lists/list-header-element.hbs`,
   "t20ga.list-inventory": `${VENDORED_TEMPLATE_ROOT}/lists/list-inventory.hbs`,
   "t20ga.list-loot": `${VENDORED_TEMPLATE_ROOT}/lists/list-loot.hbs`,
   "t20ga.list-powers-tabbed": `${VENDORED_TEMPLATE_ROOT}/lists/list-powers-tabbed.hbs`,
@@ -29,8 +31,6 @@ const VENDORED_TEMPLATES = Object.freeze({
 });
 const PREFERENCES_FLAG = "persistentPreferences";
 const PERSISTENT_SETTING_KEYS = Object.freeze([
-  "galleryCollapsed",
-  "partyGallery",
   "artPositions",
   "appearance"
 ]);
@@ -87,45 +87,6 @@ async function restorePersistentSettings() {
     console.warn(`${MODULE_ID} | Não foi possível restaurar as preferências persistentes.`, error);
   }
 }
-
-const PARTY_ART = Object.freeze([
-  {
-    id: "slot-1",
-    label: "",
-    src: "",
-    accent: "#a6b84a"
-  },
-  {
-    id: "slot-2",
-    label: "",
-    src: "",
-    accent: "#d39a45"
-  },
-  {
-    id: "slot-3",
-    label: "",
-    src: "",
-    accent: "#bd6d93"
-  },
-  {
-    id: "slot-4",
-    label: "",
-    src: "",
-    accent: "#db4f9c"
-  },
-  {
-    id: "slot-5",
-    label: "",
-    src: "",
-    accent: "#6951c8"
-  },
-  {
-    id: "slot-6",
-    label: "",
-    src: "",
-    accent: "#91a83b"
-  }
-]);
 
 const DEFAULT_ART_POSITION = Object.freeze({ x: 0, y: 0, scale: 1 });
 const DEFAULT_APPEARANCE = Object.freeze({
@@ -202,22 +163,6 @@ Hooks.once("init", () => {
       throw error;
     });
 
-  game.settings.register(MODULE_ID, "galleryCollapsed", {
-    name: "Minimizar galeria de tokens",
-    scope: "client",
-    config: false,
-    type: Boolean,
-    default: false
-  });
-
-  game.settings.register(MODULE_ID, "partyGallery", {
-    name: "Personagens da galeria",
-    scope: "client",
-    config: false,
-    type: Object,
-    default: {}
-  });
-
   game.settings.register(MODULE_ID, "artPositions", {
     name: "Posições das artes",
     scope: "client",
@@ -278,7 +223,6 @@ Hooks.once("init", () => {
     async getData(options = {}) {
       await vendoredTemplatesReady;
       const sheetData = await super.getData(options);
-      const galleryOverrides = this._getGalleryOverrides();
       const appearance = {
         ...DEFAULT_APPEARANCE,
         ...(game.settings.get(MODULE_ID, "appearance") ?? {})
@@ -305,6 +249,14 @@ Hooks.once("init", () => {
         }
       }
 
+      const favorites = sheetData.actor?.favoritos ?? {};
+      const hasFavorites = Boolean(
+        favorites.armas?.length
+        || favorites.itens?.length
+        || favorites.poderes?.length
+        || Number(favorites.qtdMagias) > 0
+      );
+
       sheetData.t20ga = {
         campaign: appearance.campaign,
         groupName: appearance.groupName,
@@ -314,8 +266,7 @@ Hooks.once("init", () => {
         eye: `${MODULE_PATH}/assets/branding/olho-tormenta.png`,
         avatarArt: this.actor.img,
         tokenArt,
-        party: PARTY_ART.map((member) => ({ ...member, ...(galleryOverrides[member.id] ?? {}) })),
-        galleryCollapsed: game.settings.get(MODULE_ID, "galleryCollapsed")
+        hasFavorites
       };
       return sheetData;
     }
@@ -325,23 +276,6 @@ Hooks.once("init", () => {
         ...DEFAULT_APPEARANCE,
         ...(game.settings.get(MODULE_ID, "appearance") ?? {})
       };
-    }
-
-    _galleryActorKey() {
-      return this.actor?.uuid ?? this.actor?.id ?? "unknown-actor";
-    }
-
-    _getGalleryOverrides() {
-      const stored = game.settings.get(MODULE_ID, "partyGallery") ?? {};
-      if (stored.schema !== 2) return {};
-      return foundry.utils.deepClone(stored.actors?.[this._galleryActorKey()] ?? {});
-    }
-
-    async _saveGalleryOverrides(overrides) {
-      const stored = game.settings.get(MODULE_ID, "partyGallery") ?? {};
-      const actors = stored.schema === 2 ? foundry.utils.deepClone(stored.actors ?? {}) : {};
-      actors[this._galleryActorKey()] = overrides;
-      await savePersistentSetting("partyGallery", { schema: 2, actors });
     }
 
     _isUnlinkedTokenSheet() {
@@ -532,12 +466,6 @@ Hooks.once("init", () => {
 
     _fitHeroArt(heroArt, heroFrame) {
       if (!heroArt || !heroFrame) return;
-      if (heroFrame.classList.contains("is-party-art")) {
-        heroArt.style.removeProperty("--t20ga-art-fit-width");
-        heroArt.style.removeProperty("--t20ga-art-fit-height");
-        return;
-      }
-
       this._fitArtToStage(
         heroArt,
         heroFrame,
@@ -703,122 +631,6 @@ Hooks.once("init", () => {
       ).render(true);
     }
 
-    _openGalleryDialog() {
-      const DialogClass = globalThis.Dialog;
-      if (!DialogClass) {
-        ui.notifications.warn("A configuração da galeria não está disponível nesta versão do Foundry.");
-        return;
-      }
-
-      const overrides = this._getGalleryOverrides();
-      const members = PARTY_ART.map((member) => ({ ...member, ...(overrides[member.id] ?? {}) }));
-      const rows = members.map((member) => `
-        <div class="t20ga-gallery-row" data-member-id="${escapeHtml(member.id)}">
-          <div class="t20ga-gallery-preview">
-            ${member.src ? `<img src="${escapeHtml(member.src)}" alt="">` : '<i class="fa-solid fa-image" aria-hidden="true"></i>'}
-          </div>
-          <div class="t20ga-gallery-fields">
-            <label>Nome <input data-field="label" type="text" value="${escapeHtml(member.label)}"></label>
-            <label>Imagem
-              <span class="t20ga-gallery-path">
-                <input data-field="src" type="text" value="${escapeHtml(member.src)}">
-                <button type="button" data-action="browse" title="Escolher imagem"><i class="fa-solid fa-folder-open"></i></button>
-              </span>
-            </label>
-          </div>
-          <label class="t20ga-gallery-color">Cor <input data-field="accent" type="color" value="${escapeHtml(member.accent)}"></label>
-        </div>`).join("");
-
-      const content = `
-        <form class="t20ga-gallery-form">
-          <p class="t20ga-dialog-help">Configure as seis artes da galeria. Ao clicar em uma arte configurada, ela será aplicada ao token da personagem aberta.</p>
-          <div class="t20ga-gallery-list">${rows}</div>
-          <button class="t20ga-gallery-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Limpar galeria</button>
-        </form>`;
-
-      new DialogClass(
-        {
-          title: "Personalizar galeria de tokens",
-          content,
-          buttons: {
-            save: {
-              icon: '<i class="fa-solid fa-floppy-disk"></i>',
-              label: "Salvar",
-              callback: async (html) => {
-                const next = {};
-                html.find(".t20ga-gallery-row").each((_, row) => {
-                  const element = $(row);
-                  next[element.data("memberId")] = {
-                    label: String(element.find('[data-field="label"]').val() ?? "").trim(),
-                    src: String(element.find('[data-field="src"]').val() ?? "").trim(),
-                    accent: String(element.find('[data-field="accent"]').val() ?? "#d1a243")
-                  };
-                });
-                await this._saveGalleryOverrides(next);
-                this.render(false);
-              }
-            },
-            cancel: {
-              icon: '<i class="fa-solid fa-xmark"></i>',
-              label: "Cancelar"
-            }
-          },
-          default: "save",
-          render: (html) => {
-            html.find('[data-action="browse"]').on("click", (event) => {
-              const row = $(event.currentTarget).closest(".t20ga-gallery-row");
-              const input = row.find('[data-field="src"]');
-              const PickerClass = globalThis.foundry?.applications?.apps?.FilePicker?.implementation
-                ?? globalThis.FilePicker;
-              if (!PickerClass) {
-                ui.notifications.warn("O seletor de arquivos não está disponível.");
-                return;
-              }
-              const updatePreview = (path) => {
-                const preview = row.find(".t20ga-gallery-preview");
-                preview.empty();
-                if (path) preview.append($(`<img src="${escapeHtml(path)}" alt="">`));
-                else preview.append('<i class="fa-solid fa-image" aria-hidden="true"></i>');
-              };
-              const callback = (path) => {
-                input.val(path);
-                updatePreview(path);
-              };
-              const picker = new PickerClass({
-                type: "image",
-                current: input.val(),
-                callback
-              });
-              if (typeof picker.browse === "function") picker.browse();
-              else picker.render({ force: true });
-            });
-
-            html.find('[data-field="src"]').on("change", (event) => {
-              const row = $(event.currentTarget).closest(".t20ga-gallery-row");
-              const path = String(event.currentTarget.value ?? "").trim();
-              const preview = row.find(".t20ga-gallery-preview");
-              preview.empty();
-              if (path) preview.append($(`<img src="${escapeHtml(path)}" alt="">`));
-              else preview.append('<i class="fa-solid fa-image" aria-hidden="true"></i>');
-            });
-
-            html.find(".t20ga-gallery-reset").on("click", () => {
-              html.find(".t20ga-gallery-row").each((_, row) => {
-                const element = $(row);
-                const original = PARTY_ART.find((member) => member.id === element.data("memberId"));
-                if (!original) return;
-                element.find('[data-field="label"]').val("");
-                element.find('[data-field="src"]').val("");
-                element.find('[data-field="accent"]').val(original.accent);
-                element.find(".t20ga-gallery-preview").html('<i class="fa-solid fa-image" aria-hidden="true"></i>');
-              });
-            });
-          }
-        },
-        { classes: ["t20ga-gallery-config-dialog"], width: 720, height: 680 }
-      ).render(true);
-    }
-
     activateListeners(html) {
       super.activateListeners(html);
 
@@ -829,11 +641,6 @@ Hooks.once("init", () => {
       const heroFrame = html.find(".t20ga-hero-frame");
       const heroFrameElement = heroFrame[0];
       const previewLabel = html.find(".t20ga-preview-label")[0];
-      const previewNotice = html.find(".t20ga-preview-notice")[0];
-      const partyButtons = html.find(".t20ga-party-member");
-      const partyRail = html.find(".t20ga-party-rail");
-      const partyToggle = html.find(".t20ga-party-toggle");
-      const partyConfig = html.find(".t20ga-party-config");
       const artSwitch = html.find(".t20ga-art-switch");
       const brandConfig = html.find(".t20ga-brand-config");
       const journalTab = html.find(".tab.journal");
@@ -842,13 +649,6 @@ Hooks.once("init", () => {
       const rawTokenArt = String(artSwitch.attr("data-token") ?? avatarArt);
       const tokenArt = rawTokenArt.includes("*") ? avatarArt : rawTokenArt;
       const artSources = { avatar: avatarArt, token: tokenArt };
-
-      const syncArtMode = (src, mode, button) => {
-        const isPartyArt = mode === null
-          && Boolean(button)
-          && partyButtons.toArray().some((partyButton) => partyButton === button && partyButton.dataset.art === src);
-        heroFrame.toggleClass("is-party-art", isPartyArt);
-      };
 
       const syncSwitch = (mode) => {
         const isToken = mode === "token";
@@ -859,30 +659,23 @@ Hooks.once("init", () => {
           .attr("title", isToken ? "Mostrando arte do token" : "Mostrando avatar da personagem");
       };
 
-      const showArt = (src, label, button = null, mode = null) => {
+      const showArt = (src, label, mode) => {
         if (!heroArt) return;
         heroArt.src = src;
         heroArt.alt = label;
         if (heroArtBackdrop) heroArtBackdrop.src = src;
         this._t20gaCurrentArt = src;
-        syncArtMode(src, mode, button);
         this._fitHeroArt(heroArt, heroFrameElement);
         this._applyArtPosition(heroArt, src);
         if (previewLabel) previewLabel.textContent = label;
-        if (previewNotice) previewNotice.hidden = mode !== null;
-        partyButtons.removeClass("is-active").attr("aria-pressed", "false");
-        if (button) $(button).addClass("is-active").attr("aria-pressed", "true");
-        if (mode) {
-          this._t20gaArtMode = mode;
-          syncSwitch(mode);
-        }
+        this._t20gaArtMode = mode;
+        syncSwitch(mode);
       };
 
       const initialMode = this._t20gaArtMode === "token" ? "token" : "avatar";
       showArt(
         artSources[initialMode],
         this.actor.name,
-        null,
         initialMode
       );
 
@@ -894,29 +687,11 @@ Hooks.once("init", () => {
         this._t20gaArtResizeObserver.observe(heroFrameElement);
       }
 
-      partyButtons.on("click", async (event) => {
-        const button = event.currentTarget;
-        const src = String(button.dataset.art ?? "").trim();
-        if (!src) {
-          ui.notifications.info("Configure esta arte pela engrenagem da galeria antes de usá-la.");
-          return;
-        }
-        try {
-          await this._updateCharacterArt("token", src);
-          showArt(src, button.dataset.label || "Imagem do token", button);
-          ui.notifications.info("Imagem do token atualizada.");
-        } catch (error) {
-          console.error(`${MODULE_ID} | Não foi possível aplicar a arte da galeria ao token.`, error);
-          ui.notifications.error("Não foi possível atualizar a imagem do token.");
-        }
-      });
-
       artSwitch.on("click", () => {
         const nextMode = this._t20gaArtMode === "token" ? "avatar" : "token";
         showArt(
           artSources[nextMode],
           this.actor.name,
-          null,
           nextMode
         );
       });
@@ -938,7 +713,7 @@ Hooks.once("init", () => {
         this._openArtFilePicker(mode, artSources[mode], (path) => {
           artSources[mode] = path;
           artSwitch.attr(mode === "token" ? "data-token" : "data-avatar", path);
-          showArt(path, this.actor.name, null, mode);
+          showArt(path, this.actor.name, mode);
         });
       };
 
@@ -946,25 +721,6 @@ Hooks.once("init", () => {
       html.find(".t20ga-art-adjust").on("click", openPositionDialog);
 
       brandConfig.on("click", () => this._openAppearanceDialog(html));
-
-      partyConfig.on("click", () => this._openGalleryDialog());
-
-      partyToggle.on("click", async (event) => {
-        const collapsed = !partyRail.hasClass("is-collapsed");
-        const button = $(event.currentTarget);
-
-        partyRail.toggleClass("is-collapsed", collapsed);
-        button.attr("aria-expanded", String(!collapsed));
-        button.attr(
-          "title",
-          collapsed ? "Expandir galeria de tokens" : "Minimizar galeria de tokens"
-        );
-        button.find("i")
-          .toggleClass("fa-chevron-up", collapsed)
-          .toggleClass("fa-chevron-down", !collapsed);
-
-        await savePersistentSetting("galleryCollapsed", collapsed);
-      });
 
       journalExpandButtons.on("click", (event) => {
         event.preventDefault();
@@ -997,8 +753,7 @@ Hooks.once("init", () => {
   }
 
   globalThis.T20FichaHeroica = {
-    ActorSheet: ActorSheetT20FichaHeroica,
-    partyArt: PARTY_ART
+    ActorSheet: ActorSheetT20FichaHeroica
   };
 
   foundry.documents.collections.Actors.registerSheet(

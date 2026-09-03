@@ -26,8 +26,9 @@
                 <span class="t20ga-brand-caption">Jornada Heroica: Guerra Artoniana</span>
               </div>
 
-              <div class="t20ga-hero-frame is-party-art">
+              <div class="t20ga-hero-frame">
                 <img class="t20ga-eye-mark" src="../assets/branding/olho-tormenta.png" alt="" />
+                <img class="t20ga-hero-art-backdrop" src="../assets/party/goblin-shooter.webp" alt="" />
                 <img
                   class="profile t20ga-hero-art"
                   src="../assets/party/goblin-shooter.webp"
@@ -140,6 +141,20 @@
                   </section>
 
                   <div class="t20ga-dashboard-side flexcol">
+                    <section class="t20ga-card t20ga-favorites-card">
+                      <div class="t20ga-section-ribbon">Favoritos</div>
+                      <div class="t20ga-favorites-list">
+                        <ol class="item-list favorites">
+                          <li class="item item-header flexrow"><div class="item-name">Poderes</div></li>
+                          <li class="item"><div class="item-name flexrow rollable"><div class="item-image" style="background-image:url('../assets/branding/olho-tormenta.png')"></div><div class="item-description"><label>Olho do Caçador</label><div class="item-tipo">Poder de classe</div></div></div></li>
+                        </ol>
+                        <ol class="item-list favorites">
+                          <li class="item item-header flexrow"><div class="item-name">Magias</div></li>
+                          <li class="item"><div class="item-name flexrow rollable"><div class="item-image" style="background-image:url('../assets/branding/olho-tormenta.png')"></div><div class="item-description"><label>Concentração de Combate</label><div class="item-tipo">1º círculo</div></div></div></li>
+                        </ol>
+                      </div>
+                    </section>
+
                     <section class="t20ga-card t20ga-traits-card">
                       <div class="t20ga-section-ribbon">Traços e detalhes</div>
                       <div class="traits">
@@ -179,43 +194,10 @@
               </section>
             </main>
           </div>
-
-          <footer class="t20ga-party-rail">
-            <div class="t20ga-party-tools">
-              <button class="t20ga-party-toggle" type="button" title="Minimizar galeria de personagens" aria-label="Minimizar galeria de personagens" aria-expanded="true"><img src="../assets/branding/olho-tormenta.png" alt="" /><i>⌄</i></button>
-              <button class="t20ga-party-config" type="button" title="Personalizar galeria" aria-label="Personalizar galeria">⚙</button>
-            </div>
-            <button class="t20ga-party-member" type="button" data-art="../assets/party/goblin-shooter.webp" data-label="Goblin Atiradora" style="--member-accent:#a6b84a"><img src="../assets/party/goblin-shooter.webp" alt="" /><span>Goblin Atiradora</span></button>
-            <button class="t20ga-party-member is-active" type="button" data-art="../assets/party/galokk.webp" data-label="Galokk Burguesa" style="--member-accent:#d39a45"><img src="../assets/party/galokk.webp" alt="" /><span>Galokk Burguesa</span></button>
-            <button class="t20ga-party-member" type="button" style="--member-accent:#bd6d93"><img src="../assets/party/dhalan.webp" alt="" /><span>Dahllan</span></button>
-            <button class="t20ga-party-member" type="button" style="--member-accent:#db4f9c"><img src="../assets/party/lefou.webp" alt="" /><span>Lefou Feiticeira</span></button>
-            <button class="t20ga-party-member" type="button" style="--member-accent:#6951c8"><img src="../assets/party/osteon.webp" alt="" /><span>Osteon Druida</span></button>
-            <button class="t20ga-party-member" type="button" style="--member-accent:#91a83b"><img src="../assets/party/gata-alquimista.webp" alt="" /><span>Gata Alquimista</span></button>
-          </footer>
         </form>
       </div>
     </div>
     <script>
-      const rail = document.querySelector(".t20ga-party-rail");
-      const toggle = document.querySelector(".t20ga-party-toggle");
-
-      toggle.addEventListener("click", () => {
-        const collapsed = rail.classList.toggle("is-collapsed");
-        toggle.setAttribute("aria-expanded", String(!collapsed));
-        toggle.setAttribute("aria-label", collapsed ? "Expandir galeria de personagens" : "Minimizar galeria de personagens");
-        toggle.title = toggle.getAttribute("aria-label");
-        toggle.querySelector("i").textContent = collapsed ? "⌃" : "⌄";
-      });
-
-      document.querySelectorAll(".t20ga-party-member[data-art]").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.querySelector(".t20ga-hero-art").src = button.dataset.art;
-          document.querySelector(".t20ga-preview-label").textContent = button.dataset.label;
-          document.querySelectorAll(".t20ga-party-member").forEach((member) => member.classList.remove("is-active"));
-          button.classList.add("is-active");
-        });
-      });
-
       const artSwitch = document.querySelector(".t20ga-art-switch");
       artSwitch.addEventListener("click", () => {
         const isToken = artSwitch.classList.toggle("is-token");

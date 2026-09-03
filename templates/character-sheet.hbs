@@ -23,9 +23,6 @@
           title="Clique para trocar a imagem selecionada"
         />
         <div class="t20ga-art-vignette" aria-hidden="true"></div>
-        <div class="t20ga-preview-notice" hidden>
-          Prévia da galeria
-        </div>
       </div>
 
       <div class="t20ga-hero-caption">
@@ -130,6 +127,15 @@
           </section>
 
           <div class="t20ga-dashboard-side flexcol">
+            {{#if t20ga.hasFavorites}}
+            <section class="t20ga-card t20ga-favorites-card">
+              <div class="t20ga-section-ribbon">Favoritos</div>
+              <div class="t20ga-favorites-list">
+                {{> "t20ga.list-favorites"}}
+              </div>
+            </section>
+            {{/if}}
+
             <section class="t20ga-card t20ga-traits-card">
               <div class="t20ga-section-ribbon">Traços e detalhes</div>
               <div class="traits">
@@ -166,41 +172,4 @@
       </section>
     </main>
   </div>
-
-  <footer class="t20ga-party-rail{{#if t20ga.galleryCollapsed}} is-collapsed{{/if}}" aria-label="Galeria de Tokens">
-    <div class="t20ga-party-tools">
-      <button
-        class="t20ga-party-toggle"
-        type="button"
-        title="{{#if t20ga.galleryCollapsed}}Expandir galeria de tokens{{else}}Minimizar galeria de tokens{{/if}}"
-        aria-label="{{#if t20ga.galleryCollapsed}}Expandir galeria de tokens{{else}}Minimizar galeria de tokens{{/if}}"
-        aria-expanded="{{#if t20ga.galleryCollapsed}}false{{else}}true{{/if}}"
-      >
-        <img src="{{t20ga.eye}}" alt="" aria-hidden="true" />
-        <i class="fa-solid {{#if t20ga.galleryCollapsed}}fa-chevron-up{{else}}fa-chevron-down{{/if}}" aria-hidden="true"></i>
-      </button>
-      <button class="t20ga-party-config" type="button" title="Personalizar galeria" aria-label="Personalizar galeria">
-        <i class="fa-solid fa-gear" aria-hidden="true"></i>
-      </button>
-    </div>
-    {{#each t20ga.party as |member|}}
-    <button
-      class="t20ga-party-member"
-      type="button"
-      data-art="{{member.src}}"
-      data-label="{{member.label}}"
-      title="Ver {{member.label}} na moldura"
-      aria-label="Ver {{member.label}} na moldura"
-      aria-pressed="false"
-      style="--member-accent: {{member.accent}}"
-    >
-      {{#if member.src}}
-      <img src="{{member.src}}" alt="" />
-      {{else}}
-      <span class="t20ga-party-empty"><i class="fa-solid fa-image" aria-hidden="true"></i></span>
-      {{/if}}
-      {{#if member.label}}<span>{{member.label}}</span>{{/if}}
-    </button>
-    {{/each}}
-  </footer>
 </form>

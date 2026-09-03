@@ -4,6 +4,7 @@ import fs from "node:fs";
 const css = fs.readFileSync(new URL("../styles/tormenta20-ficha-heroica.css", import.meta.url), "utf8");
 const journal = fs.readFileSync(new URL("../templates/vendor/tormenta20-1.5.015/journal.hbs", import.meta.url), "utf8");
 const characterSheet = fs.readFileSync(new URL("../templates/character-sheet.hbs", import.meta.url), "utf8");
+const favorites = fs.readFileSync(new URL("../templates/vendor/tormenta20-1.5.015/lists/list-favorites.hbs", import.meta.url), "utf8");
 const script = fs.readFileSync(new URL("../scripts/tormenta20-ficha-heroica.mjs", import.meta.url), "utf8");
 const manifest = JSON.parse(fs.readFileSync(new URL("../module.json", import.meta.url), "utf8"));
 
@@ -17,7 +18,6 @@ assert.match(css, /article\.is-expanded \.editor-container\s*\{[^}]*display:\s*f
 assert.match(css, /\.t20ga-hero-art\s*\{[^}]*width:\s*var\(--t20ga-art-fit-width, 100%\);[^}]*height:\s*var\(--t20ga-art-fit-height, 100%\);[^}]*object-fit:\s*contain;/s, "avatar and token art use calculated frame-filling dimensions");
 assert.match(characterSheet, /class="t20ga-hero-art-backdrop"/, "the hero frame has a full-bleed backdrop");
 assert.match(css, /\.t20ga-hero-art-backdrop\s*\{[^}]*object-fit:\s*cover;[^}]*filter:\s*blur\(12px\)[^;]*brightness\(0\.52\);/s, "the backdrop fills the frame without cropping the foreground art");
-assert.match(css, /\.t20ga-hero-frame\.is-party-art \.t20ga-hero-art\s*\{[^}]*object-fit:\s*contain;/s, "gallery previews keep their full-body presentation");
 assert.match(script, /DEFAULT_ART_POSITION = Object\.freeze\(\{ x: 0, y: 0, scale: 1 \}\)/, "art adjustment keeps the original scale and position controls");
 assert.match(script, /const coverScale = Math\.max\(stageWidth \/ imageWidth, stageHeight \/ imageHeight\);/, "the default 1x scale automatically fills the frame");
 assert.match(script, /--t20ga-art-fit-width/, "the calculated cover size is applied without pre-cropping the image element");
@@ -25,15 +25,23 @@ assert.match(script, /name="scale" min="0\.25" max="1\.8"/, "the slider can zoom
 assert.doesNotMatch(script, /name="fit"/, "the art dialog does not expose a cropping mode");
 assert.match(css, /\.t20ga-dialog-art\s*\{[^}]*object-fit:\s*contain;/s, "the adjustment preview always shows the complete image");
 assert.match(script, /class="t20ga-dialog-art-backdrop"/, "the adjustment preview shows the same filled-frame treatment");
-assert.match(script, /if \(heroArtBackdrop\) heroArtBackdrop\.src = src;/, "the backdrop follows avatar, token, and gallery changes");
+assert.match(script, /if \(heroArtBackdrop\) heroArtBackdrop\.src = src;/, "the backdrop follows avatar and token changes");
 assert.match(css, /#context-menu \.context-item[^}]*color:\s*#fff7e4 !important;/s, "context menu labels remain readable on the dark menu");
-assert.match(script, /syncArtMode\(src, mode, button\)/, "avatar and token modes do not inherit gallery preview fitting");
+assert.doesNotMatch(characterSheet, /t20ga-party-rail/, "the unused lower gallery is absent from the sheet");
+assert.doesNotMatch(script, /partyGallery|galleryCollapsed|PARTY_ART/, "gallery settings and behavior are removed");
+assert.match(script, /"t20ga\.list-favorites":/, "the isolated favorites template is registered");
+assert.match(script, /favorites\.poderes\?\.length/, "favorite powers make the card visible");
+assert.match(script, /Number\(favorites\.qtdMagias\) > 0/, "favorite spells make the card visible");
+assert.match(characterSheet, /class="t20ga-card t20ga-favorites-card"/, "the first tab includes a favorites card");
+assert.match(characterSheet, /\{\{> "t20ga\.list-favorites"\}\}/, "the first tab renders the isolated favorites partial");
+assert.match(favorites, /actor\.favoritos\.poderes/, "favorite powers are rendered");
+assert.match(favorites, /actor\.favoritos\.qtdMagias/, "favorite spells are rendered");
 assert.match(script, /journalExpandButtons\.on\("click"/, "journal expand buttons are interactive");
 assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic sheet retains the system scroll containers");
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.11", "manifest version is updated");
+assert.equal(manifest.version, "1.6.12", "manifest version is updated");
 assert.equal(
   manifest.manifest,
   "https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/latest/download/module.json",
