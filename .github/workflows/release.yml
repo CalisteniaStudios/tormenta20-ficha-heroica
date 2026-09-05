@@ -1,0 +1,37 @@
+name: Release Foundry module
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate
+        run: |
+          node --test tests/*.test.mjs
+          node --check scripts/compatibility.mjs
+          node --check scripts/tormenta20-ficha-heroica.mjs
+      - name: Package
+        id: package
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          manifest_version="$(node -p "require('./module.json').version")"
+          test "$version" = "$manifest_version"
+          archive="tormenta20-ficha-heroica-v${version}.zip"
+          zip -r "$archive" module.json scripts styles templates assets README.md THIRD_PARTY_LICENSES.md
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" "${{ steps.package.outputs.archive }}" module.json --title "${GITHUB_REF_NAME}" --generate-notes

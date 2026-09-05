@@ -1,3 +1,5 @@
+import { selectTormenta20Templates } from "./compatibility.mjs";
+
 const MODULE_ID = "tormenta20-ficha-heroica";
 const MODULE_PATH = `modules/${MODULE_ID}`;
 const VENDORED_T20_VERSION = "1.5.015";
@@ -154,9 +156,17 @@ Hooks.once("init", () => {
     return;
   }
 
-  vendoredTemplatesReady = loadTemplates(VENDORED_TEMPLATES)
+  const selectedTemplates = selectTormenta20Templates(VENDORED_TEMPLATES, {
+    systemVersion: game.system.version,
+    modulePath: MODULE_PATH
+  });
+
+  vendoredTemplatesReady = loadTemplates(selectedTemplates)
     .then(() => {
-      console.log(`${MODULE_ID} | Templates oficiais Tormenta20 ${VENDORED_T20_VERSION} carregados com nomes isolados.`);
+      const templateVersion = selectedTemplates["t20ga.active-effects"].includes("1.6.1")
+        ? "1.6.1"
+        : VENDORED_T20_VERSION;
+      console.log(`${MODULE_ID} | Templates compatíveis com Tormenta20 ${templateVersion} carregados com nomes isolados.`);
     })
     .catch((error) => {
       console.error(`${MODULE_ID} | Não foi possível carregar os templates isolados da ficha.`, error);

@@ -1,0 +1,45 @@
+<ol class="effects-list">
+	{{#each effects as |section sid|}}
+		<li class="items-header flexrow" data-effect-type="{{section.type}}">
+			<h3 class="item-name effect-name flexrow">{{section.label}}</h3>
+			{{#unless (or (eq sid 'onuse') (eq sid 'onuseTemp'))}}
+				<div class="effect-source">{{localize 'T20.Source'}}</div>
+				<div class="effect-source">{{localize 'T20.Duration'}}</div>
+			{{/unless}}
+			<div class="item-controls effect-controls flexrow">
+				<a class="effect-control" data-action="create" title="{{localize 'T20.Add'}} {{localize 'T20.Effect'}}">
+					<i class="fas fa-plus"></i> {{localize 'T20.Add'}}
+				</a>
+			</div>
+		</li>
+		<ol class="effects-list {{#if (and ../actor (or (eq section.type 'onuse') (eq section.type 'onuseTemp')))}}flexrow{{/if}} ae-{{section.type}}">
+			{{#each section.effects as |effect|}}
+				<li class="item effect flexrow" data-effect-id="{{effect.id}}" data-action="edit">
+					<div class="item-name effect-name flexrow">
+						{{#if effect.system.onuse}}
+							{{{effect.descriptionEnriched}}}
+						{{else}}
+							<img class="item-image" src="{{effect.img}}" alt="">
+							<h4 class="item-name">{{effect.name}}</h4>
+						{{/if}}
+					</div>
+					{{#unless (or (eq sid 'onuse') (eq sid 'onuseTemp'))}}
+						<div class="effect-source">{{effect.sourceName}}</div>
+						<div class="effect-duration">{{effect.duration.label}}</div>
+					{{/unless}}
+					<div class="item-controls effect-controls flexrow">
+						<a class="effect-control" data-action="toggle" title="{{localize 'T20.Toggle'}} {{localize 'T20.Effect'}}">
+							<i class="fa-regular {{#if effect.disabled}}fa-square{{else}}fa-square-check{{/if}}"></i>
+						</a>
+						<a class="effect-control" data-action="edit" title="{{localize 'T20.Edit'}}">
+							<i class="fas fa-edit"></i>
+						</a>
+						<a class="effect-control" data-action="delete" title="{{localize 'T20.Delete'}}">
+							<i class="fas fa-trash"></i>
+						</a>
+					</div>
+				</li>
+			{{/each}}
+		</ol>
+	{{/each}}
+</ol>

@@ -5,6 +5,10 @@ Os arquivos em `templates/vendor/tormenta20-1.5.015` foram derivados dos templat
 - Projeto original: https://gitlab.com/vizael/Tormenta20
 - Referência congelada: tag `v1.5.015`, commit `6609b673191ca61fa643303d7725aa105e3e7ebb`
 
+Os arquivos seletivos em `templates/vendor/tormenta20-1.6.1` foram derivados da branch oficial `v14`, versão 1.6.1, para acompanhar a nova estrutura de perícias e efeitos:
+
+- Referência congelada: commit `7e8982f8f0b44c492b5eb95b0a0f39fd91a38f6a`
+
 ## Licença BSD de 3 cláusulas
 
 Copyright (c) 2021, Victor Hugo Paiva
