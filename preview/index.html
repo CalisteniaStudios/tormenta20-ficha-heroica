@@ -28,19 +28,14 @@
 
               <div class="t20ga-hero-frame">
                 <span class="t20ga-hero-sigil" aria-hidden="true"></span>
-                <img class="t20ga-hero-art-backdrop" src="../assets/party/goblin-shooter.webp" alt="" />
-                <img
-                  class="profile t20ga-hero-art"
-                  src="../assets/party/goblin-shooter.webp"
-                  alt="Goblin Atiradora"
-                />
+                <div class="t20ga-preview-portrait" aria-hidden="true"><span></span></div>
                 <div class="t20ga-art-vignette"></div>
               </div>
 
               <div class="t20ga-hero-caption">
                 <span class="t20ga-preview-label">Sua Personagem</span>
                 <div class="t20ga-art-controls">
-                  <button class="t20ga-art-switch" type="button" role="switch" aria-checked="false" data-avatar="../assets/party/goblin-shooter.webp" data-token="../assets/party/galokk.webp">
+                  <button class="t20ga-art-switch" type="button" role="switch" aria-checked="false">
                     <span class="t20ga-switch-label">Avatar</span>
                     <span class="t20ga-switch-track"><span class="t20ga-switch-thumb"></span></span>
                     <span class="t20ga-switch-label">Token</span>
@@ -202,7 +197,6 @@
       artSwitch.addEventListener("click", () => {
         const isToken = artSwitch.classList.toggle("is-token");
         artSwitch.setAttribute("aria-checked", String(isToken));
-        document.querySelector(".t20ga-hero-art").src = isToken ? artSwitch.dataset.token : artSwitch.dataset.avatar;
         document.querySelector(".t20ga-preview-label").textContent = "Sua Personagem";
       });
 

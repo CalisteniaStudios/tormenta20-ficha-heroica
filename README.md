@@ -38,4 +38,5 @@ Na configuração da ficha da personagem, selecione novamente **Ficha de Persona
 
 - Compatibilidade alvo: Foundry VTT 13–14 e Tormenta20 1.5.015 ou superior.
 - A ficha foi criada como módulo separado para não ser sobrescrita por atualizações do sistema.
+- O pacote não inclui artes de personagens, logotipos ou símbolos oficiais; a ficha utiliza as imagens configuradas pelo próprio usuário no Foundry VTT.
 - O módulo não inclui o logotipo nem o símbolo oficial de Tormenta20. Tormenta20 é propriedade de seus respectivos titulares; este é um projeto de comunidade não oficial e sem afiliação ou endosso da Jambô Editora.

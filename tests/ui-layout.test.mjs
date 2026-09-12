@@ -7,6 +7,7 @@ const characterSheet = fs.readFileSync(new URL("../templates/character-sheet.hbs
 const favorites = fs.readFileSync(new URL("../templates/vendor/tormenta20-1.5.015/lists/list-favorites.hbs", import.meta.url), "utf8");
 const script = fs.readFileSync(new URL("../scripts/tormenta20-ficha-heroica.mjs", import.meta.url), "utf8");
 const preview = fs.readFileSync(new URL("../preview/index.html", import.meta.url), "utf8");
+const previewCss = fs.readFileSync(new URL("../preview/preview-base.css", import.meta.url), "utf8");
 const manifest = JSON.parse(fs.readFileSync(new URL("../module.json", import.meta.url), "utf8"));
 
 assert.match(css, /nav\.sheet-tabs\s*\{[^}]*justify-content:\s*center;/s, "the category bar is centered");
@@ -37,6 +38,9 @@ assert.doesNotMatch(characterSheet, /t20ga\.(?:logo|eye)/, "removed branding ass
 assert.doesNotMatch(script, /tormenta20-logo|olho-tormenta/, "removed branding assets are not exposed by the sheet data");
 assert.doesNotMatch(css, /assets\/branding/, "the stylesheet does not load removed branding assets");
 assert.doesNotMatch(preview, /tormenta20-logo|olho-tormenta|assets\/branding/, "the preview does not expose removed branding assets");
+assert.doesNotMatch(preview, /assets\/party/, "the preview does not load bundled character artwork");
+assert.match(previewCss, /\.t20ga-preview-portrait/, "the preview uses a CSS-native portrait placeholder");
+assert.doesNotMatch(script, /assets\/party/, "the runtime does not load bundled character artwork");
 assert.match(script, /"t20ga\.list-favorites":/, "the isolated favorites template is registered");
 assert.match(script, /favorites\.poderes\?\.length/, "favorite powers make the card visible");
 assert.match(script, /Number\(favorites\.qtdMagias\) > 0/, "favorite spells make the card visible");
@@ -49,7 +53,7 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.14", "manifest version is updated");
+assert.equal(manifest.version, "1.6.15", "manifest version is updated");
 assert.equal(manifest.compatibility.verified, "14.365", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(
