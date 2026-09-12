@@ -1,0 +1,51 @@
+<form class="t20ga-campaign-identity-form" autocomplete="off">
+  <p class="t20ga-dialog-help">
+    Esta identidade pertence ao mundo e será exibida da mesma forma para todos os jogadores.
+  </p>
+
+  <div class="t20ga-campaign-logo-preview {{#if identity.logo}}has-logo{{/if}}">
+    {{#if identity.logo}}
+    <img src="{{identity.logo}}" alt="Prévia da logo da campanha" />
+    {{else}}
+    <span><strong>Logo da campanha</strong><small>Edição nas configurações</small></span>
+    {{/if}}
+  </div>
+
+  <label>
+    <span>Arquivo da logo</span>
+    <div class="t20ga-campaign-file-row">
+      <input type="text" name="logo" value="{{identity.logo}}" placeholder="Nenhuma logo selecionada" />
+      <button type="button" data-action="browse-logo" title="Escolher imagem">
+        <i class="fa-solid fa-folder-open" aria-hidden="true"></i>
+      </button>
+      <button type="button" data-action="remove-logo" title="Remover logo">
+        <i class="fa-solid fa-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+  </label>
+
+  <label>
+    <span>Título da campanha</span>
+    <input type="text" name="title" maxlength="80" value="{{identity.title}}" placeholder="Opcional" />
+  </label>
+  <label class="t20ga-campaign-checkbox">
+    <input type="checkbox" name="showTitle" {{checked identity.showTitle}} />
+    <span>Mostrar o título abaixo da logo</span>
+  </label>
+
+  <label>
+    <span>Nome do grupo</span>
+    <input type="text" name="groupName" maxlength="80" value="{{identity.groupName}}" placeholder="Opcional" />
+  </label>
+  <label class="t20ga-campaign-checkbox">
+    <input type="checkbox" name="showGroupName" {{checked identity.showGroupName}} />
+    <span>Mostrar o nome do grupo na ficha</span>
+  </label>
+
+  <footer>
+    <button type="submit">
+      <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+      Salvar identidade da campanha
+    </button>
+  </footer>
+</form>

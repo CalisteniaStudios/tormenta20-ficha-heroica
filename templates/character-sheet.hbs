@@ -2,10 +2,19 @@
   <div class="t20ga-shell">
     <aside class="t20ga-hero-panel">
       <div class="t20ga-brand">
-        <button class="t20ga-brand-config" type="button" title="Editar campanha e tema da ficha" aria-label="Editar campanha e tema da Ficha Heroica">
-          <span class="t20ga-brand-title"><small>Ficha</small><strong>Heroica</strong></span>
+        <button class="t20ga-brand-config" type="button" title="Personalizar aparência" aria-label="Personalizar a aparência desta ficha">
+          {{#if t20ga.campaignLogo}}
+          <img class="t20ga-campaign-logo" src="{{t20ga.campaignLogo}}" alt="{{t20ga.campaignLogoAlt}}" />
+          {{else}}
+          <span class="t20ga-brand-placeholder">
+            <strong>Logo da campanha</strong>
+            <small>Edição nas configurações</small>
+          </span>
+          {{/if}}
         </button>
-        <span class="t20ga-brand-caption">{{t20ga.campaign}}</span>
+        {{#if t20ga.campaignTitle}}
+        <span class="t20ga-brand-caption">{{t20ga.campaignTitle}}</span>
+        {{/if}}
       </div>
 
       <div class="t20ga-hero-frame">
@@ -62,7 +71,9 @@
                 Ficha não vinculada ao ator — mudanças podem ser perdidas
               </span>
               {{/if}}
+              {{#if t20ga.groupName}}
               <span class="t20ga-kicker">{{t20ga.groupName}}</span>
+              {{/if}}
               <h1 class="charname">
                 <input
                   name="name"

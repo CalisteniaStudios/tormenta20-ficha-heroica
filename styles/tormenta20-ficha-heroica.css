@@ -162,48 +162,47 @@
   outline: 1px solid rgba(242, 215, 139, 0.38);
 }
 
-.t20ga-window .t20ga-brand-title {
+.t20ga-window .t20ga-campaign-logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 64px;
+  margin: 0 auto;
+  object-fit: contain;
+  border: 0;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.58));
+}
+
+.t20ga-window .t20ga-brand-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
+  min-height: 64px;
+  padding: 7px 12px;
   color: var(--t20ga-gold-light);
   font-family: "Palatino Linotype", Georgia, serif;
   line-height: 1;
   text-transform: uppercase;
+  border: 1px dashed rgba(242, 215, 139, 0.46);
+  border-radius: 7px;
   text-shadow: 0 2px 3px #000, 0 0 12px color-mix(in srgb, var(--t20ga-theme-primary) 58%, transparent);
 }
 
-.t20ga-window .t20ga-brand-title small {
-  color: #fff3d2;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.42em;
-  transform: translateX(0.21em);
-}
-
-.t20ga-window .t20ga-brand-title strong {
-  position: relative;
-  margin-top: 2px;
+.t20ga-window .t20ga-brand-placeholder strong {
   color: var(--t20ga-gold-light);
-  font-size: 27px;
+  font-size: 16px;
   font-weight: 800;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.1em;
 }
 
-.t20ga-window .t20ga-brand-title strong::before,
-.t20ga-window .t20ga-brand-title strong::after {
-  display: inline-block;
-  width: 20px;
-  height: 1px;
-  margin: 0 7px 7px;
-  content: "";
-  background: linear-gradient(90deg, transparent, var(--t20ga-gold));
-}
-
-.t20ga-window .t20ga-brand-title strong::after {
-  background: linear-gradient(90deg, var(--t20ga-gold), transparent);
+.t20ga-window .t20ga-brand-placeholder small {
+  margin-top: 6px;
+  color: #fff3d2;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  opacity: 0.72;
 }
 
 .t20ga-window .t20ga-brand-caption {
@@ -1492,7 +1491,8 @@
 /* Customization dialogs */
 
 .t20ga-art-config-dialog .window-content,
-.t20ga-theme-config-dialog .window-content {
+.t20ga-theme-config-dialog .window-content,
+.t20ga-campaign-config-dialog .window-content {
   color: #2a1a17;
   background:
     radial-gradient(circle at 75% 10%, rgba(255, 255, 255, 0.75), transparent 34%),
@@ -1587,6 +1587,112 @@
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+.t20ga-campaign-identity-form > label > span {
+  display: block;
+  margin: 10px 0 3px;
+  color: #4b332e;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.t20ga-campaign-identity-form input[type="text"] {
+  width: 100%;
+  color: #261917;
+  background: #fffdf7;
+  border: 1px solid rgba(84, 42, 34, 0.38);
+}
+
+.t20ga-campaign-logo-preview {
+  display: grid;
+  place-items: center;
+  min-height: 116px;
+  margin: 10px 0 12px;
+  padding: 12px;
+  color: #6b4b35;
+  text-align: center;
+  border: 1px dashed rgba(84, 42, 34, 0.48);
+  border-radius: 8px;
+  background: rgba(255, 253, 247, 0.58);
+}
+
+.t20ga-campaign-logo-preview img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 92px;
+  object-fit: contain;
+  border: 0;
+}
+
+.t20ga-campaign-logo-preview span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-transform: uppercase;
+}
+
+.t20ga-campaign-logo-preview strong {
+  font-family: "Palatino Linotype", Georgia, serif;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+}
+
+.t20ga-campaign-logo-preview small {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  opacity: 0.72;
+}
+
+.t20ga-campaign-file-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px 36px;
+  gap: 5px;
+}
+
+.t20ga-campaign-file-row button {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: #fff7df;
+  background: #6f151e;
+  border: 1px solid #b98d42;
+}
+
+.t20ga-campaign-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 5px 0 2px;
+}
+
+.t20ga-campaign-checkbox input {
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+}
+
+.t20ga-campaign-checkbox span {
+  color: #4b332e;
+  font-size: 12px;
+}
+
+.t20ga-campaign-identity-form footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(84, 42, 34, 0.24);
+}
+
+.t20ga-campaign-identity-form footer button {
+  width: auto;
+  padding: 6px 12px;
+  color: #fff7df;
+  background: #6f151e;
+  border: 1px solid #b98d42;
 }
 
 .t20ga-theme-form input[type="text"],

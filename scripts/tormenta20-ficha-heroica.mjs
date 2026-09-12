@@ -1,4 +1,14 @@
 import { selectTormenta20Templates } from "./compatibility.mjs";
+import {
+  DEFAULT_CAMPAIGN_IDENTITY,
+  DEFAULT_PERSONAL_APPEARANCE,
+  LEGACY_APPEARANCE_DEFAULTS,
+  THEME_PRESETS,
+  buildPalette,
+  normalizeCampaignIdentity,
+  normalizeHex,
+  normalizePersonalAppearance
+} from "./preferences.mjs";
 
 const MODULE_ID = "tormenta20-ficha-heroica";
 const MODULE_PATH = `modules/${MODULE_ID}`;
@@ -32,9 +42,10 @@ const VENDORED_TEMPLATES = Object.freeze({
   "t20ga.traits": `${VENDORED_TEMPLATE_ROOT}/traits.hbs`
 });
 const PREFERENCES_FLAG = "persistentPreferences";
+const PERSONAL_APPEARANCE_FLAG = "personalAppearanceByActor";
+const APPEARANCE_MIGRATION_FLAG = "appearanceV2Migrated";
 const PERSISTENT_SETTING_KEYS = Object.freeze([
-  "artPositions",
-  "appearance"
+  "artPositions"
 ]);
 
 function clonePreference(value) {
@@ -91,20 +102,6 @@ async function restorePersistentSettings() {
 }
 
 const DEFAULT_ART_POSITION = Object.freeze({ x: 0, y: 0, scale: 1 });
-const DEFAULT_APPEARANCE = Object.freeze({
-  campaign: "Jornada Heroica:",
-  groupName: "Nome do Grupo",
-  theme: "crimson",
-  customColor: "#75111b"
-});
-const THEME_PRESETS = Object.freeze({
-  crimson: { label: "Tormenta", color: "#75111b" },
-  purple: { label: "Arcana", color: "#5f2a85" },
-  blue: { label: "Mana", color: "#245a91" },
-  emerald: { label: "Adamante", color: "#23634f" },
-  amber: { label: "Tibares", color: "#8a5518" },
-  custom: { label: "Cor personalizada", color: "#75111b" }
-});
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, Number(value) || 0));
@@ -119,34 +116,161 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function normalizeHex(value, fallback = "#75111b") {
-  const color = String(value ?? "").trim();
-  return /^#[0-9a-f]{6}$/i.test(color) ? color.toLowerCase() : fallback;
+function actorAppearanceKey(actor) {
+  return String(actor?.id ?? actor?.uuid ?? "default");
 }
 
-function mixHex(first, second, amount) {
-  const parse = (hex) => [1, 3, 5].map((index) => Number.parseInt(hex.slice(index, index + 2), 16));
-  const a = parse(normalizeHex(first));
-  const b = parse(normalizeHex(second));
-  const mixed = a.map((channel, index) => Math.round(channel + (b[index] - channel) * amount));
-  return `#${mixed.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
-}
-
-function buildPalette(appearance) {
-  const preset = THEME_PRESETS[appearance.theme] ?? THEME_PRESETS.crimson;
-  const primary = normalizeHex(
-    appearance.theme === "custom" ? appearance.customColor : preset.color,
-    THEME_PRESETS.crimson.color
+function getCampaignIdentity() {
+  return normalizeCampaignIdentity(
+    game.settings.get(MODULE_ID, "campaignIdentity") ?? DEFAULT_CAMPAIGN_IDENTITY
   );
-  return {
-    primary,
-    bright: mixHex(primary, "#ffffff", 0.2),
-    highlight: mixHex(primary, "#ffffff", 0.38),
-    dark: mixHex(primary, "#000000", 0.34),
-    deep: mixHex(primary, "#000000", 0.64),
-    surface: mixHex(primary, "#ffffff", 0.06)
-  };
 }
+
+function getPersonalAppearance(actor) {
+  const stored = game.user?.getFlag?.(MODULE_ID, PERSONAL_APPEARANCE_FLAG) ?? {};
+  const value = stored.actors?.[actorAppearanceKey(actor)] ?? stored.default;
+  return normalizePersonalAppearance(value ?? DEFAULT_PERSONAL_APPEARANCE);
+}
+
+async function savePersonalAppearance(actor, appearance) {
+  if (typeof game.user?.setFlag !== "function") return;
+  const stored = game.user.getFlag?.(MODULE_ID, PERSONAL_APPEARANCE_FLAG) ?? {};
+  const next = {
+    schema: 1,
+    default: normalizePersonalAppearance(stored.default ?? DEFAULT_PERSONAL_APPEARANCE),
+    actors: {
+      ...(stored.actors ?? {}),
+      [actorAppearanceKey(actor)]: normalizePersonalAppearance(appearance)
+    }
+  };
+  await game.user.setFlag(MODULE_ID, PERSONAL_APPEARANCE_FLAG, next);
+}
+
+function rerenderHeroicSheets() {
+  for (const application of Object.values(globalThis.ui?.windows ?? {})) {
+    if (application?.options?.classes?.includes?.("t20ga-window")) application.render(false);
+  }
+}
+
+async function migrateLegacyAppearance() {
+  if (typeof game.user?.getFlag !== "function" || typeof game.user?.setFlag !== "function") return;
+  if (game.user.getFlag(MODULE_ID, APPEARANCE_MIGRATION_FLAG)) return;
+
+  const legacy = {
+    ...LEGACY_APPEARANCE_DEFAULTS,
+    ...(game.settings.get(MODULE_ID, "appearance") ?? {})
+  };
+  const personalStored = game.user.getFlag(MODULE_ID, PERSONAL_APPEARANCE_FLAG);
+  if (!personalStored?.schema) {
+    await game.user.setFlag(MODULE_ID, PERSONAL_APPEARANCE_FLAG, {
+      schema: 1,
+      default: normalizePersonalAppearance(legacy),
+      actors: {}
+    });
+  }
+
+  if (game.user.isGM) {
+    const identity = getCampaignIdentity();
+    if (!identity.configured) {
+      const legacyTitle = String(legacy.campaign ?? "").trim() === LEGACY_APPEARANCE_DEFAULTS.campaign
+        ? ""
+        : String(legacy.campaign ?? "").trim();
+      const legacyGroupName = String(legacy.groupName ?? "").trim() === LEGACY_APPEARANCE_DEFAULTS.groupName
+        ? ""
+        : String(legacy.groupName ?? "").trim();
+      if (legacyTitle || legacyGroupName) {
+        await game.settings.set(MODULE_ID, "campaignIdentity", normalizeCampaignIdentity({
+          ...identity,
+          title: legacyTitle,
+          groupName: legacyGroupName,
+          configured: true
+        }));
+      }
+    }
+  }
+
+  await game.user.setFlag(MODULE_ID, APPEARANCE_MIGRATION_FLAG, true);
+}
+
+class CampaignIdentityConfig extends FormApplication {
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      id: "t20ga-campaign-identity-config",
+      classes: ["t20ga-campaign-config-dialog"],
+      title: "Identidade da campanha",
+      template: `${MODULE_PATH}/templates/campaign-identity-config.hbs`,
+      width: 560,
+      closeOnSubmit: true
+    });
+  }
+
+  async getData(options = {}) {
+    return {
+      ...(await super.getData(options)),
+      identity: getCampaignIdentity()
+    };
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    const logoInput = html.find('[name="logo"]');
+
+    const updatePreview = () => {
+      const logo = String(logoInput.val() ?? "").trim();
+      const preview = html.find(".t20ga-campaign-logo-preview");
+      preview.toggleClass("has-logo", Boolean(logo));
+      if (logo) {
+        preview.html("");
+        $("<img>", { src: logo, alt: "Prévia da logo da campanha" }).appendTo(preview);
+      } else {
+        preview.html("<span><strong>Logo da campanha</strong><small>Edição nas configurações</small></span>");
+      }
+    };
+
+    html.find('[data-action="browse-logo"]').on("click", () => {
+      const callback = (path) => {
+        logoInput.val(path);
+        updatePreview();
+      };
+      const current = String(logoInput.val() ?? "");
+      const ModernFilePicker = globalThis.foundry?.applications?.apps?.FilePicker?.implementation;
+      if (ModernFilePicker) {
+        new ModernFilePicker({ type: "image", current, callback }).render({ force: true });
+        return;
+      }
+      const LegacyFilePicker = globalThis.FilePicker;
+      if (LegacyFilePicker) {
+        const picker = new LegacyFilePicker({ type: "image", current, callback });
+        if (typeof picker.browse === "function") picker.browse();
+        else picker.render(true);
+      }
+    });
+
+    html.find('[data-action="remove-logo"]').on("click", () => {
+      logoInput.val("");
+      updatePreview();
+    });
+    logoInput.on("input change", updatePreview);
+  }
+
+  async _updateObject(_event, formData) {
+    if (!game.user.isGM) {
+      ui.notifications.warn("Somente o mestre pode alterar a identidade da campanha.");
+      return;
+    }
+    const identity = normalizeCampaignIdentity({
+      logo: formData.logo,
+      title: formData.title,
+      groupName: formData.groupName,
+      showTitle: Boolean(formData.showTitle),
+      showGroupName: Boolean(formData.showGroupName),
+      configured: true
+    });
+    await game.settings.set(MODULE_ID, "campaignIdentity", identity);
+    ui.notifications.info("A identidade da campanha foi salva para este mundo.");
+  }
+}
+
 
 Hooks.once("init", () => {
   const loadTemplates = globalThis.foundry?.applications?.handlebars?.loadTemplates
@@ -182,11 +306,29 @@ Hooks.once("init", () => {
   });
 
   game.settings.register(MODULE_ID, "appearance", {
-    name: "Aparência da ficha",
+    name: "Aparência antiga da ficha",
     scope: "client",
     config: false,
     type: Object,
-    default: DEFAULT_APPEARANCE
+    default: LEGACY_APPEARANCE_DEFAULTS
+  });
+
+  game.settings.register(MODULE_ID, "campaignIdentity", {
+    name: "Identidade da campanha",
+    scope: "world",
+    config: false,
+    type: Object,
+    default: DEFAULT_CAMPAIGN_IDENTITY,
+    onChange: rerenderHeroicSheets
+  });
+
+  game.settings.registerMenu(MODULE_ID, "campaignIdentityMenu", {
+    name: "Identidade da campanha",
+    label: "Configurar identidade",
+    hint: "Defina a logo, o título da campanha e o nome do grupo exibidos para todos neste mundo.",
+    icon: "fa-solid fa-shield-halved",
+    type: CampaignIdentityConfig,
+    restricted: true
   });
 
   const BaseSheet = ORIGINAL_SYSTEM_SHEET
@@ -233,10 +375,8 @@ Hooks.once("init", () => {
     async getData(options = {}) {
       await vendoredTemplatesReady;
       const sheetData = await super.getData(options);
-      const appearance = {
-        ...DEFAULT_APPEARANCE,
-        ...(game.settings.get(MODULE_ID, "appearance") ?? {})
-      };
+      const appearance = getPersonalAppearance(this.actor);
+      const identity = getCampaignIdentity();
       let tokenDocument = this.token?.document ?? this.token ?? null;
 
       try {
@@ -268,8 +408,10 @@ Hooks.once("init", () => {
       );
 
       sheetData.t20ga = {
-        campaign: appearance.campaign,
-        groupName: appearance.groupName,
+        campaignLogo: identity.logo,
+        campaignLogoAlt: identity.title || "Logo da campanha",
+        campaignTitle: identity.showTitle ? identity.title : "",
+        groupName: identity.showGroupName ? identity.groupName : "",
         unlinkedToken: this._isUnlinkedTokenSheet(),
         appearance,
         avatarArt: this.actor.img,
@@ -280,10 +422,7 @@ Hooks.once("init", () => {
     }
 
     _getAppearance() {
-      return {
-        ...DEFAULT_APPEARANCE,
-        ...(game.settings.get(MODULE_ID, "appearance") ?? {})
-      };
+      return getPersonalAppearance(this.actor);
     }
 
     _isUnlinkedTokenSheet() {
@@ -318,7 +457,6 @@ Hooks.once("init", () => {
         windowElement.style.setProperty(property, value);
       }
       windowElement.dataset.t20gaTheme = appearance.theme;
-      html.find?.(".t20ga-brand-caption").text(appearance.campaign);
     }
 
     _openAppearanceDialog(html) {
@@ -335,15 +473,7 @@ Hooks.once("init", () => {
         .join("");
       const content = `
         <form class="t20ga-theme-form">
-          <p class="t20ga-dialog-help">Altere o nome da campanha, o nome do grupo e escolha a identidade de cores da ficha.</p>
-          <label class="t20ga-theme-title">
-            <span>Texto abaixo da logo</span>
-            <input type="text" name="campaign" maxlength="80" value="${escapeHtml(original.campaign)}">
-          </label>
-          <label class="t20ga-theme-title">
-            <span>Nome do grupo</span>
-            <input type="text" name="groupName" maxlength="80" value="${escapeHtml(original.groupName)}">
-          </label>
+          <p class="t20ga-dialog-help">Escolha uma aparência pessoal para esta personagem. Esta mudança só será exibida para você.</p>
           <div class="t20ga-theme-grid">
             <label>
               <span>Tema</span>
@@ -362,11 +492,7 @@ Hooks.once("init", () => {
         </form>`;
 
       const readAppearance = (dialogHtml) => ({
-        campaign: String(dialogHtml.find('[name="campaign"]').val() ?? "").trim()
-          || DEFAULT_APPEARANCE.campaign,
-        groupName: String(dialogHtml.find('[name="groupName"]').val() ?? "").trim()
-          || DEFAULT_APPEARANCE.groupName,
-        theme: String(dialogHtml.find('[name="theme"]').val() ?? DEFAULT_APPEARANCE.theme),
+        theme: String(dialogHtml.find('[name="theme"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.theme),
         customColor: normalizeHex(dialogHtml.find('[name="customColor"]').val())
       });
 
@@ -383,16 +509,16 @@ Hooks.once("init", () => {
 
       new DialogClass(
         {
-          title: "Personalizar campanha e tema",
+          title: "Personalizar aparência",
           content,
           buttons: {
             save: {
               icon: '<i class="fa-solid fa-palette"></i>',
-              label: "Aplicar tema",
+              label: "Salvar aparência",
               callback: async (dialogHtml) => {
                 saved = true;
-                const appearance = readAppearance(dialogHtml);
-                await savePersistentSetting("appearance", appearance);
+                const appearance = normalizePersonalAppearance(readAppearance(dialogHtml));
+                await savePersonalAppearance(this.actor, appearance);
                 this._applyAppearance(html, appearance);
                 this.render(false);
               }
@@ -406,10 +532,8 @@ Hooks.once("init", () => {
           render: (dialogHtml) => {
             dialogHtml.find('input, select').on("input change", () => updatePreview(dialogHtml));
             dialogHtml.find(".t20ga-theme-reset").on("click", () => {
-              dialogHtml.find('[name="campaign"]').val(DEFAULT_APPEARANCE.campaign);
-              dialogHtml.find('[name="groupName"]').val(DEFAULT_APPEARANCE.groupName);
-              dialogHtml.find('[name="theme"]').val(DEFAULT_APPEARANCE.theme);
-              dialogHtml.find('[name="customColor"]').val(DEFAULT_APPEARANCE.customColor);
+              dialogHtml.find('[name="theme"]').val(DEFAULT_PERSONAL_APPEARANCE.theme);
+              dialogHtml.find('[name="customColor"]').val(DEFAULT_PERSONAL_APPEARANCE.customColor);
               updatePreview(dialogHtml);
             });
             updatePreview(dialogHtml);
@@ -777,4 +901,8 @@ Hooks.once("init", () => {
   console.log(`${MODULE_ID} | Ficha Heroica registrada.`);
 });
 
-Hooks.once("ready", restorePersistentSettings);
+Hooks.once("ready", async () => {
+  await restorePersistentSettings();
+  await migrateLegacyAppearance();
+  rerenderHeroicSheets();
+});

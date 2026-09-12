@@ -8,6 +8,7 @@ const favorites = fs.readFileSync(new URL("../templates/vendor/tormenta20-1.5.01
 const script = fs.readFileSync(new URL("../scripts/tormenta20-ficha-heroica.mjs", import.meta.url), "utf8");
 const preview = fs.readFileSync(new URL("../preview/index.html", import.meta.url), "utf8");
 const previewCss = fs.readFileSync(new URL("../preview/preview-base.css", import.meta.url), "utf8");
+const campaignConfig = fs.readFileSync(new URL("../templates/campaign-identity-config.hbs", import.meta.url), "utf8");
 const manifest = JSON.parse(fs.readFileSync(new URL("../module.json", import.meta.url), "utf8"));
 
 assert.match(css, /nav\.sheet-tabs\s*\{[^}]*justify-content:\s*center;/s, "the category bar is centered");
@@ -31,7 +32,9 @@ assert.match(script, /if \(heroArtBackdrop\) heroArtBackdrop\.src = src;/, "the 
 assert.match(css, /#context-menu \.context-item[^}]*color:\s*#fff7e4 !important;/s, "context menu labels remain readable on the dark menu");
 assert.doesNotMatch(characterSheet, /t20ga-party-rail/, "the unused lower gallery is absent from the sheet");
 assert.doesNotMatch(script, /partyGallery|galleryCollapsed|PARTY_ART/, "gallery settings and behavior are removed");
-assert.match(characterSheet, /class="t20ga-brand-title"/, "the sheet uses its own text title instead of a third-party logo");
+assert.match(characterSheet, /class="t20ga-campaign-logo"/, "a configured campaign logo is rendered");
+assert.match(characterSheet, /class="t20ga-brand-placeholder"/, "an image-free campaign logo placeholder is available");
+assert.doesNotMatch(characterSheet, /class="t20ga-brand-title"/, "the old fixed sheet title is absent");
 assert.match(characterSheet, /class="t20ga-hero-sigil"/, "the hero panel uses a CSS-native geometric seal");
 assert.match(characterSheet, /class="t20ga-switch-thumb"/, "the art switch uses a CSS-native marker");
 assert.doesNotMatch(characterSheet, /t20ga\.(?:logo|eye)/, "removed branding assets are not referenced by the sheet");
@@ -41,6 +44,13 @@ assert.doesNotMatch(preview, /tormenta20-logo|olho-tormenta|assets\/branding/, "
 assert.doesNotMatch(preview, /assets\/party/, "the preview does not load bundled character artwork");
 assert.match(previewCss, /\.t20ga-preview-portrait/, "the preview uses a CSS-native portrait placeholder");
 assert.doesNotMatch(script, /assets\/party/, "the runtime does not load bundled character artwork");
+assert.match(script, /scope: "world"[\s\S]*default: DEFAULT_CAMPAIGN_IDENTITY/, "campaign identity is stored in the world");
+assert.match(script, /restricted: true/, "only game masters can open campaign identity settings");
+assert.match(script, /PERSONAL_APPEARANCE_FLAG = "personalAppearanceByActor"/, "personal themes are stored on the user document");
+assert.match(script, /\[actorAppearanceKey\(actor\)\]: normalizePersonalAppearance\(appearance\)/, "personal themes are saved separately by actor");
+assert.match(campaignConfig, /name="logo"/, "campaign identity includes a logo selector");
+assert.match(campaignConfig, /name="title"/, "campaign identity includes an optional title");
+assert.match(campaignConfig, /name="groupName"/, "campaign identity includes an optional group name");
 assert.match(script, /"t20ga\.list-favorites":/, "the isolated favorites template is registered");
 assert.match(script, /favorites\.poderes\?\.length/, "favorite powers make the card visible");
 assert.match(script, /Number\(favorites\.qtdMagias\) > 0/, "favorite spells make the card visible");
@@ -53,7 +63,7 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.15", "manifest version is updated");
+assert.equal(manifest.version, "1.6.16", "manifest version is updated");
 assert.equal(manifest.compatibility.verified, "14.365", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(

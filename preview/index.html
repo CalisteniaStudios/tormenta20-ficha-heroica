@@ -20,10 +20,9 @@
           <div class="t20ga-shell">
             <aside class="t20ga-hero-panel">
               <div class="t20ga-brand">
-                <button class="t20ga-brand-config" type="button" title="Editar campanha e tema da ficha" aria-label="Editar campanha e tema da Ficha Heroica">
-                  <span class="t20ga-brand-title"><small>Ficha</small><strong>Heroica</strong></span>
+                <button class="t20ga-brand-config" type="button" title="Personalizar aparência" aria-label="Personalizar a aparência desta ficha">
+                  <span class="t20ga-brand-placeholder"><strong>Logo da campanha</strong><small>Edição nas configurações</small></span>
                 </button>
-                <span class="t20ga-brand-caption">Jornada Heroica: Guerra Artoniana</span>
               </div>
 
               <div class="t20ga-hero-frame">
@@ -50,7 +49,6 @@
                 <section class="header-details flexcol">
                   <div class="general-information flexrow">
                     <div class="t20ga-name-block">
-                      <span class="t20ga-kicker">Clube da Mariana</span>
                       <h1 class="charname"><input value="Sua Personagem" aria-label="Nome" /></h1>
                     </div>
                     <aside class="header-exp flexcol">
@@ -214,9 +212,6 @@
         windowElement.style.setProperty("--t20ga-theme-surface", palette[1]);
         windowElement.style.setProperty("--t20ga-theme-dark", palette[2]);
         windowElement.style.setProperty("--t20ga-theme-deep", palette[3]);
-        document.querySelector(".t20ga-brand-caption").textContent = alternateTheme
-          ? "Campanha Personalizada"
-          : "Jornada Heroica: Guerra Artoniana";
       });
     </script>
   </body>

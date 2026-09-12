@@ -21,14 +21,15 @@ Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como
 
 - O seletor **Avatar/Token**, com um marcador geométrico, alterna entre a imagem da personagem e a imagem configurada no protótipo do token.
 - Clique na imagem grande ou no botão **Ajustar** para configurar a escala e a posição horizontal/vertical. Cada imagem mantém seu próprio enquadramento.
-- Clique no título **Ficha Heroica** para editar o texto da campanha e escolher entre os temas Rubro, Arcano, Azul, Esmeralda, Ouro ou uma cor personalizada.
+- O mestre configura a **logo da campanha**, o **título da campanha** e o **nome do grupo** em **Configurações do módulo → Identidade da campanha**. Esses dados ficam salvos no mundo e são compartilhados com todos.
+- Clique na logo ou no espaço reservado para escolher entre os temas Tormenta, Arcana, Mana, Adamante, Tibares ou uma cor personalizada. Essa aparência é pessoal, fica salva por usuário e personagem e não altera a ficha vista pelos demais jogadores.
 - Armas, itens, poderes e magias marcados como favoritos aparecem na primeira aba da ficha, como na ficha padrão do Tormenta20.
 - Perícias e efeitos de uso adotam automaticamente a estrutura correta do Tormenta20 1.5.015 ou 1.6.1.
 - A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
 - Cada cartão do Diário possui um botão para expandir a anotação e usar toda a área da ficha.
 - Ao expandir uma anotação, o campo de edição também cresce e aproveita todo o espaço disponível.
 - O avatar ou token é dimensionado automaticamente pela proporção real da imagem para preencher a moldura em `1×`, sem pré-recortar a imagem. Reduzir a escala em **Ajustar** revela as áreas que ficaram fora da moldura, enquanto o fundo integrado continua preenchendo os espaços.
-- As preferências visuais ficam salvas individualmente para cada usuário.
+- A identidade da campanha e as preferências pessoais continuam salvas após atualizar a página, sair do mundo ou trocar de navegador/computador.
 
 ## Desinstalação ou retorno à ficha padrão
 
