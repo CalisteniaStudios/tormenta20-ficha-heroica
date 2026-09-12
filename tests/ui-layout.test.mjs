@@ -63,8 +63,8 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.16", "manifest version is updated");
-assert.equal(manifest.compatibility.verified, "14.365", "Foundry 14 compatibility is declared");
+assert.equal(manifest.version, "1.6.17", "manifest version is updated");
+assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(
   manifest.manifest,
