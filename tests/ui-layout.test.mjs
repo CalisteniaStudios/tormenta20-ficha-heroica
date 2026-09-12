@@ -6,6 +6,7 @@ const journal = fs.readFileSync(new URL("../templates/vendor/tormenta20-1.5.015/
 const characterSheet = fs.readFileSync(new URL("../templates/character-sheet.hbs", import.meta.url), "utf8");
 const favorites = fs.readFileSync(new URL("../templates/vendor/tormenta20-1.5.015/lists/list-favorites.hbs", import.meta.url), "utf8");
 const script = fs.readFileSync(new URL("../scripts/tormenta20-ficha-heroica.mjs", import.meta.url), "utf8");
+const preview = fs.readFileSync(new URL("../preview/index.html", import.meta.url), "utf8");
 const manifest = JSON.parse(fs.readFileSync(new URL("../module.json", import.meta.url), "utf8"));
 
 assert.match(css, /nav\.sheet-tabs\s*\{[^}]*justify-content:\s*center;/s, "the category bar is centered");
@@ -29,6 +30,13 @@ assert.match(script, /if \(heroArtBackdrop\) heroArtBackdrop\.src = src;/, "the 
 assert.match(css, /#context-menu \.context-item[^}]*color:\s*#fff7e4 !important;/s, "context menu labels remain readable on the dark menu");
 assert.doesNotMatch(characterSheet, /t20ga-party-rail/, "the unused lower gallery is absent from the sheet");
 assert.doesNotMatch(script, /partyGallery|galleryCollapsed|PARTY_ART/, "gallery settings and behavior are removed");
+assert.match(characterSheet, /class="t20ga-brand-title"/, "the sheet uses its own text title instead of a third-party logo");
+assert.match(characterSheet, /class="t20ga-hero-sigil"/, "the hero panel uses a CSS-native geometric seal");
+assert.match(characterSheet, /class="t20ga-switch-thumb"/, "the art switch uses a CSS-native marker");
+assert.doesNotMatch(characterSheet, /t20ga\.(?:logo|eye)/, "removed branding assets are not referenced by the sheet");
+assert.doesNotMatch(script, /tormenta20-logo|olho-tormenta/, "removed branding assets are not exposed by the sheet data");
+assert.doesNotMatch(css, /assets\/branding/, "the stylesheet does not load removed branding assets");
+assert.doesNotMatch(preview, /tormenta20-logo|olho-tormenta|assets\/branding/, "the preview does not expose removed branding assets");
 assert.match(script, /"t20ga\.list-favorites":/, "the isolated favorites template is registered");
 assert.match(script, /favorites\.poderes\?\.length/, "favorite powers make the card visible");
 assert.match(script, /Number\(favorites\.qtdMagias\) > 0/, "favorite spells make the card visible");

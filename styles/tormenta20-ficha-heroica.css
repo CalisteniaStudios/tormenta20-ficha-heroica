@@ -46,13 +46,24 @@
 
 .t20ga-window .window-content::before {
   position: absolute;
-  inset: 0;
+  top: 47%;
+  left: 74%;
   z-index: 0;
+  width: 350px;
+  max-width: 42%;
+  aspect-ratio: 1;
   content: "";
   pointer-events: none;
-  opacity: 0.035;
-  background: url("../assets/branding/olho-tormenta.png") 74% 47% / 420px no-repeat;
-  filter: grayscale(1) sepia(1) saturate(2);
+  opacity: 0.055;
+  color: var(--t20ga-theme-primary);
+  border: 3px solid currentColor;
+  border-radius: 24%;
+  background:
+    linear-gradient(45deg, transparent 48.8%, currentColor 49% 51%, transparent 51.2%),
+    linear-gradient(-45deg, transparent 48.8%, currentColor 49% 51%, transparent 51.2%),
+    radial-gradient(circle, transparent 0 19%, currentColor 19.5% 20.5%, transparent 21% 36%, currentColor 36.5% 37.5%, transparent 38%);
+  box-shadow: inset 0 0 0 22px transparent, inset 0 0 0 24px currentColor;
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .t20ga-window .t20ga-sheet {
@@ -151,20 +162,51 @@
   outline: 1px solid rgba(242, 215, 139, 0.38);
 }
 
-.t20ga-window .t20ga-brand-config:hover img {
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--t20ga-red) 65%, transparent));
+.t20ga-window .t20ga-brand-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  color: var(--t20ga-gold-light);
+  font-family: "Palatino Linotype", Georgia, serif;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 2px 3px #000, 0 0 12px color-mix(in srgb, var(--t20ga-theme-primary) 58%, transparent);
 }
 
-.t20ga-window .t20ga-brand img {
-  display: block;
-  width: min(100%, 220px);
-  height: auto;
-  margin: 0 auto -2px;
-  border: 0;
-  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.62));
+.t20ga-window .t20ga-brand-title small {
+  color: #fff3d2;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  transform: translateX(0.21em);
 }
 
-.t20ga-window .t20ga-brand span {
+.t20ga-window .t20ga-brand-title strong {
+  position: relative;
+  margin-top: 2px;
+  color: var(--t20ga-gold-light);
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+}
+
+.t20ga-window .t20ga-brand-title strong::before,
+.t20ga-window .t20ga-brand-title strong::after {
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  margin: 0 7px 7px;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--t20ga-gold));
+}
+
+.t20ga-window .t20ga-brand-title strong::after {
+  background: linear-gradient(90deg, var(--t20ga-gold), transparent);
+}
+
+.t20ga-window .t20ga-brand-caption {
   display: inline-block;
   padding: 2px 13px 3px;
   color: var(--t20ga-gold-light);
@@ -196,17 +238,21 @@
     0 6px 18px rgba(0, 0, 0, 0.32);
 }
 
-.t20ga-window .t20ga-eye-mark {
+.t20ga-window .t20ga-hero-sigil {
   position: absolute;
-  top: 7%;
+  top: 8%;
   left: 50%;
   z-index: 0;
-  width: 76%;
-  height: auto;
-  opacity: 0.18;
-  border: 0;
-  transform: translateX(-50%);
-  filter: saturate(0.75) brightness(1.25);
+  width: 68%;
+  aspect-ratio: 1;
+  opacity: 0.17;
+  border: 2px solid var(--t20ga-gold-light);
+  border-radius: 22%;
+  background:
+    repeating-conic-gradient(from 22.5deg, rgba(242, 215, 139, 0.52) 0 2deg, transparent 2deg 45deg),
+    radial-gradient(circle, transparent 0 20%, rgba(242, 215, 139, 0.82) 20.5% 22%, transparent 22.5% 39%, rgba(242, 215, 139, 0.5) 39.5% 41%, transparent 41.5%);
+  box-shadow: inset 0 0 22px color-mix(in srgb, var(--t20ga-theme-primary) 55%, transparent), 0 0 16px rgba(242, 215, 139, 0.16);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 .t20ga-window .t20ga-hero-art-backdrop {
@@ -326,19 +372,24 @@
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.46);
 }
 
-.t20ga-window .t20ga-switch-track img {
+.t20ga-window .t20ga-switch-thumb {
   position: absolute;
   top: 1px;
   left: 1px;
+  display: block;
   width: 17px;
   height: 17px;
-  object-fit: contain;
-  border: 0;
-  filter: drop-shadow(0 1px 2px #000);
+  border: 1px solid #fff0bd;
+  border-radius: 50%;
+  background:
+    linear-gradient(45deg, transparent 43%, #fff0bd 44% 56%, transparent 57%),
+    linear-gradient(-45deg, transparent 43%, #fff0bd 44% 56%, transparent 57%),
+    radial-gradient(circle, var(--t20ga-gold) 0 30%, #6e4517 32% 100%);
+  box-shadow: 0 1px 3px #000, 0 0 5px rgba(242, 215, 139, 0.46);
   transition: left 180ms ease;
 }
 
-.t20ga-window .t20ga-art-switch.is-token .t20ga-switch-track img {
+.t20ga-window .t20ga-art-switch.is-token .t20ga-switch-thumb {
   left: 25px;
 }
 
@@ -1618,11 +1669,6 @@
 .t20ga-window button.t20ga-brand-config::after {
   display: none !important;
   content: none !important;
-}
-
-.t20ga-window button.t20ga-brand-config img {
-  background: transparent !important;
-  box-shadow: none !important;
 }
 
 .t20ga-window form.t20ga-sheet .t20ga-vitals {

@@ -19,9 +19,9 @@ Manifesto para instalação pelo Foundry VTT:
 
 Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como imagem da ficha.
 
-- O seletor **Avatar/Token**, com o Olho da Tormenta deslizante, alterna entre a imagem da personagem e a imagem configurada no protótipo do token.
+- O seletor **Avatar/Token**, com um marcador geométrico, alterna entre a imagem da personagem e a imagem configurada no protótipo do token.
 - Clique na imagem grande ou no botão **Ajustar** para configurar a escala e a posição horizontal/vertical. Cada imagem mantém seu próprio enquadramento.
-- Clique na logo **Tormenta20** para editar o texto da campanha e escolher entre os temas Rubro, Arcano, Azul, Esmeralda, Ouro ou uma cor personalizada.
+- Clique no título **Ficha Heroica** para editar o texto da campanha e escolher entre os temas Rubro, Arcano, Azul, Esmeralda, Ouro ou uma cor personalizada.
 - Armas, itens, poderes e magias marcados como favoritos aparecem na primeira aba da ficha, como na ficha padrão do Tormenta20.
 - Perícias e efeitos de uso adotam automaticamente a estrutura correta do Tormenta20 1.5.015 ou 1.6.1.
 - A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
@@ -38,4 +38,4 @@ Na configuração da ficha da personagem, selecione novamente **Ficha de Persona
 
 - Compatibilidade alvo: Foundry VTT 13–14 e Tormenta20 1.5.015 ou superior.
 - A ficha foi criada como módulo separado para não ser sobrescrita por atualizações do sistema.
-- As marcas incluídas foram fornecidas como material de referência para uso nesta mesa. Verifique as permissões dos respectivos autores antes de redistribuir publicamente o módulo.
+- O módulo não inclui o logotipo nem o símbolo oficial de Tormenta20. Tormenta20 é propriedade de seus respectivos titulares; este é um projeto de comunidade não oficial e sem afiliação ou endosso da Jambô Editora.

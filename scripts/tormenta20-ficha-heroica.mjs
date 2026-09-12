@@ -272,8 +272,6 @@ Hooks.once("init", () => {
         groupName: appearance.groupName,
         unlinkedToken: this._isUnlinkedTokenSheet(),
         appearance,
-        logo: `${MODULE_PATH}/assets/branding/tormenta20-logo.webp`,
-        eye: `${MODULE_PATH}/assets/branding/olho-tormenta.png`,
         avatarArt: this.actor.img,
         tokenArt,
         hasFavorites
