@@ -4,7 +4,14 @@
       <div class="t20ga-brand">
         <button class="t20ga-brand-config" type="button" title="Personalizar aparência" aria-label="Personalizar a aparência desta ficha">
           {{#if t20ga.campaignLogo}}
-          <img class="t20ga-campaign-logo" src="{{t20ga.campaignLogo}}" alt="{{t20ga.campaignLogoAlt}}" />
+          <span class="t20ga-campaign-logo-frame">
+            <img
+              class="t20ga-campaign-logo"
+              src="{{t20ga.campaignLogo}}"
+              alt="{{t20ga.campaignLogoAlt}}"
+              style="--t20ga-campaign-logo-scale: {{t20ga.campaignLogoScale}}; --t20ga-campaign-logo-x: {{t20ga.campaignLogoPositionX}}px; --t20ga-campaign-logo-y: {{t20ga.campaignLogoPositionY}}px;"
+            />
+          </span>
           {{else}}
           <span class="t20ga-brand-placeholder">
             <strong>Logo da campanha</strong>

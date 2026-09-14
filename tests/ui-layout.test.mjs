@@ -49,6 +49,11 @@ assert.match(script, /restricted: true/, "only game masters can open campaign id
 assert.match(script, /PERSONAL_APPEARANCE_FLAG = "personalAppearanceByActor"/, "personal themes are stored on the user document");
 assert.match(script, /\[actorAppearanceKey\(actor\)\]: normalizePersonalAppearance\(appearance\)/, "personal themes are saved separately by actor");
 assert.match(campaignConfig, /name="logo"/, "campaign identity includes a logo selector");
+assert.match(campaignConfig, /name="logoScale" min="0\.5" max="3"/, "campaign identity includes a logo scale control");
+assert.match(campaignConfig, /name="logoPositionX" min="-100" max="100"/, "campaign identity includes horizontal logo positioning");
+assert.match(campaignConfig, /name="logoPositionY" min="-40" max="40"/, "campaign identity includes vertical logo positioning");
+assert.match(characterSheet, /--t20ga-campaign-logo-scale: \{\{t20ga\.campaignLogoScale\}\}/, "the saved logo scale reaches the character sheet");
+assert.match(css, /\.t20ga-campaign-logo\s*\{[^}]*transform:\s*translate\(var\(--t20ga-campaign-logo-x[^;]*scale\(var\(--t20ga-campaign-logo-scale/s, "the logo applies its saved scale and position");
 assert.match(campaignConfig, /name="title"/, "campaign identity includes an optional title");
 assert.match(campaignConfig, /name="groupName"/, "campaign identity includes an optional group name");
 assert.match(script, /"t20ga\.list-favorites":/, "the isolated favorites template is registered");
@@ -63,7 +68,7 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.17", "manifest version is updated");
+assert.equal(manifest.version, "1.6.18", "manifest version is updated");
 assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(

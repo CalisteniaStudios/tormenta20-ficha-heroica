@@ -215,16 +215,30 @@ class CampaignIdentityConfig extends FormApplication {
     super.activateListeners(html);
     const logoInput = html.find('[name="logo"]');
 
+    const readLogoTransform = () => ({
+      scale: clamp(html.find('[name="logoScale"]').val(), 0.5, 3),
+      x: clamp(html.find('[name="logoPositionX"]').val(), -100, 100),
+      y: clamp(html.find('[name="logoPositionY"]').val(), -40, 40)
+    });
+
     const updatePreview = () => {
       const logo = String(logoInput.val() ?? "").trim();
+      const transform = readLogoTransform();
       const preview = html.find(".t20ga-campaign-logo-preview");
       preview.toggleClass("has-logo", Boolean(logo));
       if (logo) {
         preview.html("");
-        $("<img>", { src: logo, alt: "Prévia da logo da campanha" }).appendTo(preview);
+        $("<img>", { src: logo, alt: "Prévia da logo da campanha" })
+          .css("--t20ga-campaign-logo-scale", transform.scale)
+          .css("--t20ga-campaign-logo-x", `${transform.x}px`)
+          .css("--t20ga-campaign-logo-y", `${transform.y}px`)
+          .appendTo(preview);
       } else {
         preview.html("<span><strong>Logo da campanha</strong><small>Edição nas configurações</small></span>");
       }
+      html.find('[data-output="logoScale"]').text(`${transform.scale.toFixed(2)}×`);
+      html.find('[data-output="logoPositionX"]').text(`${transform.x}px`);
+      html.find('[data-output="logoPositionY"]').text(`${transform.y}px`);
     };
 
     html.find('[data-action="browse-logo"]').on("click", () => {
@@ -250,7 +264,15 @@ class CampaignIdentityConfig extends FormApplication {
       logoInput.val("");
       updatePreview();
     });
-    logoInput.on("input change", updatePreview);
+    html.find('[data-action="reset-logo-transform"]').on("click", () => {
+      html.find('[name="logoScale"]').val(DEFAULT_CAMPAIGN_IDENTITY.logoScale);
+      html.find('[name="logoPositionX"]').val(DEFAULT_CAMPAIGN_IDENTITY.logoPositionX);
+      html.find('[name="logoPositionY"]').val(DEFAULT_CAMPAIGN_IDENTITY.logoPositionY);
+      updatePreview();
+    });
+    html.find('[name="logo"], [name="logoScale"], [name="logoPositionX"], [name="logoPositionY"]')
+      .on("input change", updatePreview);
+    updatePreview();
   }
 
   async _updateObject(_event, formData) {
@@ -260,6 +282,9 @@ class CampaignIdentityConfig extends FormApplication {
     }
     const identity = normalizeCampaignIdentity({
       logo: formData.logo,
+      logoScale: formData.logoScale,
+      logoPositionX: formData.logoPositionX,
+      logoPositionY: formData.logoPositionY,
       title: formData.title,
       groupName: formData.groupName,
       showTitle: Boolean(formData.showTitle),
@@ -410,6 +435,9 @@ Hooks.once("init", () => {
       sheetData.t20ga = {
         campaignLogo: identity.logo,
         campaignLogoAlt: identity.title || "Logo da campanha",
+        campaignLogoScale: identity.logoScale,
+        campaignLogoPositionX: identity.logoPositionX,
+        campaignLogoPositionY: identity.logoPositionY,
         campaignTitle: identity.showTitle ? identity.title : "",
         groupName: identity.showGroupName ? identity.groupName : "",
         unlinkedToken: this._isUnlinkedTokenSheet(),

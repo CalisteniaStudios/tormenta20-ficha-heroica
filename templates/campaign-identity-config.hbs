@@ -5,7 +5,11 @@
 
   <div class="t20ga-campaign-logo-preview {{#if identity.logo}}has-logo{{/if}}">
     {{#if identity.logo}}
-    <img src="{{identity.logo}}" alt="Prévia da logo da campanha" />
+    <img
+      src="{{identity.logo}}"
+      alt="Prévia da logo da campanha"
+      style="--t20ga-campaign-logo-scale: {{identity.logoScale}}; --t20ga-campaign-logo-x: {{identity.logoPositionX}}px; --t20ga-campaign-logo-y: {{identity.logoPositionY}}px;"
+    />
     {{else}}
     <span><strong>Logo da campanha</strong><small>Edição nas configurações</small></span>
     {{/if}}
@@ -23,6 +27,26 @@
       </button>
     </div>
   </label>
+
+  <fieldset class="t20ga-campaign-logo-adjustments">
+    <legend>Ajuste da logo</legend>
+    <label>
+      <span>Escala <output data-output="logoScale">{{identity.logoScale}}×</output></span>
+      <input type="range" name="logoScale" min="0.5" max="3" step="0.01" value="{{identity.logoScale}}" />
+    </label>
+    <label>
+      <span>Posição horizontal <output data-output="logoPositionX">{{identity.logoPositionX}}px</output></span>
+      <input type="range" name="logoPositionX" min="-100" max="100" step="1" value="{{identity.logoPositionX}}" />
+    </label>
+    <label>
+      <span>Posição vertical <output data-output="logoPositionY">{{identity.logoPositionY}}px</output></span>
+      <input type="range" name="logoPositionY" min="-40" max="40" step="1" value="{{identity.logoPositionY}}" />
+    </label>
+    <button type="button" class="t20ga-dialog-reset" data-action="reset-logo-transform">
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+      Restaurar enquadramento
+    </button>
+  </fieldset>
 
   <label>
     <span>Título da campanha</span>

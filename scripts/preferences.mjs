@@ -5,6 +5,9 @@ export const DEFAULT_PERSONAL_APPEARANCE = Object.freeze({
 
 export const DEFAULT_CAMPAIGN_IDENTITY = Object.freeze({
   logo: "",
+  logoScale: 1,
+  logoPositionX: 0,
+  logoPositionY: 0,
   title: "",
   groupName: "",
   showTitle: true,
@@ -43,8 +46,15 @@ export function normalizePersonalAppearance(value = {}) {
 }
 
 export function normalizeCampaignIdentity(value = {}) {
+  const clamp = (number, minimum, maximum, fallback) => {
+    const parsed = Number(number);
+    return Number.isFinite(parsed) ? Math.min(maximum, Math.max(minimum, parsed)) : fallback;
+  };
   return {
     logo: String(value.logo ?? "").trim(),
+    logoScale: clamp(value.logoScale, 0.5, 3, DEFAULT_CAMPAIGN_IDENTITY.logoScale),
+    logoPositionX: clamp(value.logoPositionX, -100, 100, DEFAULT_CAMPAIGN_IDENTITY.logoPositionX),
+    logoPositionY: clamp(value.logoPositionY, -40, 40, DEFAULT_CAMPAIGN_IDENTITY.logoPositionY),
     title: String(value.title ?? "").trim(),
     groupName: String(value.groupName ?? "").trim(),
     showTitle: value.showTitle !== false,

@@ -70,6 +70,9 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   assert.equal(menus.get("campaignIdentityMenu").restricted, true);
   assert.deepEqual(settings.get("campaignIdentity"), {
     logo: "",
+    logoScale: 1,
+    logoPositionX: 0,
+    logoPositionY: 0,
     title: "",
     groupName: "",
     showTitle: true,
@@ -85,6 +88,9 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   const IdentityConfig = menus.get("campaignIdentityMenu").type;
   await new IdentityConfig()._updateObject(null, {
     logo: "worlds/test/logo.svg",
+    logoScale: "1.75",
+    logoPositionX: "12",
+    logoPositionY: "-6",
     title: "A Coroa Partida",
     groupName: "Companhia Rubra",
     showTitle: true,
@@ -92,6 +98,9 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   });
   assert.deepEqual(settings.get("campaignIdentity"), {
     logo: "worlds/test/logo.svg",
+    logoScale: 1.75,
+    logoPositionX: 12,
+    logoPositionY: -6,
     title: "A Coroa Partida",
     groupName: "Companhia Rubra",
     showTitle: true,
