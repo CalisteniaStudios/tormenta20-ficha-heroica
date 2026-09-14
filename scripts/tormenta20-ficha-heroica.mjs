@@ -126,6 +126,21 @@ function getCampaignIdentity() {
   );
 }
 
+function getCampaignLogoLayout(identity) {
+  const scale = clamp(identity.logoScale, 0.5, 1.8);
+  const x = clamp(identity.logoPositionX, -60, 60);
+  const y = clamp(identity.logoPositionY, -40, 40);
+  return {
+    scale,
+    panelWidth: Math.max(25, 25 * scale),
+    horizontalSpace: Math.abs(x) * 2,
+    paddingTop: Math.max(y, 0) * 2,
+    paddingRight: Math.max(-x, 0) * 2,
+    paddingBottom: Math.max(-y, 0) * 2,
+    paddingLeft: Math.max(x, 0) * 2
+  };
+}
+
 function getPersonalAppearance(actor) {
   const stored = game.user?.getFlag?.(MODULE_ID, PERSONAL_APPEARANCE_FLAG) ?? {};
   const value = stored.actors?.[actorAppearanceKey(actor)] ?? stored.default;
@@ -216,8 +231,8 @@ class CampaignIdentityConfig extends FormApplication {
     const logoInput = html.find('[name="logo"]');
 
     const readLogoTransform = () => ({
-      scale: clamp(html.find('[name="logoScale"]').val(), 0.5, 3),
-      x: clamp(html.find('[name="logoPositionX"]').val(), -100, 100),
+      scale: clamp(html.find('[name="logoScale"]').val(), 0.5, 1.8),
+      x: clamp(html.find('[name="logoPositionX"]').val(), -60, 60),
       y: clamp(html.find('[name="logoPositionY"]').val(), -40, 40)
     });
 
@@ -226,13 +241,14 @@ class CampaignIdentityConfig extends FormApplication {
       const transform = readLogoTransform();
       const preview = html.find(".t20ga-campaign-logo-preview");
       preview.toggleClass("has-logo", Boolean(logo));
+      preview.css("--t20ga-campaign-logo-preview-width", `${(transform.scale / 1.8) * 100}%`);
+      preview.css("padding-left", `${12 + Math.max(transform.x, 0)}px`);
+      preview.css("padding-right", `${12 + Math.max(-transform.x, 0)}px`);
+      preview.css("padding-top", `${12 + Math.max(transform.y, 0)}px`);
+      preview.css("padding-bottom", `${12 + Math.max(-transform.y, 0)}px`);
       if (logo) {
         preview.html("");
-        $("<img>", { src: logo, alt: "Prévia da logo da campanha" })
-          .css("--t20ga-campaign-logo-scale", transform.scale)
-          .css("--t20ga-campaign-logo-x", `${transform.x}px`)
-          .css("--t20ga-campaign-logo-y", `${transform.y}px`)
-          .appendTo(preview);
+        $("<img>", { src: logo, alt: "Prévia da logo da campanha" }).appendTo(preview);
       } else {
         preview.html("<span><strong>Logo da campanha</strong><small>Edição nas configurações</small></span>");
       }
@@ -402,6 +418,7 @@ Hooks.once("init", () => {
       const sheetData = await super.getData(options);
       const appearance = getPersonalAppearance(this.actor);
       const identity = getCampaignIdentity();
+      const logoLayout = getCampaignLogoLayout(identity);
       let tokenDocument = this.token?.document ?? this.token ?? null;
 
       try {
@@ -438,6 +455,12 @@ Hooks.once("init", () => {
         campaignLogoScale: identity.logoScale,
         campaignLogoPositionX: identity.logoPositionX,
         campaignLogoPositionY: identity.logoPositionY,
+        campaignLogoPanelWidth: logoLayout.panelWidth,
+        campaignLogoHorizontalSpace: logoLayout.horizontalSpace,
+        campaignLogoPaddingTop: logoLayout.paddingTop,
+        campaignLogoPaddingRight: logoLayout.paddingRight,
+        campaignLogoPaddingBottom: logoLayout.paddingBottom,
+        campaignLogoPaddingLeft: logoLayout.paddingLeft,
         campaignTitle: identity.showTitle ? identity.title : "",
         groupName: identity.showGroupName ? identity.groupName : "",
         unlinkedToken: this._isUnlinkedTokenSheet(),

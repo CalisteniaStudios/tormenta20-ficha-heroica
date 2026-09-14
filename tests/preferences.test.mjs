@@ -17,7 +17,7 @@ test("mantém a identidade da campanha vazia até o mestre configurá-la", () =>
 test("preserva as opções de exibição e normaliza textos compartilhados", () => {
   assert.deepEqual(normalizeCampaignIdentity({
     logo: "  worlds/minha-mesa/logo.webp  ",
-    logoScale: 2.25,
+    logoScale: 1.25,
     logoPositionX: -18,
     logoPositionY: 9,
     title: "  A Coroa Partida  ",
@@ -27,7 +27,7 @@ test("preserva as opções de exibição e normaliza textos compartilhados", () 
     configured: true
   }), {
     logo: "worlds/minha-mesa/logo.webp",
-    logoScale: 2.25,
+    logoScale: 1.25,
     logoPositionX: -18,
     logoPositionY: 9,
     title: "A Coroa Partida",
@@ -45,8 +45,8 @@ test("limita escala e posição da logo a um enquadramento seguro", () => {
     logoPositionY: "valor inválido"
   }), {
     ...DEFAULT_CAMPAIGN_IDENTITY,
-    logoScale: 3,
-    logoPositionX: -100
+    logoScale: 1.8,
+    logoPositionX: -60
   });
 });
 

@@ -81,7 +81,7 @@
 
 .t20ga-window .t20ga-shell {
   display: grid;
-  grid-template-columns: minmax(245px, 25%) minmax(0, 1fr);
+  grid-template-columns: minmax(245px, var(--t20ga-hero-panel-width, 25%)) minmax(0, 1fr);
   flex: 1;
   min-height: 0;
 }
@@ -163,23 +163,24 @@
 }
 
 .t20ga-window .t20ga-campaign-logo-frame {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  height: 64px;
-  overflow: hidden;
-  place-items: center;
+  min-height: calc(64px * var(--t20ga-campaign-logo-scale, 1));
+  padding: var(--t20ga-campaign-logo-padding-top, 0) var(--t20ga-campaign-logo-padding-right, 0) var(--t20ga-campaign-logo-padding-bottom, 0) var(--t20ga-campaign-logo-padding-left, 0);
+  box-sizing: border-box;
 }
 
 .t20ga-window .t20ga-campaign-logo {
   display: block;
   width: auto;
   max-width: 100%;
-  height: 64px;
+  height: calc(64px * var(--t20ga-campaign-logo-scale, 1));
+  max-height: none;
   margin: 0 auto;
   object-fit: contain;
   border: 0;
-  transform: translate(var(--t20ga-campaign-logo-x, 0), var(--t20ga-campaign-logo-y, 0)) scale(var(--t20ga-campaign-logo-scale, 1));
-  transform-origin: center;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.58));
 }
 
@@ -1467,7 +1468,7 @@
 
 @container (max-width: 1040px) {
   .t20ga-window .t20ga-shell {
-    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-columns: minmax(220px, var(--t20ga-hero-panel-width, 25%)) minmax(0, 1fr);
   }
 
   .t20ga-window .t20ga-vitals {
@@ -1626,18 +1627,18 @@
   border: 1px dashed rgba(84, 42, 34, 0.48);
   border-radius: 8px;
   background: rgba(255, 253, 247, 0.58);
+  box-sizing: border-box;
   overflow: hidden;
 }
 
 .t20ga-campaign-logo-preview img {
   display: block;
-  width: auto;
+  width: var(--t20ga-campaign-logo-preview-width, 55.56%);
   max-width: 100%;
-  height: 92px;
+  height: auto;
+  max-height: none;
   object-fit: contain;
   border: 0;
-  transform: translate(var(--t20ga-campaign-logo-x, 0), var(--t20ga-campaign-logo-y, 0)) scale(var(--t20ga-campaign-logo-scale, 1));
-  transform-origin: center;
 }
 
 .t20ga-campaign-logo-adjustments {

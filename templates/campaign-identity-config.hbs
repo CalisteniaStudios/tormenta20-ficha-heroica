@@ -8,7 +8,6 @@
     <img
       src="{{identity.logo}}"
       alt="Prévia da logo da campanha"
-      style="--t20ga-campaign-logo-scale: {{identity.logoScale}}; --t20ga-campaign-logo-x: {{identity.logoPositionX}}px; --t20ga-campaign-logo-y: {{identity.logoPositionY}}px;"
     />
     {{else}}
     <span><strong>Logo da campanha</strong><small>Edição nas configurações</small></span>
@@ -32,11 +31,11 @@
     <legend>Ajuste da logo</legend>
     <label>
       <span>Escala <output data-output="logoScale">{{identity.logoScale}}×</output></span>
-      <input type="range" name="logoScale" min="0.5" max="3" step="0.01" value="{{identity.logoScale}}" />
+      <input type="range" name="logoScale" min="0.5" max="1.8" step="0.01" value="{{identity.logoScale}}" />
     </label>
     <label>
       <span>Posição horizontal <output data-output="logoPositionX">{{identity.logoPositionX}}px</output></span>
-      <input type="range" name="logoPositionX" min="-100" max="100" step="1" value="{{identity.logoPositionX}}" />
+      <input type="range" name="logoPositionX" min="-60" max="60" step="1" value="{{identity.logoPositionX}}" />
     </label>
     <label>
       <span>Posição vertical <output data-output="logoPositionY">{{identity.logoPositionY}}px</output></span>

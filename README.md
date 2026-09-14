@@ -21,7 +21,7 @@ Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como
 
 - O seletor **Avatar/Token**, com um marcador geométrico, alterna entre a imagem da personagem e a imagem configurada no protótipo do token.
 - Clique na imagem grande ou no botão **Ajustar** para configurar a escala e a posição horizontal/vertical. Cada imagem mantém seu próprio enquadramento.
-- O mestre configura a **logo da campanha**, seu tamanho e posição, o **título da campanha** e o **nome do grupo** em **Configurações do módulo → Identidade da campanha**. A prévia mostra o enquadramento antes de salvar; esses dados ficam salvos no mundo e são compartilhados com todos.
+- O mestre configura a **logo da campanha**, seu tamanho e posição, o **título da campanha** e o **nome do grupo** em **Configurações do módulo → Identidade da campanha**. A prévia mostra o enquadramento antes de salvar; ao ampliar ou mover a logo, o painel se reorganiza para manter a imagem inteira. Esses dados ficam salvos no mundo e são compartilhados com todos.
 - Clique na logo ou no espaço reservado para escolher entre os temas Tormenta, Arcana, Mana, Adamante, Tibares ou uma cor personalizada. Essa aparência é pessoal, fica salva por usuário e personagem e não altera a ficha vista pelos demais jogadores.
 - Armas, itens, poderes e magias marcados como favoritos aparecem na primeira aba da ficha, como na ficha padrão do Tormenta20.
 - Perícias e efeitos de uso adotam automaticamente a estrutura correta do Tormenta20 1.5.015 ou 1.6.1.
