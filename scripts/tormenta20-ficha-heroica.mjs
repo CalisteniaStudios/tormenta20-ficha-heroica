@@ -4,6 +4,7 @@ import {
   DEFAULT_CAMPAIGN_IDENTITY,
   DEFAULT_PERSONAL_APPEARANCE,
   FRAME_PRESETS,
+  LAYOUT_PRESETS,
   LEGACY_APPEARANCE_DEFAULTS,
   THEME_PRESETS,
   buildPalette,
@@ -389,6 +390,7 @@ Hooks.once("init", () => {
         ...(baseOptions.scrollY ?? []),
         ".skills-list",
         ".t20ga-dashboard-side",
+        ".t20ga-sheet-body",
         ".t20ga-sheet-body > .tab"
       ];
 
@@ -497,6 +499,23 @@ Hooks.once("init", () => {
         ?? html[0];
       if (!windowElement) return;
 
+      const previousLayout = windowElement.dataset.t20gaLayout;
+      const sections = html.find?.(".t20ga-sheet-body > .tab");
+      if (sections?.length && appearance.layout === "continuous") {
+        if (previousLayout !== "continuous") {
+          this._t20gaTabbedSection = sections.filter(".active").first().attr("data-tab") ?? "attributes";
+        }
+        sections.addClass("active");
+      } else if (sections?.length && previousLayout === "continuous") {
+        const activeTab = this._t20gaTabbedSection ?? "attributes";
+        sections.removeClass("active");
+        sections.filter(`[data-tab="${activeTab}"]`).addClass("active");
+        html.find?.("nav.sheet-tabs .item")
+          .removeClass("active")
+          .filter(`[data-tab="${activeTab}"]`)
+          .addClass("active");
+      }
+
       const variables = {
         "--t20ga-crimson": palette.primary,
         "--t20ga-red": palette.bright,
@@ -510,6 +529,7 @@ Hooks.once("init", () => {
         windowElement.style.setProperty(property, value);
       }
       windowElement.dataset.t20gaTheme = appearance.theme;
+      windowElement.dataset.t20gaLayout = appearance.layout;
       windowElement.dataset.t20gaFrame = appearance.frame;
       windowElement.dataset.t20gaBackground = appearance.background;
       if (appearance.backgroundImage) {
@@ -537,12 +557,19 @@ Hooks.once("init", () => {
       const frameOptions = Object.entries(FRAME_PRESETS)
         .map(([id, frame]) => `<option value="${id}"${original.frame === id ? " selected" : ""}>${escapeHtml(frame.label)}</option>`)
         .join("");
+      const layoutOptions = Object.entries(LAYOUT_PRESETS)
+        .map(([id, layout]) => `<option value="${id}"${original.layout === id ? " selected" : ""}>${escapeHtml(layout.label)}</option>`)
+        .join("");
       const backgroundOptions = Object.entries(BACKGROUND_PRESETS)
         .map(([id, background]) => `<option value="${id}"${original.background === id ? " selected" : ""}>${escapeHtml(background.label)}</option>`)
         .join("");
       const content = `
         <form class="t20ga-theme-form">
           <p class="t20ga-dialog-help">Escolha uma aparência pessoal para esta personagem. Esta mudança só será exibida para você.</p>
+          <label class="t20ga-layout-field">
+            <span>Organização da ficha</span>
+            <select name="layout">${layoutOptions}</select>
+          </label>
           <div class="t20ga-theme-grid">
             <label>
               <span>Tema</span>
@@ -584,6 +611,7 @@ Hooks.once("init", () => {
       const readAppearance = (dialogHtml) => ({
         theme: String(dialogHtml.find('[name="theme"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.theme),
         customColor: normalizeHex(dialogHtml.find('[name="customColor"]').val()),
+        layout: String(dialogHtml.find('[name="layout"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.layout),
         frame: String(dialogHtml.find('[name="frame"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.frame),
         background: String(dialogHtml.find('[name="background"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.background),
         backgroundImage: String(dialogHtml.find('[name="backgroundImage"]').val() ?? "").trim()
@@ -671,6 +699,7 @@ Hooks.once("init", () => {
             dialogHtml.find(".t20ga-theme-reset").on("click", () => {
               dialogHtml.find('[name="theme"]').val(DEFAULT_PERSONAL_APPEARANCE.theme);
               dialogHtml.find('[name="customColor"]').val(DEFAULT_PERSONAL_APPEARANCE.customColor);
+              dialogHtml.find('[name="layout"]').val(DEFAULT_PERSONAL_APPEARANCE.layout);
               dialogHtml.find('[name="frame"]').val(DEFAULT_PERSONAL_APPEARANCE.frame);
               dialogHtml.find('[name="background"]').val(DEFAULT_PERSONAL_APPEARANCE.background);
               dialogHtml.find('[name="backgroundImage"]').val(DEFAULT_PERSONAL_APPEARANCE.backgroundImage);

@@ -84,6 +84,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
     default: {
       theme: "crimson",
       customColor: "#75111b",
+      layout: "tabs",
       frame: "heroic",
       background: "parchment",
       backgroundImage: ""

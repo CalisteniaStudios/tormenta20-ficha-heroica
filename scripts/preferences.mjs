@@ -1,6 +1,7 @@
 export const DEFAULT_PERSONAL_APPEARANCE = Object.freeze({
   theme: "crimson",
   customColor: "#75111b",
+  layout: "tabs",
   frame: "heroic",
   background: "parchment",
   backgroundImage: ""
@@ -40,6 +41,11 @@ export const FRAME_PRESETS = Object.freeze({
   minimal: { label: "Minimalista" }
 });
 
+export const LAYOUT_PRESETS = Object.freeze({
+  tabs: { label: "Com abas" },
+  continuous: { label: "Página contínua (sem abas)" }
+});
+
 export const BACKGROUND_PRESETS = Object.freeze({
   parchment: { label: "Pergaminho" },
   leather: { label: "Couro" },
@@ -60,12 +66,16 @@ export function normalizePersonalAppearance(value = {}) {
   const frame = Object.hasOwn(FRAME_PRESETS, value.frame)
     ? value.frame
     : DEFAULT_PERSONAL_APPEARANCE.frame;
+  const layout = Object.hasOwn(LAYOUT_PRESETS, value.layout)
+    ? value.layout
+    : DEFAULT_PERSONAL_APPEARANCE.layout;
   const background = Object.hasOwn(BACKGROUND_PRESETS, value.background)
     ? value.background
     : DEFAULT_PERSONAL_APPEARANCE.background;
   return {
     theme,
     customColor: normalizeHex(value.customColor),
+    layout,
     frame,
     background,
     backgroundImage: String(value.backgroundImage ?? "").trim()

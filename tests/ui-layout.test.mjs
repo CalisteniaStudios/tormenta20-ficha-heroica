@@ -54,15 +54,22 @@ assert.match(script, /restricted: true/, "only game masters can open campaign id
 assert.match(script, /PERSONAL_APPEARANCE_FLAG = "personalAppearanceByActor"/, "personal themes are stored on the user document");
 assert.match(script, /\[actorAppearanceKey\(actor\)\]: normalizePersonalAppearance\(appearance\)/, "personal themes are saved separately by actor");
 assert.match(script, /name="frame"/, "the logo dialog includes personal frame styles");
+assert.match(script, /name="layout"/, "the logo dialog includes a tabbed or continuous layout choice");
 assert.match(script, /name="background"/, "the logo dialog includes personal sheet backgrounds");
 assert.match(script, /name="backgroundImage"/, "the logo dialog accepts a personal background image");
 assert.match(script, /t20ga-background-file-picker/, "the personal background uses the Foundry image picker");
 assert.match(script, /dataset\.t20gaFrame = appearance\.frame/, "the selected frame style reaches the sheet window");
+assert.match(script, /dataset\.t20gaLayout = appearance\.layout/, "the selected layout reaches the sheet window");
+assert.match(script, /sections\.addClass\("active"\)/, "continuous mode activates every Foundry tab section");
+assert.match(script, /sections\.removeClass\("active"\)/, "returning to tabs restores a single active section");
 assert.match(script, /dataset\.t20gaBackground = appearance\.background/, "the selected background reaches the sheet window");
 assert.match(css, /\[data-t20ga-background="custom"\] \.window-content\s*\{[^}]*--t20ga-custom-background/s, "custom background images cover the sheet behind a readable overlay");
 assert.match(css, /\[data-t20ga-frame="arcane"\] \.t20ga-hero-frame/, "the arcane frame style is available");
 assert.match(css, /\[data-t20ga-frame="forged"\] \.t20ga-hero-frame/, "the forged frame style is available");
 assert.match(css, /\[data-t20ga-frame="minimal"\] \.t20ga-hero-frame/, "the minimal frame style is available");
+assert.match(css, /\[data-t20ga-layout="continuous"\] nav\.sheet-tabs\s*\{[^}]*display:\s*none;/s, "continuous mode removes the tab bar");
+assert.match(css, /\[data-t20ga-layout="continuous"\] \.t20ga-sheet-body > \.tab\s*\{[^}]*display:\s*block !important;/s, "continuous mode makes every sheet section visible");
+assert.match(characterSheet, /class="t20ga-continuous-heading"/, "continuous sections have visible headings");
 assert.match(campaignConfig, /name="logo"/, "campaign identity includes a logo selector");
 assert.match(campaignConfig, /name="logoScale" min="0\.5" max="1\.8"/, "campaign identity includes a fluid logo scale control");
 assert.match(campaignConfig, /name="logoPositionX" min="-60" max="60"/, "campaign identity includes horizontal logo positioning");
@@ -85,7 +92,7 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.22", "manifest version is updated");
+assert.equal(manifest.version, "1.6.23", "manifest version is updated");
 assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(

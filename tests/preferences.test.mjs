@@ -55,6 +55,7 @@ test("limita o tema pessoal a valores conhecidos e cores hexadecimais", () => {
   assert.deepEqual(normalizePersonalAppearance({ theme: "custom", customColor: "#ABCDEF" }), {
     theme: "custom",
     customColor: "#abcdef",
+    layout: "tabs",
     frame: "heroic",
     background: "parchment",
     backgroundImage: ""
@@ -70,8 +71,14 @@ test("preserva moldura e fundo pessoais válidos", () => {
   }), {
     theme: "crimson",
     customColor: "#75111b",
+    layout: "tabs",
     frame: "arcane",
     background: "custom",
     backgroundImage: "worlds/minha-mesa/fundo.webp"
   });
+});
+
+test("aceita a organização contínua sem abas", () => {
+  assert.equal(normalizePersonalAppearance({ layout: "continuous" }).layout, "continuous");
+  assert.equal(normalizePersonalAppearance({ layout: "desconhecido" }).layout, "tabs");
 });
