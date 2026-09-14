@@ -41,3 +41,12 @@ Na configuração da ficha da personagem, selecione novamente **Ficha de Persona
 - A ficha foi criada como módulo separado para não ser sobrescrita por atualizações do sistema.
 - O pacote não inclui artes de personagens, logotipos ou símbolos oficiais; a ficha utiliza as imagens configuradas pelo próprio usuário no Foundry VTT.
 - O módulo não inclui o logotipo nem o símbolo oficial de Tormenta20. Tormenta20 é propriedade de seus respectivos titulares; este é um projeto de comunidade não oficial e sem afiliação ou endosso da Jambô Editora.
+
+## Licença
+
+O módulo pode ser baixado, instalado e usado gratuitamente. Sua venda, revenda,
+redistribuição, republicação ou reempacotamento não são permitidos sem autorização
+prévia da Calistenia Studios. Consulte [LICENSE](LICENSE) para os termos completos.
+
+Os componentes de terceiros permanecem sujeitos às licenças descritas em
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
