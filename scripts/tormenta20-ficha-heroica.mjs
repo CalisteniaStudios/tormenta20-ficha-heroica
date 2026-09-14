@@ -471,7 +471,8 @@ Hooks.once("init", () => {
         appearance,
         avatarArt: this.actor.img,
         tokenArt,
-        hasFavorites
+        hasFavorites,
+        classicLayout: appearance.layout === "classic"
       };
       return sheetData;
     }
@@ -498,23 +499,6 @@ Hooks.once("init", () => {
         ?? html[0]?.closest?.(".t20ga-window")
         ?? html[0];
       if (!windowElement) return;
-
-      const previousLayout = windowElement.dataset.t20gaLayout;
-      const sections = html.find?.(".t20ga-sheet-body > .tab");
-      if (sections?.length && appearance.layout === "continuous") {
-        if (previousLayout !== "continuous") {
-          this._t20gaTabbedSection = sections.filter(".active").first().attr("data-tab") ?? "attributes";
-        }
-        sections.addClass("active");
-      } else if (sections?.length && previousLayout === "continuous") {
-        const activeTab = this._t20gaTabbedSection ?? "attributes";
-        sections.removeClass("active");
-        sections.filter(`[data-tab="${activeTab}"]`).addClass("active");
-        html.find?.("nav.sheet-tabs .item")
-          .removeClass("active")
-          .filter(`[data-tab="${activeTab}"]`)
-          .addClass("active");
-      }
 
       const variables = {
         "--t20ga-crimson": palette.primary,

@@ -130,6 +130,105 @@
         </section>
       </header>
 
+      {{#if t20ga.classicLayout}}
+      <nav class="sheet-tabs tabs primary flexrow t20ga-classic-nav" data-group="primary">
+        <a class="item" data-tab="attributes"><i class="fa-solid fa-file-invoice"></i> Ficha</a>
+        <a class="item" data-tab="journal"><i class="fa-solid fa-book"></i> Diário</a>
+        <a class="item" data-tab="effects"><i class="fa-solid fa-wand-magic-sparkles"></i> Efeitos</a>
+      </nav>
+
+      <section class="sheet-body t20ga-sheet-body t20ga-classic-body">
+        <div class="tab attributes t20ga-classic-page" data-group="primary" data-tab="attributes">
+          <div class="t20ga-classic-left">
+            <section class="t20ga-vitals t20ga-classic-vitals">
+              <div class="t20ga-abilities">
+                {{> "t20ga.abilities"}}
+              </div>
+              <ul class="attributes t20ga-resources flexrow">
+                {{> "t20ga.resources"}}
+                {{> "t20ga.defense"}}
+              </ul>
+            </section>
+
+            <section class="t20ga-card t20ga-classic-card t20ga-classic-weapons">
+              <div class="t20ga-section-ribbon">Armas</div>
+              {{> "t20ga.list-weapon"}}
+            </section>
+
+            <section class="t20ga-card t20ga-classic-card t20ga-classic-equipment">
+              <div class="t20ga-section-ribbon">Equipamentos</div>
+              {{> "t20ga.list-equipment"}}
+            </section>
+
+            <section class="t20ga-card t20ga-classic-card t20ga-classic-powers">
+              <div class="t20ga-section-ribbon">Poderes</div>
+              {{> "t20ga.list-powers-tabbed"}}
+            </section>
+
+            {{#if actor.maiorCirculo}}
+            <section class="t20ga-card t20ga-classic-card t20ga-classic-spells">
+              <div class="t20ga-section-ribbon">Magias</div>
+              {{> "t20ga.list-spells"}}
+            </section>
+            {{/if}}
+
+            <section class="t20ga-card t20ga-classic-card t20ga-traits-card">
+              <div class="t20ga-section-ribbon">Traços e detalhes</div>
+              <div class="traits">
+                {{> "t20ga.traits"}}
+                <textarea name="system.detalhes.info" rows="8">{{system.detalhes.info}}</textarea>
+              </div>
+            </section>
+          </div>
+
+          <aside class="t20ga-classic-right">
+            <section class="t20ga-card t20ga-classic-card t20ga-skills-card">
+              <div class="t20ga-section-ribbon">Perícias</div>
+              {{> "t20ga.list-skills"}}
+            </section>
+
+            {{#if t20ga.hasFavorites}}
+            <section class="t20ga-card t20ga-classic-card t20ga-favorites-card">
+              <div class="t20ga-section-ribbon">Favoritos</div>
+              <div class="t20ga-favorites-list">
+                {{> "t20ga.list-favorites"}}
+              </div>
+            </section>
+            {{/if}}
+
+            <section class="t20ga-card t20ga-classic-card t20ga-classic-inventory">
+              <div class="t20ga-section-ribbon">Inventário</div>
+              <header class="flexrow">
+                {{> "t20ga.currency"}}
+                <div class="item-controls">
+                  <a class="button item-control item-dialog" data-type="gerais" data-tooltip="Criar Item">
+                    <i class="fas fa-plus"></i>
+                  </a>
+                </div>
+              </header>
+              <div class="inventory-list">
+                {{> "t20ga.list-consumable"}}
+                {{> "t20ga.list-loot"}}
+              </div>
+              {{> "t20ga.encumbrance"}}
+            </section>
+
+            <section class="t20ga-card t20ga-classic-card t20ga-classic-modifiers">
+              <div class="t20ga-section-ribbon">Modificadores</div>
+              {{> "t20ga.modifiers"}}
+            </section>
+          </aside>
+        </div>
+
+        <div class="tab journal t20ga-card flexrow flex-between" data-group="primary" data-tab="journal">
+          {{> "t20ga.journal"}}
+        </div>
+
+        <div class="tab effects t20ga-card" data-group="primary" data-tab="effects">
+          {{> "t20ga.active-effects"}}
+        </div>
+      </section>
+      {{else}}
       <section class="t20ga-vitals">
         <div class="t20ga-abilities">
           {{> "t20ga.abilities"}}
@@ -144,7 +243,6 @@
 
       <section class="sheet-body t20ga-sheet-body">
         <div class="tab attributes t20ga-dashboard flexrow" data-group="primary" data-tab="attributes">
-          <h2 class="t20ga-continuous-heading"><i class="fa-solid fa-file-invoice"></i> Resumo da personagem</h2>
           <section class="t20ga-card t20ga-skills-card">
             <div class="t20ga-section-ribbon">Perícias</div>
             {{> "t20ga.list-skills"}}
@@ -171,35 +269,30 @@
         </div>
 
         <div class="tab inventory t20ga-card" data-group="primary" data-tab="inventory">
-          <h2 class="t20ga-continuous-heading"><i class="fa-solid fa-suitcase-rolling"></i> Inventário</h2>
           {{> "t20ga.list-inventory"}}
         </div>
 
         <div class="tab powers t20ga-card" data-group="primary" data-tab="powers">
-          <h2 class="t20ga-continuous-heading"><i class="fa-solid fa-bolt"></i> Poderes</h2>
           {{> "t20ga.list-powers-tabbed"}}
         </div>
 
         <div class="tab spells t20ga-card" data-group="primary" data-tab="spells">
-          <h2 class="t20ga-continuous-heading"><i class="fa-solid fa-hurricane"></i> Magias</h2>
           {{> "t20ga.list-spells"}}
         </div>
 
         <div class="tab journal t20ga-card flexrow flex-between" data-group="primary" data-tab="journal">
-          <h2 class="t20ga-continuous-heading"><i class="fa-solid fa-book"></i> Diário</h2>
           {{> "t20ga.journal"}}
         </div>
 
         <div class="tab modifiers t20ga-card" data-group="primary" data-tab="modifiers">
-          <h2 class="t20ga-continuous-heading"><i class="fa-solid fa-sliders"></i> Modificadores</h2>
           {{> "t20ga.modifiers"}}
         </div>
 
         <div class="tab effects t20ga-card" data-group="primary" data-tab="effects">
-          <h2 class="t20ga-continuous-heading"><i class="fa-solid fa-wand-magic-sparkles"></i> Efeitos</h2>
           {{> "t20ga.active-effects"}}
         </div>
       </section>
+      {{/if}}
     </main>
   </div>
 </form>

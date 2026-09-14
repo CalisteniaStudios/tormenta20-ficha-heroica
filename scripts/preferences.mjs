@@ -43,7 +43,7 @@ export const FRAME_PRESETS = Object.freeze({
 
 export const LAYOUT_PRESETS = Object.freeze({
   tabs: { label: "Com abas" },
-  continuous: { label: "Página contínua (sem abas)" }
+  classic: { label: "Clássica (como a ficha original)" }
 });
 
 export const BACKGROUND_PRESETS = Object.freeze({
@@ -66,8 +66,9 @@ export function normalizePersonalAppearance(value = {}) {
   const frame = Object.hasOwn(FRAME_PRESETS, value.frame)
     ? value.frame
     : DEFAULT_PERSONAL_APPEARANCE.frame;
-  const layout = Object.hasOwn(LAYOUT_PRESETS, value.layout)
-    ? value.layout
+  const requestedLayout = value.layout === "continuous" ? "classic" : value.layout;
+  const layout = Object.hasOwn(LAYOUT_PRESETS, requestedLayout)
+    ? requestedLayout
     : DEFAULT_PERSONAL_APPEARANCE.layout;
   const background = Object.hasOwn(BACKGROUND_PRESETS, value.background)
     ? value.background

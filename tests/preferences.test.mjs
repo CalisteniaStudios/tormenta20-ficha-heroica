@@ -78,7 +78,8 @@ test("preserva moldura e fundo pessoais válidos", () => {
   });
 });
 
-test("aceita a organização contínua sem abas", () => {
-  assert.equal(normalizePersonalAppearance({ layout: "continuous" }).layout, "continuous");
+test("aceita a organização clássica e migra a antiga página contínua", () => {
+  assert.equal(normalizePersonalAppearance({ layout: "classic" }).layout, "classic");
+  assert.equal(normalizePersonalAppearance({ layout: "continuous" }).layout, "classic");
   assert.equal(normalizePersonalAppearance({ layout: "desconhecido" }).layout, "tabs");
 });
