@@ -1,6 +1,9 @@
 export const DEFAULT_PERSONAL_APPEARANCE = Object.freeze({
   theme: "crimson",
-  customColor: "#75111b"
+  customColor: "#75111b",
+  frame: "heroic",
+  background: "parchment",
+  backgroundImage: ""
 });
 
 export const DEFAULT_CAMPAIGN_IDENTITY = Object.freeze({
@@ -30,6 +33,21 @@ export const THEME_PRESETS = Object.freeze({
   custom: { label: "Cor personalizada", color: "#75111b" }
 });
 
+export const FRAME_PRESETS = Object.freeze({
+  heroic: { label: "Heroica" },
+  arcane: { label: "Arcana" },
+  forged: { label: "Forjada" },
+  minimal: { label: "Minimalista" }
+});
+
+export const BACKGROUND_PRESETS = Object.freeze({
+  parchment: { label: "Pergaminho" },
+  leather: { label: "Couro" },
+  stone: { label: "Pedra" },
+  night: { label: "Noite" },
+  custom: { label: "Imagem personalizada" }
+});
+
 export function normalizeHex(value, fallback = DEFAULT_PERSONAL_APPEARANCE.customColor) {
   const color = String(value ?? "").trim();
   return /^#[0-9a-f]{6}$/i.test(color) ? color.toLowerCase() : fallback;
@@ -39,9 +57,18 @@ export function normalizePersonalAppearance(value = {}) {
   const theme = Object.hasOwn(THEME_PRESETS, value.theme)
     ? value.theme
     : DEFAULT_PERSONAL_APPEARANCE.theme;
+  const frame = Object.hasOwn(FRAME_PRESETS, value.frame)
+    ? value.frame
+    : DEFAULT_PERSONAL_APPEARANCE.frame;
+  const background = Object.hasOwn(BACKGROUND_PRESETS, value.background)
+    ? value.background
+    : DEFAULT_PERSONAL_APPEARANCE.background;
   return {
     theme,
-    customColor: normalizeHex(value.customColor)
+    customColor: normalizeHex(value.customColor),
+    frame,
+    background,
+    backgroundImage: String(value.backgroundImage ?? "").trim()
   };
 }
 

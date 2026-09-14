@@ -81,7 +81,13 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   });
   assert.deepEqual(flags.get("personalAppearanceByActor"), {
     schema: 1,
-    default: { theme: "crimson", customColor: "#75111b" },
+    default: {
+      theme: "crimson",
+      customColor: "#75111b",
+      frame: "heroic",
+      background: "parchment",
+      backgroundImage: ""
+    },
     actors: {}
   });
 

@@ -54,7 +54,24 @@ test("limita o tema pessoal a valores conhecidos e cores hexadecimais", () => {
   assert.deepEqual(normalizePersonalAppearance({ theme: "desconhecido", customColor: "red" }), DEFAULT_PERSONAL_APPEARANCE);
   assert.deepEqual(normalizePersonalAppearance({ theme: "custom", customColor: "#ABCDEF" }), {
     theme: "custom",
-    customColor: "#abcdef"
+    customColor: "#abcdef",
+    frame: "heroic",
+    background: "parchment",
+    backgroundImage: ""
   });
   assert.equal(buildPalette({ theme: "custom", customColor: "#336699" }).primary, "#336699");
+});
+
+test("preserva moldura e fundo pessoais válidos", () => {
+  assert.deepEqual(normalizePersonalAppearance({
+    frame: "arcane",
+    background: "custom",
+    backgroundImage: "  worlds/minha-mesa/fundo.webp  "
+  }), {
+    theme: "crimson",
+    customColor: "#75111b",
+    frame: "arcane",
+    background: "custom",
+    backgroundImage: "worlds/minha-mesa/fundo.webp"
+  });
 });

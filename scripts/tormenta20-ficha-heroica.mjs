@@ -1,7 +1,9 @@
 import { selectTormenta20Templates } from "./compatibility.mjs";
 import {
+  BACKGROUND_PRESETS,
   DEFAULT_CAMPAIGN_IDENTITY,
   DEFAULT_PERSONAL_APPEARANCE,
+  FRAME_PRESETS,
   LEGACY_APPEARANCE_DEFAULTS,
   THEME_PRESETS,
   buildPalette,
@@ -508,6 +510,16 @@ Hooks.once("init", () => {
         windowElement.style.setProperty(property, value);
       }
       windowElement.dataset.t20gaTheme = appearance.theme;
+      windowElement.dataset.t20gaFrame = appearance.frame;
+      windowElement.dataset.t20gaBackground = appearance.background;
+      if (appearance.backgroundImage) {
+        windowElement.style.setProperty(
+          "--t20ga-custom-background",
+          `url(${JSON.stringify(appearance.backgroundImage)})`
+        );
+      } else {
+        windowElement.style.removeProperty("--t20ga-custom-background");
+      }
     }
 
     _openAppearanceDialog(html) {
@@ -521,6 +533,12 @@ Hooks.once("init", () => {
       let saved = false;
       const options = Object.entries(THEME_PRESETS)
         .map(([id, theme]) => `<option value="${id}"${original.theme === id ? " selected" : ""}>${escapeHtml(theme.label)}</option>`)
+        .join("");
+      const frameOptions = Object.entries(FRAME_PRESETS)
+        .map(([id, frame]) => `<option value="${id}"${original.frame === id ? " selected" : ""}>${escapeHtml(frame.label)}</option>`)
+        .join("");
+      const backgroundOptions = Object.entries(BACKGROUND_PRESETS)
+        .map(([id, background]) => `<option value="${id}"${original.background === id ? " selected" : ""}>${escapeHtml(background.label)}</option>`)
         .join("");
       const content = `
         <form class="t20ga-theme-form">
@@ -538,23 +556,64 @@ Hooks.once("init", () => {
           <div class="t20ga-theme-preview" aria-hidden="true">
             <span></span><span></span><span></span><span></span>
           </div>
-          <p class="t20ga-theme-note">A cor escolhida é aplicada à barra de abas, painéis, faixas, botões e molduras da ficha.</p>
-          <button class="t20ga-theme-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Restaurar tema original</button>
+          <div class="t20ga-appearance-options">
+            <label>
+              <span>Estilo das molduras</span>
+              <select name="frame">${frameOptions}</select>
+            </label>
+            <label>
+              <span>Fundo da ficha</span>
+              <select name="background">${backgroundOptions}</select>
+            </label>
+          </div>
+          <label class="t20ga-custom-background-field">
+            <span>Imagem de fundo personalizada</span>
+            <div class="t20ga-background-file-row">
+              <input type="text" name="backgroundImage" value="${escapeHtml(original.backgroundImage)}" placeholder="Escolha uma imagem do Foundry">
+              <button class="t20ga-background-file-picker" type="button" title="Escolher imagem"><i class="fa-solid fa-folder-open"></i></button>
+              <button class="t20ga-background-file-clear" type="button" title="Remover imagem"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </label>
+          <div class="t20ga-style-preview" data-frame="${original.frame}" data-background="${original.background}" aria-hidden="true">
+            <span>Prévia da moldura e do fundo</span>
+          </div>
+          <p class="t20ga-theme-note">A aparência fica salva somente para você e para esta personagem.</p>
+          <button class="t20ga-theme-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Restaurar aparência original</button>
         </form>`;
 
       const readAppearance = (dialogHtml) => ({
         theme: String(dialogHtml.find('[name="theme"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.theme),
-        customColor: normalizeHex(dialogHtml.find('[name="customColor"]').val())
+        customColor: normalizeHex(dialogHtml.find('[name="customColor"]').val()),
+        frame: String(dialogHtml.find('[name="frame"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.frame),
+        background: String(dialogHtml.find('[name="background"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.background),
+        backgroundImage: String(dialogHtml.find('[name="backgroundImage"]').val() ?? "").trim()
       });
 
       const updatePreview = (dialogHtml) => {
         const appearance = readAppearance(dialogHtml);
         const palette = buildPalette(appearance);
         dialogHtml.find(".t20ga-custom-color-field").toggleClass("is-active", appearance.theme === "custom");
+        dialogHtml.find(".t20ga-custom-background-field").toggleClass("is-active", appearance.background === "custom");
         const colors = [palette.deep, palette.dark, palette.primary, palette.bright];
         dialogHtml.find(".t20ga-theme-preview span").each((index, element) => {
           element.style.background = colors[index];
         });
+        const stylePreview = dialogHtml.find(".t20ga-style-preview")[0];
+        if (stylePreview) {
+          stylePreview.dataset.frame = appearance.frame;
+          stylePreview.dataset.background = appearance.background;
+          stylePreview.style.setProperty("--t20ga-theme-primary", palette.primary);
+          stylePreview.style.setProperty("--t20ga-theme-surface", palette.surface);
+          stylePreview.style.setProperty("--t20ga-theme-deep", palette.deep);
+          if (appearance.backgroundImage) {
+            stylePreview.style.setProperty(
+              "--t20ga-preview-background",
+              `url(${JSON.stringify(appearance.backgroundImage)})`
+            );
+          } else {
+            stylePreview.style.removeProperty("--t20ga-preview-background");
+          }
+        }
         this._applyAppearance(html, appearance);
       };
 
@@ -582,9 +641,39 @@ Hooks.once("init", () => {
           default: "save",
           render: (dialogHtml) => {
             dialogHtml.find('input, select').on("input change", () => updatePreview(dialogHtml));
+            dialogHtml.find(".t20ga-background-file-picker").on("click", () => {
+              const input = dialogHtml.find('[name="backgroundImage"]');
+              const callback = (path) => {
+                input.val(path);
+                dialogHtml.find('[name="background"]').val("custom");
+                updatePreview(dialogHtml);
+              };
+              const current = String(input.val() ?? "");
+              const ModernFilePicker = globalThis.foundry?.applications?.apps?.FilePicker?.implementation;
+              if (ModernFilePicker) {
+                new ModernFilePicker({ type: "image", current, callback }).render({ force: true });
+                return;
+              }
+              const LegacyFilePicker = globalThis.FilePicker;
+              if (LegacyFilePicker) {
+                const picker = new LegacyFilePicker({ type: "image", current, callback });
+                if (typeof picker.browse === "function") picker.browse();
+                else picker.render(true);
+                return;
+              }
+              ui.notifications.warn("O seletor de imagens não está disponível nesta versão do Foundry.");
+            });
+            dialogHtml.find(".t20ga-background-file-clear").on("click", () => {
+              dialogHtml.find('[name="backgroundImage"]').val("");
+              dialogHtml.find('[name="background"]').val(DEFAULT_PERSONAL_APPEARANCE.background);
+              updatePreview(dialogHtml);
+            });
             dialogHtml.find(".t20ga-theme-reset").on("click", () => {
               dialogHtml.find('[name="theme"]').val(DEFAULT_PERSONAL_APPEARANCE.theme);
               dialogHtml.find('[name="customColor"]').val(DEFAULT_PERSONAL_APPEARANCE.customColor);
+              dialogHtml.find('[name="frame"]').val(DEFAULT_PERSONAL_APPEARANCE.frame);
+              dialogHtml.find('[name="background"]').val(DEFAULT_PERSONAL_APPEARANCE.background);
+              dialogHtml.find('[name="backgroundImage"]').val(DEFAULT_PERSONAL_APPEARANCE.backgroundImage);
               updatePreview(dialogHtml);
             });
             updatePreview(dialogHtml);
