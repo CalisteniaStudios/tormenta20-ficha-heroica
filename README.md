@@ -26,6 +26,7 @@ Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como
 - Armas, itens, poderes e magias marcados como favoritos aparecem na primeira aba da ficha, como na ficha padrão do Tormenta20.
 - Perícias e efeitos de uso adotam automaticamente a estrutura correta do Tormenta20 1.5.015 ou 1.6.1.
 - A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
+- A janela pode ser redimensionada pela alça do canto inferior direito. Em larguras menores, a arte passa para um cabeçalho compacto e os painéis se reorganizam para manter todos os controles acessíveis.
 - Cada cartão do Diário possui um botão para expandir a anotação e usar toda a área da ficha.
 - Ao expandir uma anotação, o campo de edição também cresce e aproveita todo o espaço disponível.
 - O avatar ou token é dimensionado automaticamente pela proporção real da imagem para preencher a moldura em `1×`, sem pré-recortar a imagem. Reduzir a escala em **Ajustar** revela as áreas que ficaram fora da moldura, enquanto o fundo integrado continua preenchendo os espaços.

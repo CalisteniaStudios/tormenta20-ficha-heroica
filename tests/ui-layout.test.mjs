@@ -14,6 +14,11 @@ const manifest = JSON.parse(fs.readFileSync(new URL("../module.json", import.met
 assert.match(css, /nav\.sheet-tabs\s*\{[^}]*justify-content:\s*center;/s, "the category bar is centered");
 assert.match(css, /nav\.sheet-tabs\s*\{[^}]*flex-wrap:\s*nowrap;/s, "category buttons remain on one row");
 assert.match(css, /nav\.sheet-tabs \.item\s*\{[^}]*flex:\s*0 1 160px;/s, "category buttons form a centered group");
+assert.match(css, /\.t20ga-window\s*\{[^}]*min-width:\s*620px;[^}]*min-height:\s*560px;/s, "the sheet can be resized to a compact usable window");
+assert.match(css, /\.window-resizable-handle,[\s\S]*\.window-resize-handle\s*\{[^}]*z-index:\s*2147483647;[^}]*pointer-events:\s*auto;/s, "Foundry resize handles stay interactive above the custom sheet");
+assert.match(css, /@container \(max-width: 900px\)[\s\S]*grid-template-rows:\s*clamp\(190px, 30%, 240px\) minmax\(0, 1fr\);/s, "medium sheets move the artwork into a compact horizontal header");
+assert.match(css, /@container \(max-width: 900px\)[\s\S]*\.t20ga-dashboard\.active\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/s, "dense dashboard panels stack when the sheet narrows");
+assert.match(css, /@container \(max-width: 720px\)[\s\S]*nav\.sheet-tabs\s*\{[^}]*overflow-x:\s*auto;/s, "all category tabs remain reachable in the narrow layout");
 assert.equal((journal.match(/class="t20ga-journal-expand"/g) ?? []).length, 6, "every character journal card has an expand button");
 assert.match(css, /article\.is-expanded\s*\{[^}]*position:\s*absolute !important;[^}]*inset:\s*0 !important;/s, "expanded journal cards occupy the panel");
 assert.match(css, /article\.is-expanded > \*:not\(\.section-titles\)\s*\{[^}]*flex:\s*1 1 0 !important;[^}]*height:\s*auto !important;/s, "expanded journal editor roots grow with the card");
@@ -70,7 +75,7 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.20", "manifest version is updated");
+assert.equal(manifest.version, "1.6.21", "manifest version is updated");
 assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(

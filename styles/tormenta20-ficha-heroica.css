@@ -1,6 +1,6 @@
 .t20ga-window {
-  min-width: 980px;
-  min-height: 680px;
+  min-width: 620px;
+  min-height: 560px;
   --t20ga-ink: #261917;
   --t20ga-ink-soft: #49342f;
   --t20ga-crimson: #75111b;
@@ -16,6 +16,14 @@
   --t20ga-paper-deep: #dfd2b7;
   --t20ga-line: rgba(84, 42, 34, 0.26);
   --t20ga-shadow: rgba(34, 12, 12, 0.32);
+}
+
+/* Keep both the Application V1 and V2 resize handles above the sheet. */
+.t20ga-window .window-resizable-handle,
+.t20ga-window .window-resize-handle {
+  z-index: 2147483647;
+  pointer-events: auto;
+  cursor: nwse-resize;
 }
 
 .t20ga-window .window-header {
@@ -1490,6 +1498,119 @@
 
   .t20ga-window nav.sheet-tabs .item {
     font-size: 10px;
+  }
+}
+
+@container (max-width: 900px) {
+  .t20ga-window .t20ga-shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: clamp(190px, 30%, 240px) minmax(0, 1fr);
+  }
+
+  .t20ga-window .t20ga-hero-panel {
+    display: grid;
+    grid-template-columns: minmax(180px, 32%) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 3px solid var(--t20ga-gold);
+    box-shadow: 0 9px 24px rgba(48, 10, 14, 0.22);
+  }
+
+  .t20ga-window .t20ga-hero-panel::after {
+    top: auto;
+    right: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 13px;
+    background: linear-gradient(
+      90deg,
+      transparent 0 2%,
+      rgba(242, 215, 139, 0.52) 2% 4%,
+      transparent 4% 13%,
+      rgba(242, 215, 139, 0.32) 13% 14%,
+      transparent 14% 100%
+    );
+    clip-path: polygon(0 42%, 0 100%, 100% 100%, 100% 25%, 96% 52%, 91% 28%, 84% 58%, 76% 26%, 67% 58%, 55% 29%, 44% 62%, 31% 29%, 19% 62%, 8% 30%);
+  }
+
+  .t20ga-window .t20ga-brand {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    min-height: 0;
+    padding: 9px 12px 4px;
+  }
+
+  .t20ga-window .t20ga-hero-frame {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin: 9px 12px 9px 4px;
+    border-radius: 12px 44% 44% 12px / 12px 14% 14% 12px;
+  }
+
+  .t20ga-window .t20ga-hero-caption {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+    padding: 2px 10px 9px;
+  }
+
+  .t20ga-window .t20ga-main {
+    padding: 9px 10px 7px;
+  }
+
+  .t20ga-window .t20ga-vitals {
+    grid-template-columns: minmax(340px, 1.35fr) minmax(245px, 0.9fr);
+  }
+
+  .t20ga-window .t20ga-dashboard.active {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    overflow: hidden auto;
+  }
+
+  .t20ga-window .t20ga-skills-card {
+    height: auto;
+    min-height: 340px;
+  }
+
+  .t20ga-window .t20ga-dashboard-side {
+    overflow: visible;
+  }
+
+  .t20ga-window .t20ga-favorites-card {
+    max-height: none;
+  }
+
+  .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active {
+    flex-direction: column !important;
+    overflow: hidden auto !important;
+  }
+
+  .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active > .left-notes,
+  .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .tab.journal.active > .right-notes {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+  }
+}
+
+@container (max-width: 720px) {
+  .t20ga-window .t20ga-vitals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .t20ga-window nav.sheet-tabs {
+    justify-content: flex-start;
+    padding-inline: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .t20ga-window nav.sheet-tabs .item {
+    flex: 0 0 auto;
+    min-width: 72px;
+    padding-inline: 5px;
   }
 }
 
