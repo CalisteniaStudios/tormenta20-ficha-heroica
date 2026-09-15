@@ -89,7 +89,7 @@
 
 .t20ga-window .t20ga-shell {
   display: grid;
-  grid-template-columns: minmax(245px, var(--t20ga-hero-panel-width, 25%)) minmax(0, 1fr);
+  grid-template-columns: minmax(245px, 25%) minmax(0, 1fr);
   flex: 1;
   min-height: 0;
 }
@@ -98,11 +98,11 @@
 
 .t20ga-window .t20ga-hero-panel {
   position: relative;
-  z-index: 2;
+  z-index: auto;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   color: #fff5df;
   background:
     radial-gradient(circle at 50% 35%, rgba(218, 57, 65, 0.44), transparent 34%),
@@ -146,7 +146,7 @@
 
 .t20ga-window .t20ga-brand {
   position: relative;
-  z-index: 4;
+  z-index: 20;
   flex: 0 0 auto;
   padding: 15px 18px 8px;
   text-align: center;
@@ -162,6 +162,7 @@
   border: 0;
   border-radius: 8px;
   box-shadow: none;
+  overflow: visible;
 }
 
 .t20ga-window .t20ga-brand-config:hover,
@@ -171,12 +172,11 @@
 }
 
 .t20ga-window .t20ga-campaign-logo-frame {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
   width: 100%;
-  min-height: calc(64px * var(--t20ga-campaign-logo-scale, 1));
-  padding: var(--t20ga-campaign-logo-padding-top, 0) var(--t20ga-campaign-logo-padding-right, 0) var(--t20ga-campaign-logo-padding-bottom, 0) var(--t20ga-campaign-logo-padding-left, 0);
+  height: 64px;
+  overflow: visible;
+  place-items: center;
   box-sizing: border-box;
 }
 
@@ -184,11 +184,13 @@
   display: block;
   width: auto;
   max-width: 100%;
-  height: calc(64px * var(--t20ga-campaign-logo-scale, 1));
+  height: 64px;
   max-height: none;
   margin: 0 auto;
   object-fit: contain;
   border: 0;
+  transform: translate(var(--t20ga-campaign-logo-x, 0), var(--t20ga-campaign-logo-y, 0)) scale(var(--t20ga-campaign-logo-scale, 1));
+  transform-origin: center center;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.58));
 }
 
@@ -1476,7 +1478,7 @@
 
 @container (max-width: 1040px) {
   .t20ga-window .t20ga-shell {
-    grid-template-columns: minmax(220px, var(--t20ga-hero-panel-width, 25%)) minmax(0, 1fr);
+    grid-template-columns: minmax(220px, 25%) minmax(0, 1fr);
   }
 
   .t20ga-window .t20ga-vitals {

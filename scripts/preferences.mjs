@@ -90,7 +90,7 @@ export function normalizeCampaignIdentity(value = {}) {
   };
   return {
     logo: String(value.logo ?? "").trim(),
-    logoScale: clamp(value.logoScale, 0.5, 1.8, DEFAULT_CAMPAIGN_IDENTITY.logoScale),
+    logoScale: clamp(value.logoScale, 0.5, 3, DEFAULT_CAMPAIGN_IDENTITY.logoScale),
     logoPositionX: clamp(value.logoPositionX, -60, 60, DEFAULT_CAMPAIGN_IDENTITY.logoPositionX),
     logoPositionY: clamp(value.logoPositionY, -40, 40, DEFAULT_CAMPAIGN_IDENTITY.logoPositionY),
     title: String(value.title ?? "").trim(),

@@ -75,13 +75,14 @@ assert.match(characterSheet, /t20ga\.list-skills[\s\S]*t20ga\.list-consumable[\s
 assert.match(css, /\[data-t20ga-layout="classic"\] \.t20ga-classic-page\.active\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(350px, 1\.08fr\) minmax\(300px, 0\.92fr\);/s, "classic mode uses a practical two-column sheet");
 assert.doesNotMatch(css, /data-t20ga-layout="continuous"/, "the impractical continuous layout styles are removed");
 assert.match(campaignConfig, /name="logo"/, "campaign identity includes a logo selector");
-assert.match(campaignConfig, /name="logoScale" min="0\.5" max="1\.8"/, "campaign identity includes a fluid logo scale control");
+assert.match(campaignConfig, /name="logoScale" min="0\.5" max="3"/, "campaign identity can enlarge the logo up to three times");
 assert.match(campaignConfig, /name="logoPositionX" min="-60" max="60"/, "campaign identity includes horizontal logo positioning");
 assert.match(campaignConfig, /name="logoPositionY" min="-40" max="40"/, "campaign identity includes vertical logo positioning");
 assert.match(characterSheet, /--t20ga-campaign-logo-scale: \{\{t20ga\.campaignLogoScale\}\}/, "the saved logo scale reaches the character sheet");
-assert.match(css, /grid-template-columns:\s*minmax\(245px, var\(--t20ga-hero-panel-width, 25%\)\)/, "the surrounding sheet layout follows the logo width");
-assert.match(css, /\.t20ga-campaign-logo\s*\{[^}]*height:\s*calc\(64px \* var\(--t20ga-campaign-logo-scale, 1\)\);[^}]*max-height:\s*none;/s, "the logo grows through layout instead of a cropped transform");
-assert.doesNotMatch(css, /\.t20ga-campaign-logo\s*\{[^}]*transform:/s, "the campaign logo is never enlarged outside a fixed clipping frame");
+assert.match(css, /grid-template-columns:\s*minmax\(245px, 25%\) minmax\(0, 1fr\);/, "the portrait column stays independent from the campaign logo scale");
+assert.doesNotMatch(characterSheet, /campaignLogoPanelWidth|campaignLogoHorizontalSpace/, "the logo cannot resize the portrait column");
+assert.match(css, /\.t20ga-campaign-logo-frame\s*\{[^}]*height:\s*64px;[^}]*overflow:\s*visible;/s, "the logo uses a fixed layout slot without clipping enlarged artwork");
+assert.match(css, /\.t20ga-campaign-logo\s*\{[^}]*height:\s*64px;[^}]*transform:\s*translate\(var\(--t20ga-campaign-logo-x[^;]*scale\(var\(--t20ga-campaign-logo-scale/s, "the logo scale and position are visual transforms that do not resize the portrait");
 assert.match(campaignConfig, /name="title"/, "campaign identity includes an optional title");
 assert.match(campaignConfig, /name="groupName"/, "campaign identity includes an optional group name");
 assert.match(script, /"t20ga\.list-favorites":/, "the isolated favorites template is registered");
@@ -96,7 +97,7 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.24", "manifest version is updated");
+assert.equal(manifest.version, "1.6.25", "manifest version is updated");
 assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(

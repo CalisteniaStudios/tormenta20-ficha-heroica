@@ -45,7 +45,7 @@ test("limita escala e posição da logo a um enquadramento seguro", () => {
     logoPositionY: "valor inválido"
   }), {
     ...DEFAULT_CAMPAIGN_IDENTITY,
-    logoScale: 1.8,
+    logoScale: 3,
     logoPositionX: -60
   });
 });
