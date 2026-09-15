@@ -41,6 +41,14 @@
       <span>Posição vertical <output data-output="logoPositionY">{{identity.logoPositionY}}px</output></span>
       <input type="range" name="logoPositionY" min="-40" max="40" step="1" value="{{identity.logoPositionY}}" />
     </label>
+    <label class="t20ga-campaign-checkbox">
+      <input type="checkbox" name="logoPushPortrait" {{checked identity.logoPushPortrait}} />
+      <span>Reservar espaço para a logo acima do retrato</span>
+    </label>
+    <label>
+      <span>Largura da área do retrato <output data-output="portraitWidth">{{identity.portraitWidth}}%</output></span>
+      <input type="range" name="portraitWidth" min="20" max="45" step="1" value="{{identity.portraitWidth}}" />
+    </label>
     <button type="button" class="t20ga-dialog-reset" data-action="reset-logo-transform">
       <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
       Restaurar enquadramento

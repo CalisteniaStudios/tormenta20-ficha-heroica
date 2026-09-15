@@ -1,12 +1,12 @@
 <form class="tormenta20 tabbed t20ga-sheet" autocomplete="off">
-  <div class="t20ga-shell">
+  <div class="t20ga-shell" style="--t20ga-hero-panel-width: {{t20ga.portraitWidth}}%;">
     <aside class="t20ga-hero-panel">
       <div class="t20ga-brand">
         <button class="t20ga-brand-config" type="button" title="Personalizar aparência" aria-label="Personalizar a aparência desta ficha">
           {{#if t20ga.campaignLogo}}
           <span
             class="t20ga-campaign-logo-frame"
-            style="--t20ga-campaign-logo-scale: {{t20ga.campaignLogoScale}}; --t20ga-campaign-logo-x: {{t20ga.campaignLogoPositionX}}px; --t20ga-campaign-logo-y: {{t20ga.campaignLogoPositionY}}px;"
+            style="--t20ga-campaign-logo-scale: {{t20ga.campaignLogoScale}}; --t20ga-campaign-logo-x: {{t20ga.campaignLogoPositionX}}px; --t20ga-campaign-logo-y: {{t20ga.campaignLogoPositionY}}px; --t20ga-campaign-logo-reserved-height: {{t20ga.campaignLogoReservedHeight}}px;"
           >
             <img
               class="t20ga-campaign-logo"

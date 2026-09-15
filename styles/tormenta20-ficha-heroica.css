@@ -89,7 +89,7 @@
 
 .t20ga-window .t20ga-shell {
   display: grid;
-  grid-template-columns: minmax(245px, 25%) minmax(0, 1fr);
+  grid-template-columns: minmax(245px, var(--t20ga-hero-panel-width, 25%)) minmax(0, 1fr);
   flex: 1;
   min-height: 0;
 }
@@ -174,7 +174,7 @@
 .t20ga-window .t20ga-campaign-logo-frame {
   display: grid;
   width: 100%;
-  height: 64px;
+  height: var(--t20ga-campaign-logo-reserved-height, 64px);
   overflow: visible;
   place-items: center;
   box-sizing: border-box;
@@ -1479,7 +1479,7 @@
 
 @container (max-width: 1040px) {
   .t20ga-window .t20ga-shell {
-    grid-template-columns: minmax(220px, 25%) minmax(0, 1fr);
+    grid-template-columns: minmax(220px, var(--t20ga-hero-panel-width, 25%)) minmax(0, 1fr);
   }
 
   .t20ga-window .t20ga-vitals {
@@ -1802,6 +1802,18 @@
 .t20ga-campaign-logo-adjustments input[type="range"] {
   width: 100%;
   accent-color: #8d1b25;
+}
+
+.t20ga-campaign-logo-adjustments label.t20ga-campaign-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 10px 0 8px;
+}
+
+.t20ga-campaign-logo-adjustments label.t20ga-campaign-checkbox > span {
+  display: block;
+  margin: 0;
 }
 
 .t20ga-campaign-logo-preview span {
