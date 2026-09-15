@@ -129,6 +129,23 @@ function getCampaignIdentity() {
   );
 }
 
+function previewCampaignLogoTransform({ scale, x, y }) {
+  const normalizedScale = clamp(scale, 0.5, 3);
+  const normalizedX = clamp(x, -60, 60);
+  const normalizedY = clamp(y, -40, 40);
+
+  for (const application of Object.values(ui.windows ?? {})) {
+    if (!application?.options?.classes?.includes?.("t20ga-window")) continue;
+    const root = application.element?.[0] ?? application.element;
+    const frames = root?.querySelectorAll?.(".t20ga-campaign-logo-frame") ?? [];
+    for (const frame of frames) {
+      frame.style.setProperty("--t20ga-campaign-logo-scale", normalizedScale);
+      frame.style.setProperty("--t20ga-campaign-logo-x", `${normalizedX}px`);
+      frame.style.setProperty("--t20ga-campaign-logo-y", `${normalizedY}px`);
+    }
+  }
+}
+
 function getPersonalAppearance(actor) {
   const stored = game.user?.getFlag?.(MODULE_ID, PERSONAL_APPEARANCE_FLAG) ?? {};
   const value = stored.actors?.[actorAppearanceKey(actor)] ?? stored.default;
@@ -208,9 +225,11 @@ class CampaignIdentityConfig extends FormApplication {
   }
 
   async getData(options = {}) {
+    this._savedIdentity = getCampaignIdentity();
+    this._identitySubmitted = false;
     return {
       ...(await super.getData(options)),
-      identity: getCampaignIdentity()
+      identity: this._savedIdentity
     };
   }
 
@@ -243,6 +262,7 @@ class CampaignIdentityConfig extends FormApplication {
       html.find('[data-output="logoScale"]').text(`${transform.scale.toFixed(2)}×`);
       html.find('[data-output="logoPositionX"]').text(`${transform.x}px`);
       html.find('[data-output="logoPositionY"]').text(`${transform.y}px`);
+      previewCampaignLogoTransform(transform);
     };
 
     html.find('[data-action="browse-logo"]').on("click", () => {
@@ -296,7 +316,19 @@ class CampaignIdentityConfig extends FormApplication {
       configured: true
     });
     await game.settings.set(MODULE_ID, "campaignIdentity", identity);
+    this._identitySubmitted = true;
     ui.notifications.info("A identidade da campanha foi salva para este mundo.");
+  }
+
+  async close(options = {}) {
+    if (!this._identitySubmitted && this._savedIdentity) {
+      previewCampaignLogoTransform({
+        scale: this._savedIdentity.logoScale,
+        x: this._savedIdentity.logoPositionX,
+        y: this._savedIdentity.logoPositionY
+      });
+    }
+    return super.close(options);
   }
 }
 

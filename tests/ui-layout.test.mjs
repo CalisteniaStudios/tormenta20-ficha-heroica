@@ -83,6 +83,10 @@ assert.match(css, /grid-template-columns:\s*minmax\(245px, 25%\) minmax\(0, 1fr\
 assert.doesNotMatch(characterSheet, /campaignLogoPanelWidth|campaignLogoHorizontalSpace/, "the logo cannot resize the portrait column");
 assert.match(css, /\.t20ga-campaign-logo-frame\s*\{[^}]*height:\s*64px;[^}]*overflow:\s*visible;/s, "the logo uses a fixed layout slot without clipping enlarged artwork");
 assert.match(css, /\.t20ga-campaign-logo\s*\{[^}]*height:\s*64px;[^}]*transform:\s*translate\(var\(--t20ga-campaign-logo-x[^;]*scale\(var\(--t20ga-campaign-logo-scale/s, "the logo scale and position are visual transforms that do not resize the portrait");
+assert.match(script, /function previewCampaignLogoTransform\(\{ scale, x, y \}\)/, "campaign logo adjustments can be applied to open sheets");
+assert.match(script, /frame\.style\.setProperty\("--t20ga-campaign-logo-scale", normalizedScale\)/, "the live preview updates the open sheet logo scale");
+assert.match(script, /previewCampaignLogoTransform\(transform\)/, "moving a logo control updates the open sheets immediately");
+assert.match(script, /if \(!this\._identitySubmitted && this\._savedIdentity\)/, "closing without saving restores the previous logo framing");
 assert.match(campaignConfig, /name="title"/, "campaign identity includes an optional title");
 assert.match(campaignConfig, /name="groupName"/, "campaign identity includes an optional group name");
 assert.match(script, /"t20ga\.list-favorites":/, "the isolated favorites template is registered");
@@ -97,7 +101,7 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.25", "manifest version is updated");
+assert.equal(manifest.version, "1.6.26", "manifest version is updated");
 assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(

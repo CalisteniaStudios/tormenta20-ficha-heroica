@@ -191,6 +191,7 @@
   border: 0;
   transform: translate(var(--t20ga-campaign-logo-x, 0), var(--t20ga-campaign-logo-y, 0)) scale(var(--t20ga-campaign-logo-scale, 1));
   transform-origin: center center;
+  will-change: transform;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.58));
 }
 
