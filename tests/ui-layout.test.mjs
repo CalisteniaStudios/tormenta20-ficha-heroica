@@ -106,7 +106,8 @@ assert.match(script, /\.\.\.\(baseOptions\.scrollY \?\? \[\]\)/, "the heroic she
 assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
-assert.equal(manifest.version, "1.6.26", "manifest version is updated");
+assert.match(manifest.version, /^\d+\.\d+\.\d+$/, "manifest declares a semantic release version");
+assert.equal(manifest.download, `https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/download/v${manifest.version}/tormenta20-ficha-heroica-v${manifest.version}.zip`, "download targets the declared version");
 assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(
