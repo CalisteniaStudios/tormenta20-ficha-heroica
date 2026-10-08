@@ -1,4 +1,6 @@
 import { selectTormenta20Templates } from "./compatibility.mjs";
+import { useSheetContextPopover } from "./context-menu.mjs";
+import { arrangeSheetStyle } from "./sheet-styles.mjs";
 import {
   BACKGROUND_PRESETS,
   DEFAULT_CAMPAIGN_IDENTITY,
@@ -460,7 +462,7 @@ Hooks.once("init", () => {
     async getData(options = {}) {
       await vendoredTemplatesReady;
       const sheetData = await super.getData(options);
-      const appearance = getPersonalAppearance(this.actor);
+      const appearance = this._getAppearance();
       const identity = getCampaignIdentity();
       let tokenDocument = this.token?.document ?? this.token ?? null;
 
@@ -513,7 +515,7 @@ Hooks.once("init", () => {
     }
 
     _getAppearance() {
-      return getPersonalAppearance(this.actor);
+      return this._t20gaPreviewAppearance ?? getPersonalAppearance(this.actor);
     }
 
     _isUnlinkedTokenSheet() {
@@ -570,6 +572,7 @@ Hooks.once("init", () => {
 
       const original = this._getAppearance();
       let saved = false;
+      let saving = false;
       const options = Object.entries(THEME_PRESETS)
         .map(([id, theme]) => `<option value="${id}"${original.theme === id ? " selected" : ""}>${escapeHtml(theme.label)}</option>`)
         .join("");
@@ -588,6 +591,7 @@ Hooks.once("init", () => {
           <label class="t20ga-layout-field">
             <span>Organização da ficha</span>
             <select name="layout">${layoutOptions}</select>
+            <small class="t20ga-layout-description"></small>
           </label>
           <div class="t20ga-theme-grid">
             <label>
@@ -637,7 +641,10 @@ Hooks.once("init", () => {
       });
 
       const updatePreview = (dialogHtml) => {
-        const appearance = readAppearance(dialogHtml);
+        const appearance = normalizePersonalAppearance(readAppearance(dialogHtml));
+        const previousLayout = this._getAppearance().layout;
+        this._t20gaPreviewAppearance = appearance;
+        dialogHtml.find(".t20ga-layout-description").text(LAYOUT_PRESETS[appearance.layout]?.description ?? "");
         const palette = buildPalette(appearance);
         dialogHtml.find(".t20ga-custom-color-field").toggleClass("is-active", appearance.theme === "custom");
         dialogHtml.find(".t20ga-custom-background-field").toggleClass("is-active", appearance.background === "custom");
@@ -661,7 +668,8 @@ Hooks.once("init", () => {
             stylePreview.style.removeProperty("--t20ga-preview-background");
           }
         }
-        this._applyAppearance(html, appearance);
+        this._applyAppearance(this.element, appearance);
+        if (previousLayout !== appearance.layout) this.render(false);
       };
 
       new DialogClass(
@@ -673,11 +681,23 @@ Hooks.once("init", () => {
               icon: '<i class="fa-solid fa-palette"></i>',
               label: "Salvar aparência",
               callback: async (dialogHtml) => {
-                saved = true;
                 const appearance = normalizePersonalAppearance(readAppearance(dialogHtml));
-                await savePersonalAppearance(this.actor, appearance);
-                this._applyAppearance(html, appearance);
-                this.render(false);
+                saving = true;
+                try {
+                  await savePersonalAppearance(this.actor, appearance);
+                  saved = true;
+                  delete this._t20gaPreviewAppearance;
+                  this._applyAppearance(this.element, appearance);
+                  this.render(false);
+                } catch (error) {
+                  delete this._t20gaPreviewAppearance;
+                  this._applyAppearance(this.element, original);
+                  this.render(false);
+                  ui.notifications.error("Não foi possível salvar a aparência. A aparência anterior foi restaurada.");
+                  console.error(`${MODULE_ID} | Falha ao salvar aparência.`, error);
+                } finally {
+                  saving = false;
+                }
               }
             },
             cancel: {
@@ -727,7 +747,12 @@ Hooks.once("init", () => {
             updatePreview(dialogHtml);
           },
           close: () => {
-            if (!saved) this._applyAppearance(html, original);
+            if (!saved && !saving) {
+              const layoutChanged = this._getAppearance().layout !== original.layout;
+              delete this._t20gaPreviewAppearance;
+              this._applyAppearance(this.element, original);
+              if (layoutChanged) this.render(false);
+            }
           }
         },
         { classes: ["t20ga-theme-config-dialog"], width: 560 }
@@ -951,10 +976,24 @@ Hooks.once("init", () => {
       ).render(true);
     }
 
+    _onItemToggleContext(element) {
+      super._onItemToggleContext(element);
+      useSheetContextPopover(ui.context);
+    }
+
+    async close(options = {}) {
+      const context = ui.context;
+      if (context?.target && this.element?.[0]?.contains(context.target)) {
+        await context.close({ animate: false });
+      }
+      return super.close(options);
+    }
+
     activateListeners(html) {
       super.activateListeners(html);
 
       this._applyAppearance(html, this._getAppearance());
+      arrangeSheetStyle(html[0], this._getAppearance().layout);
 
       const heroArt = html.find(".t20ga-hero-art")[0];
       const heroArtBackdrop = html.find(".t20ga-hero-art-backdrop")[0];

@@ -45,7 +45,10 @@ export const FRAME_PRESETS = Object.freeze({
 
 export const LAYOUT_PRESETS = Object.freeze({
   tabs: { label: "Com abas" },
-  classic: { label: "Clássica (como a ficha original)" }
+  classic: { label: "Clássica (como a ficha original)" },
+  legend: { label: "Lenda · Cinematográfica", description: "Arte central ampla, medalhões de recursos, atributos e perícias à esquerda e atalhos de equipamento à direita." },
+  grimoire: { label: "Grimório · Livro de aventuras", description: "Livro aberto, retrato em destaque, atributos coloridos e abas como marcadores." },
+  saga: { label: "Saga · Fantasia em quadrinhos", description: "Arte integrada, traços de tinta, recursos em destaque e favoritos." }
 });
 
 export const BACKGROUND_PRESETS = Object.freeze({

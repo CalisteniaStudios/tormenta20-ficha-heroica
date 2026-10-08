@@ -89,3 +89,11 @@ test("aceita a organização clássica e migra a antiga página contínua", () =
   assert.equal(normalizePersonalAppearance({ layout: "continuous" }).layout, "classic");
   assert.equal(normalizePersonalAppearance({ layout: "desconhecido" }).layout, "tabs");
 });
+
+
+test("mantém os três novos estilos e suas escolhas visuais após serialização", () => {
+  for (const layout of ["legend", "grimoire", "saga"]) {
+    const appearance = { theme: "custom", customColor: "#008080", layout, frame: "arcane", background: "night", backgroundImage: "" };
+    assert.deepEqual(normalizePersonalAppearance(JSON.parse(JSON.stringify(appearance))), appearance);
+  }
+});
