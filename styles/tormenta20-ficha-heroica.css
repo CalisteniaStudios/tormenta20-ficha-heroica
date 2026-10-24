@@ -3629,19 +3629,23 @@
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-style-favorites .item:not(.item-header) { background: #f6e9c855 !important; border-color: #ad8950; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-style-favorites .item:not(.item-header) { background: linear-gradient(110deg,#26332355,#060e0a) !important; border-color: #92734288; }
 
-/* Original Calistenia Studios artwork as a small mark inside the portrait frame. */
+/* Original artwork behind the character portrait, in place of the decorative sigil. */
 .t20ga-window .t20ga-hero-frame .t20ga-studio-watermark {
   position: absolute;
+  top: 8%;
   left: 50%;
-  bottom: 14px;
-  z-index: 4;
+  z-index: 1;
   display: block;
-  width: min(46%, 145px);
+  width: min(72%, 310px);
   height: auto;
-  max-height: 82px;
+  max-height: 28%;
   object-fit: contain;
   pointer-events: none;
-  opacity: 0.42;
+  opacity: 0.7;
   transform: translateX(-50%);
-  filter: drop-shadow(0 2px 5px #0009);
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
 }
