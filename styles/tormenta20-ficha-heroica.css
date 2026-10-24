@@ -3628,3 +3628,20 @@
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-header .item-name { background: transparent !important; color: inherit !important; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-style-favorites .item:not(.item-header) { background: #f6e9c855 !important; border-color: #ad8950; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-style-favorites .item:not(.item-header) { background: linear-gradient(110deg,#26332355,#060e0a) !important; border-color: #92734288; }
+
+/* Original Calistenia Studios artwork as a small mark inside the portrait frame. */
+.t20ga-window .t20ga-hero-frame .t20ga-studio-watermark {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 4;
+  display: block;
+  width: min(46%, 145px);
+  height: auto;
+  max-height: 82px;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0.42;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 2px 5px #0009);
+}

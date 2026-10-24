@@ -1,5 +1,7 @@
 # Tormenta20: Ficha Heroica
 
+<img src="assets/LOGO.png" alt="Calistenia Studios" width="200">
+
 Ficha alternativa de personagem para **Tormenta20 1.5.015 ou superior**, compatível com **Foundry VTT 13 e 14** e verificada no **Foundry VTT 14.367**.
 
 Os componentes visuais internos da ficha são cópias isoladas da ficha oficial do Tormenta20, criada por Victor Hugo Paiva. A base visual permanece na **v1.5.015**, enquanto perícias e efeitos usam automaticamente os modelos compatíveis com a **v1.6.1** quando o mundo está no Foundry VTT 14. Isso evita que módulos que substituam os templates globais da ficha padrão alterem também a Ficha Heroica. Os dados, rolagens, itens e automações continuam sendo processados pelo sistema Tormenta20 instalado.
