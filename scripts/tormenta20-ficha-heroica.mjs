@@ -131,6 +131,15 @@ function getCampaignIdentity() {
   );
 }
 
+function canModifyCampaignIdentity() {
+  return Boolean(game.user?.isGM || game.user?.can?.("SETTINGS_MODIFY"));
+}
+
+function syncCampaignIdentityMenuPermission() {
+  const menu = game.settings.menus?.get(`${MODULE_ID}.campaignIdentityMenu`);
+  if (menu) menu.restricted = !canModifyCampaignIdentity();
+}
+
 function getCampaignLogoReservedHeight({ scale, y, logoPushPortrait }) {
   if (!logoPushPortrait) return 64;
   return Math.ceil((64 * clamp(scale, 0.5, 3)) + (Math.abs(clamp(y, -40, 40)) * 2));
@@ -321,8 +330,8 @@ class CampaignIdentityConfig extends FormApplication {
   }
 
   async _updateObject(_event, formData) {
-    if (!game.user.isGM) {
-      ui.notifications.warn("Somente o mestre pode alterar a identidade da campanha.");
+    if (!canModifyCampaignIdentity()) {
+      ui.notifications.warn("Você precisa da permissão de alterar configurações para editar a identidade da campanha.");
       return;
     }
     const identity = normalizeCampaignIdentity({
@@ -414,7 +423,7 @@ Hooks.once("init", () => {
     hint: "Defina a logo, o título da campanha e o nome do grupo exibidos para todos neste mundo.",
     icon: "fa-solid fa-shield-halved",
     type: CampaignIdentityConfig,
-    restricted: true
+    restricted: !canModifyCampaignIdentity()
   });
 
   const BaseSheet = ORIGINAL_SYSTEM_SHEET
@@ -1129,6 +1138,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
+  syncCampaignIdentityMenuPermission();
   await restorePersistentSettings();
   await migrateLegacyAppearance();
   rerenderHeroicSheets();

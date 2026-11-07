@@ -40,7 +40,7 @@ assert.doesNotMatch(script, /partyGallery|galleryCollapsed|PARTY_ART/, "gallery 
 assert.match(characterSheet, /class="t20ga-campaign-logo"/, "a configured campaign logo is rendered");
 assert.match(characterSheet, /class="t20ga-brand-placeholder"/, "an image-free campaign logo placeholder is available");
 assert.doesNotMatch(characterSheet, /class="t20ga-brand-title"/, "the old fixed sheet title is absent");
-assert.match(characterSheet, /class="t20ga-hero-sigil"/, "the hero panel uses a CSS-native geometric seal");
+assert.match(characterSheet, /class="t20ga-studio-watermark"/, "the hero panel shows the studio watermark");
 assert.match(characterSheet, /class="t20ga-switch-thumb"/, "the art switch uses a CSS-native marker");
 assert.doesNotMatch(characterSheet, /t20ga\.(?:logo|eye)/, "removed branding assets are not referenced by the sheet");
 assert.doesNotMatch(script, /tormenta20-logo|olho-tormenta/, "removed branding assets are not exposed by the sheet data");
@@ -50,7 +50,7 @@ assert.doesNotMatch(preview, /assets\/party/, "the preview does not load bundled
 assert.match(previewCss, /\.t20ga-preview-portrait/, "the preview uses a CSS-native portrait placeholder");
 assert.doesNotMatch(script, /assets\/party/, "the runtime does not load bundled character artwork");
 assert.match(script, /scope: "world"[\s\S]*default: DEFAULT_CAMPAIGN_IDENTITY/, "campaign identity is stored in the world");
-assert.match(script, /restricted: true/, "only game masters can open campaign identity settings");
+assert.match(script, /restricted: !canModifyCampaignIdentity\(\)/, "campaign identity settings require permission to modify settings");
 assert.match(script, /PERSONAL_APPEARANCE_FLAG = "personalAppearanceByActor"/, "personal themes are stored on the user document");
 assert.match(script, /\[actorAppearanceKey\(actor\)\]: normalizePersonalAppearance\(appearance\)/, "personal themes are saved separately by actor");
 assert.match(script, /name="frame"/, "the logo dialog includes personal frame styles");
@@ -78,8 +78,8 @@ assert.match(campaignConfig, /name="logo"/, "campaign identity includes a logo s
 assert.match(campaignConfig, /name="logoScale" min="0\.5" max="3"/, "campaign identity can enlarge the logo up to three times");
 assert.match(campaignConfig, /name="logoPositionX" min="-60" max="60"/, "campaign identity includes horizontal logo positioning");
 assert.match(campaignConfig, /name="logoPositionY" min="-40" max="40"/, "campaign identity includes vertical logo positioning");
-assert.match(campaignConfig, /name="logoPushPortrait"/, "the GM can optionally reserve portrait space for an enlarged logo");
-assert.match(campaignConfig, /name="portraitWidth" min="20" max="45"/, "the GM can adjust the portrait panel width");
+assert.match(campaignConfig, /name="logoPushPortrait"/, "an authorized user can optionally reserve portrait space for an enlarged logo");
+assert.match(campaignConfig, /name="portraitWidth" min="20" max="45"/, "an authorized user can adjust the portrait panel width");
 assert.match(characterSheet, /--t20ga-campaign-logo-scale: \{\{t20ga\.campaignLogoScale\}\}/, "the saved logo scale reaches the character sheet");
 assert.match(characterSheet, /--t20ga-hero-panel-width: \{\{t20ga\.portraitWidth\}\}%/, "the explicit portrait width reaches the character sheet");
 assert.match(css, /grid-template-columns:\s*minmax\(245px, var\(--t20ga-hero-panel-width, 25%\)\) minmax\(0, 1fr\);/, "the portrait column follows only its dedicated width control");

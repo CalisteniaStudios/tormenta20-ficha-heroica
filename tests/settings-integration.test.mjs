@@ -7,6 +7,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   const definitions = new Map();
   const menus = new Map();
   const flags = new Map();
+  const warnings = [];
   let HeroicSheet;
   let systemContextCalls = 0;
   let sheetCloseCalls = 0;
@@ -28,7 +29,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   };
   globalThis.ui = {
     windows: {},
-    notifications: { info() {}, warn() {} }
+    notifications: { info() {}, warn(message) { warnings.push(message); } }
   };
   globalThis.foundry = {
     utils: {
@@ -45,11 +46,12 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   globalThis.game = {
     system: { version: "1.6.1" },
     settings: {
+      menus,
       register: (namespace, key, definition) => {
         definitions.set(key, definition);
         if (!settings.has(key)) settings.set(key, structuredClone(definition.default));
       },
-      registerMenu: (_namespace, key, definition) => menus.set(key, definition),
+      registerMenu: (namespace, key, definition) => menus.set(`${namespace}.${key}`, definition),
       get: (_namespace, key) => settings.get(key),
       set: async (_namespace, key, value) => {
         settings.set(key, structuredClone(value));
@@ -151,7 +153,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   delete globalThis.Dialog;
 
   assert.equal(definitions.get("campaignIdentity").scope, "world");
-  assert.equal(menus.get("campaignIdentityMenu").restricted, true);
+  assert.equal(menus.get("tormenta20-ficha-heroica.campaignIdentityMenu").restricted, false);
   assert.deepEqual(settings.get("campaignIdentity"), {
     logo: "",
     logoScale: 1,
@@ -178,7 +180,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
     actors: {}
   });
 
-  const IdentityConfig = menus.get("campaignIdentityMenu").type;
+  const IdentityConfig = menus.get("tormenta20-ficha-heroica.campaignIdentityMenu").type;
   await new IdentityConfig()._updateObject(null, {
     logo: "worlds/test/logo.svg",
     logoScale: "1.75",
@@ -204,4 +206,23 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
     showGroupName: false,
     configured: true
   });
+
+  game.user.isGM = false;
+  game.user.can = (permission) => permission === "SETTINGS_MODIFY";
+  await hooks.ready();
+  assert.equal(menus.get("tormenta20-ficha-heroica.campaignIdentityMenu").restricted, false,
+    "a menu is visible to a player allowed to modify settings");
+  await new IdentityConfig()._updateObject(null, {
+    logo: "worlds/test/player-logo.svg",
+    title: "Campanha do jogador"
+  });
+  assert.equal(settings.get("campaignIdentity").logo, "worlds/test/player-logo.svg");
+
+  game.user.can = () => false;
+  await hooks.ready();
+  assert.equal(menus.get("tormenta20-ficha-heroica.campaignIdentityMenu").restricted, true,
+    "a player without settings permission cannot see the menu");
+  await new IdentityConfig()._updateObject(null, { logo: "worlds/test/blocked.svg" });
+  assert.equal(settings.get("campaignIdentity").logo, "worlds/test/player-logo.svg");
+  assert.match(warnings.at(-1), /permissão de alterar configurações/);
 });
