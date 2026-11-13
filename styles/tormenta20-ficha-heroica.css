@@ -2927,10 +2927,10 @@
   pointer-events: none;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-brand {
-  position: relative; z-index: 6; align-items: flex-start; flex-direction: column; gap: 2px;
-  width: 81%; min-width: 0; box-sizing: border-box; padding: 14px 24px; margin: 0; border: 0;
+  position: relative; z-index: 6; align-items: center; flex-direction: row; gap: 8px;
+  width: 81%; min-width: 0; box-sizing: border-box; padding: 12px 14px; margin: 0; border: 0;
 }
-.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-brand-config { width: 100%; max-width: 100%; min-width: 0; overflow: hidden; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-brand-config { flex: 1 1 auto; width: auto; max-width: none; min-width: 0; overflow: hidden; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-campaign-logo-frame { width: 100%; max-width: 100%; overflow: hidden; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-campaign-logo { width: 100%; max-width: 100%; object-fit: contain; transform: none !important; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-style-name { color: #f3e9d0; font-size: 9px; letter-spacing: .2em; }
@@ -3416,12 +3416,7 @@
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-hero-caption { position: absolute; bottom: 4px; inset-inline: 0; padding: 10px 4px; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-preview-label { display: none; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-art-controls { flex-wrap: wrap; gap: 5px; }
-.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-character-header { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; padding: 0 0 10px; }
-.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-miniature {
-  width: 58px; height: 58px; min-height: 0; object-fit: cover; object-position: 50% 25%;
-  border-radius: 50%; border: 2px solid #c3a265; padding: 3px;
-  background: #15231b; box-shadow: 0 0 0 1px #3e301c, 0 0 0 4px #9c7b3d22;
-}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-character-header { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 0 0 10px; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .header-details { min-width: 0; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] h1.charname input { font-size: clamp(19px, 2cqw, 27px); height: 34px; line-height: 34px; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .general-information { gap: 3px; }
@@ -3533,7 +3528,6 @@
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-main { grid-column: 2; grid-row: 2; padding: 8px; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] nav.sheet-tabs { grid-column: 1 / 3; grid-row: 3; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-character-header { grid-template-columns: minmax(0, 1fr); }
-  .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-miniature { display: none; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-resources > .attribute { min-height: 74px; padding: 3px; grid-template-rows: 12px 22px 14px; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-resources .attribute-value input { font-size: 15px; height: 23px; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-resources .attribute-value { height: 23px; font-size: 23px; }
@@ -3546,8 +3540,7 @@
 }
 /* Reset system decorations that assume a horizontal, pale character sheet. */
 .t20ga-window:has(.t20ga-style-shell[data-style="legend"]) .window-content { padding: 0 !important; background: #07110f; }
-.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-miniature { display: block !important; }
-.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .header-details { grid-column: 2; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .header-details { grid-column: 1; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .header-details, .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .header-exp { flex: 0 0 auto; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .summary { grid-auto-rows: 22px; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .summary > li { margin: 0; padding: 0; line-height: 22px; }
@@ -3558,7 +3551,6 @@
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-resources .attribute-footer input { text-align: center; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .ability h4.ability-name { border: 0; }
 @container (max-width: 950px) {
-  .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-miniature { display: none !important; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .header-details { grid-column: 1; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-resources > .attribute { aspect-ratio: auto; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-resources .attribute-value input { margin: 0; }
@@ -3770,9 +3762,11 @@
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-studio-mark-light { display: none; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-studio-mark-dark { display: block; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-style-name {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+  position: static;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  max-width: 36px;
 }
 
 /* The campaign mark fits its own area even when another style uses a large zoom. */
@@ -3835,6 +3829,19 @@
   box-shadow: none !important;
   filter: none !important;
 }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-hero-frame .t20ga-studio-watermark {
+  opacity: .12;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-character-header .t20ga-kicker {
+  color: #f6e7ca;
+  -webkit-text-stroke: .65px #17252a;
+  text-shadow: 0 1px 3px #081418, 0 0 6px #081418;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-character-header .t20ga-kicker {
+  color: #ead5a6;
+  -webkit-text-stroke: .5px #17251b;
+  text-shadow: 0 1px 3px #07110d;
+}
 
 /* Grimório: the portrait is the opening illustration, with the editable name as its title. */
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-hero-panel {
@@ -3886,8 +3893,9 @@
   background: transparent;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-cover-title .t20ga-kicker {
-  color: #714726;
-  text-shadow: 0 1px 2px #fff2d9;
+  color: #fff1d2;
+  -webkit-text-stroke: .65px #57371f;
+  text-shadow: 0 1px 3px #3c2419, 0 0 5px #fff2d9;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-cover-title h1.charname,
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-cover-title h1.charname input {
@@ -4119,10 +4127,14 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: auto !important;
+  max-height: none !important;
   padding: 0;
+  overflow: visible !important;
   color: #ead9b4 !important;
   background: transparent !important;
   background-color: transparent !important;
+  border: 0 !important;
   font: 12px/1.4 Georgia, serif;
 }
 .t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .traits > :is(h3,h4) {
@@ -4147,10 +4159,11 @@
   flex: 0 0 auto;
   grid-template-columns: minmax(78px, 35%) minmax(0, 1fr);
   align-items: center;
-  gap: 4px;
-  min-height: 27px;
+  gap: 6px;
+  min-height: 36px;
+  height: auto !important;
   width: 100%;
-  padding: 3px 0;
+  padding: 7px 0 !important;
   color: #ead9b4 !important;
   border-bottom: 1px solid #94703d3b;
   background: transparent !important;

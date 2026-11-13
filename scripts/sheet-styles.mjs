@@ -43,7 +43,7 @@ export function arrangeSheetStyle(root, layout) {
 
   if (layout === "saga") arrangeSaga(root, main, vitals);
   if (layout === "grimoire") arrangeGrimoire(root, dossier, main, hero, header, vitals);
-  if (layout === "legend") arrangeLegend(root, shell, dossier, main, hero, header, vitals);
+  if (layout === "legend") arrangeLegend(root, shell, dossier, main, header, vitals);
 
   for (const key of ["pv", "pm"]) {
     const resource = shell.querySelector(key === "pv" ? ".health" : ".mana");
@@ -60,7 +60,7 @@ export function arrangeSheetStyle(root, layout) {
   }
 }
 
-function arrangeLegend(root, shell, dossier, main, hero, header, vitals) {
+function arrangeLegend(root, shell, dossier, main, header, vitals) {
   const doc = root.ownerDocument;
   const make = (tag, className, text) => {
     const el = doc.createElement(tag);
@@ -68,16 +68,6 @@ function arrangeLegend(root, shell, dossier, main, hero, header, vitals) {
     if (text) el.textContent = text;
     return el;
   };
-  const art = hero.querySelector(".t20ga-hero-art");
-  if (art) {
-    const portrait = make("img", "t20ga-legend-miniature");
-    portrait.alt = "";
-    portrait.setAttribute("aria-hidden", "true");
-    const sync = () => { portrait.src = art.getAttribute("src"); };
-    sync();
-    art.addEventListener("load", sync);
-    header.prepend(portrait);
-  }
   const nav = main.querySelector("nav.sheet-tabs");
   if (nav) shell.append(nav);
   // Keep the bound skill list in the wide, scrollable main page.
