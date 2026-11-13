@@ -3858,7 +3858,8 @@
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-hero-art-backdrop { display: none; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-hero-frame .t20ga-studio-watermark {
-  top: 9%; width: min(24%, 104px); max-height: 30%; opacity: .18;
+  top: 14px; left: 14px; z-index: 4;
+  width: 56px; max-height: 70px; opacity: .34; transform: none;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-hero-art {
   filter: drop-shadow(0 7px 7px #6d472c75) drop-shadow(0 1px 1px #432b2490);
