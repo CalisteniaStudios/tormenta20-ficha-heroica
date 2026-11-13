@@ -5,6 +5,7 @@ import {
   DEFAULT_CAMPAIGN_IDENTITY,
   DEFAULT_PERSONAL_APPEARANCE,
   buildPalette,
+  getCampaignLogoReservedHeight,
   normalizeCampaignIdentity,
   normalizePersonalAppearance
 } from "../scripts/preferences.mjs";
@@ -54,6 +55,12 @@ test("limita escala e posição da logo a um enquadramento seguro", () => {
     logoPositionX: -60,
     portraitWidth: 45
   });
+});
+
+test("reserva espaço para logo ampliada e título ao abrir a ficha", () => {
+  assert.equal(getCampaignLogoReservedHeight({ logoScale: 1.75, logoPositionY: -6, showTitle: true, title: "A Coroa Partida" }), 156);
+  assert.equal(getCampaignLogoReservedHeight({ logoScale: 2.2, showTitle: true, title: "Guerra Artoniana" }), 173);
+  assert.equal(getCampaignLogoReservedHeight({ logoScale: 2.2, showTitle: false, title: "Guerra Artoniana" }), 64);
 });
 
 test("limita o tema pessoal a valores conhecidos e cores hexadecimais", () => {

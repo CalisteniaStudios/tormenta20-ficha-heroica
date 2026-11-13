@@ -22,6 +22,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
     applications: {
       ActorSheetT20CharacterTabbed: class {
         static get defaultOptions() { return { classes: [], scrollY: [] }; }
+        async getData() { return { actor: { favoritos: {} } }; }
         _onItemToggleContext() { systemContextCalls++; }
         async close(options) { sheetCloseCalls++; return options; }
       }
@@ -206,6 +207,10 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
     showGroupName: false,
     configured: true
   });
+  const renderedIdentity = (await sheet.getData()).t20ga;
+  assert.equal(renderedIdentity.campaignLogoReservedHeight, 156,
+    "a ficha aberta reserva a altura da logo configurada antes de exibir o título");
+  assert.equal(renderedIdentity.campaignTitle, "A Coroa Partida");
 
   game.user.isGM = false;
   game.user.can = (permission) => permission === "SETTINGS_MODIFY";

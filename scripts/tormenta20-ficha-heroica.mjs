@@ -10,6 +10,7 @@ import {
   LEGACY_APPEARANCE_DEFAULTS,
   THEME_PRESETS,
   buildPalette,
+  getCampaignLogoReservedHeight,
   normalizeCampaignIdentity,
   normalizeHex,
   normalizePersonalAppearance
@@ -140,19 +141,14 @@ function syncCampaignIdentityMenuPermission() {
   if (menu) menu.restricted = !canModifyCampaignIdentity();
 }
 
-function getCampaignLogoReservedHeight({ scale, y, logoPushPortrait, showTitle, title }) {
-  if (!logoPushPortrait && !(showTitle && title)) return 64;
-  return Math.max(64, Math.ceil((64 * clamp(scale, 0.5, 3)) + (Math.abs(clamp(y, -40, 40)) * 2) + 32));
-}
-
 function previewCampaignLogoLayout({ scale, x, y, logoPushPortrait, showTitle, title, portraitWidth }) {
   const normalizedScale = clamp(scale, 0.5, 3);
   const normalizedX = clamp(x, -60, 60);
   const normalizedY = clamp(y, -40, 40);
   const normalizedPortraitWidth = clamp(portraitWidth, 20, 45);
   const reservedHeight = getCampaignLogoReservedHeight({
-    scale: normalizedScale,
-    y: normalizedY,
+    logoScale: normalizedScale,
+    logoPositionY: normalizedY,
     logoPushPortrait,
     showTitle,
     title

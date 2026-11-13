@@ -108,6 +108,12 @@ export function normalizeCampaignIdentity(value = {}) {
   };
 }
 
+export function getCampaignLogoReservedHeight(identity = {}) {
+  const { logoScale, logoPositionY, logoPushPortrait, showTitle, title } = normalizeCampaignIdentity(identity);
+  if (!logoPushPortrait && !(showTitle && title)) return 64;
+  return Math.max(64, Math.ceil(64 * logoScale + 2 * Math.abs(logoPositionY) + 32));
+}
+
 function mixHex(first, second, amount) {
   const parse = (hex) => [1, 3, 5].map((index) => Number.parseInt(hex.slice(index, index + 2), 16));
   const a = parse(normalizeHex(first));
