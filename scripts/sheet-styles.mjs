@@ -26,7 +26,11 @@ export function arrangeSheetStyle(root, layout) {
 
   const title = root.ownerDocument.createElement("span");
   title.className = "t20ga-style-name";
-  title.textContent = "Calistenia Studios";
+  if (layout === "grimoire") {
+    title.textContent = "✦";
+    title.setAttribute("aria-label", "Calistenia Studios");
+    title.title = "Calistenia Studios";
+  } else title.textContent = "Calistenia Studios";
   brand.append(title);
   if (layout !== "saga") main.prepend(brand);
   const config = brand.querySelector(".t20ga-brand-config");
@@ -71,8 +75,8 @@ function arrangeLegend(root, shell, dossier, main, hero, header, vitals) {
   }
   const nav = main.querySelector("nav.sheet-tabs");
   if (nav) shell.append(nav);
-  const skills = main.querySelector(".t20ga-skills-card");
-  if (skills) dossier.append(skills);
+  // Keep the bound skill list in the wide, scrollable main page.
+  // The dossier is intentionally reserved for identity and attributes.
   for (const [key, name] of Object.entries({ for: "fist-raised", des: "feather-alt", con: "heart", int: "book-open", sab: "eye", car: "crown" })) {
     const icon = make("i", `fas fa-${name} t20ga-legend-ability-icon`);
     icon.setAttribute("aria-hidden", "true");

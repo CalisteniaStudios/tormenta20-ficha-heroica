@@ -3608,6 +3608,138 @@
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-header { grid-column: 1 / -1; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item:not(.item-header) { padding: 7px; border: 1px solid var(--t20ga-style-line); border-radius: 3px; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-name { width: 100%; align-items: center; }
+
+/* Grimório: a arte ocupa a largura da página; os dados ficam abaixo dela. */
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-identity {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-hero-panel {
+  width: 100%;
+  height: clamp(300px, 37cqh, 390px);
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-character-header {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #a7834a;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px 12px;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-resources {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-resources > .attribute {
+  min-width: 0;
+  height: 72px;
+  min-height: 72px;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-brand {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 84px;
+  padding: 0 0 10px;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] button.t20ga-brand-config {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 76px;
+  overflow: hidden;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-campaign-logo-frame {
+  width: 100%;
+  height: 76px;
+  max-width: 100%;
+  overflow: hidden;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-campaign-logo {
+  width: 100%;
+  max-width: 100%;
+  height: 76px;
+  max-height: 76px;
+  object-fit: contain;
+  transform: translate(clamp(-24px, var(--t20ga-campaign-logo-x, 0px), 24px), clamp(-12px, var(--t20ga-campaign-logo-y, 0px), 12px)) scale(min(1.1, var(--t20ga-campaign-logo-scale, 1)));
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-style-name {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  max-width: none;
+  color: #774925;
+  font: 25px/1 Georgia, serif;
+  border: 1px solid #ad8a52;
+  border-radius: 50%;
+  background: #f8e8c4;
+  box-shadow: inset 0 0 0 3px #f8e8c4, inset 0 0 0 4px #ad8a52;
+}
+
+/* Lenda: perícias usam a página principal, em duas colunas legíveis. */
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-dashboard.active {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: max-content;
+  align-content: start;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  height: auto;
+  padding: 12px;
+  overflow: visible;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .t20ga-section-ribbon {
+  display: block;
+  position: static;
+  margin: 0 0 10px;
+  padding: 0 0 8px;
+  font: 600 18px/1.2 Georgia, serif;
+  border-bottom: 1px solid #94703d80;
+  background: transparent;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .skills-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .skills-list .item-header,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .skills-list .create-skill {
+  grid-column: 1 / -1;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .skills-list .skill:not(.item-header) {
+  min-width: 0;
+  min-height: 38px;
+  padding: 6px 8px;
+  border: 1px solid #92734288;
+  border-radius: 4px;
+  background: #fff2d908;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .skills-list .skill-name {
+  min-width: 0;
+  font-size: 12px;
+}
+@container (max-width: 950px) {
+  .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-hero-panel { height: 300px; }
+  .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .skills-list { grid-template-columns: minmax(0, 1fr); }
+}
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-description { flex: 1 1 0; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-description label { white-space: normal; overflow-wrap: anywhere; line-height: 1.3; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-tipo { color: var(--t20ga-style-text); opacity: .8; }
