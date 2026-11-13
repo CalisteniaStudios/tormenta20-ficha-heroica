@@ -86,7 +86,7 @@ assert.match(css, /grid-template-columns:\s*minmax\(245px, var\(--t20ga-hero-pan
 assert.doesNotMatch(characterSheet, /campaignLogoPanelWidth|campaignLogoHorizontalSpace/, "the logo cannot resize the portrait column");
 assert.match(css, /\.t20ga-campaign-logo-frame\s*\{[^}]*height:\s*var\(--t20ga-campaign-logo-reserved-height, 64px\);[^}]*overflow:\s*visible;/s, "the optional reserved height can push the portrait below an enlarged logo");
 assert.match(css, /\.t20ga-campaign-logo\s*\{[^}]*height:\s*64px;[^}]*transform:\s*translate\(var\(--t20ga-campaign-logo-x[^;]*scale\(var\(--t20ga-campaign-logo-scale/s, "the logo scale and position are visual transforms that do not resize the portrait");
-assert.match(script, /function previewCampaignLogoLayout\(\{ scale, x, y, logoPushPortrait, portraitWidth \}\)/, "campaign logo and portrait adjustments can be applied to open sheets");
+assert.match(script, /function previewCampaignLogoLayout\(\{ scale, x, y, logoPushPortrait, showTitle, title, portraitWidth \}\)/, "campaign logo, title and portrait adjustments can be applied to open sheets");
 assert.match(script, /frame\.style\.setProperty\("--t20ga-campaign-logo-scale", normalizedScale\)/, "the live preview updates the open sheet logo scale");
 assert.match(script, /shell\?\.style\.setProperty\("--t20ga-hero-panel-width", `\$\{normalizedPortraitWidth\}%`\)/, "the live preview updates the open sheet portrait width");
 assert.match(script, /frame\.style\.setProperty\("--t20ga-campaign-logo-reserved-height", `\$\{reservedHeight\}px`\)/, "the live preview optionally moves the portrait below the logo");

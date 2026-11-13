@@ -140,12 +140,12 @@ function syncCampaignIdentityMenuPermission() {
   if (menu) menu.restricted = !canModifyCampaignIdentity();
 }
 
-function getCampaignLogoReservedHeight({ scale, y, logoPushPortrait }) {
-  if (!logoPushPortrait) return 64;
-  return Math.ceil((64 * clamp(scale, 0.5, 3)) + (Math.abs(clamp(y, -40, 40)) * 2));
+function getCampaignLogoReservedHeight({ scale, y, logoPushPortrait, showTitle, title }) {
+  if (!logoPushPortrait && !(showTitle && title)) return 64;
+  return Math.max(64, Math.ceil((64 * clamp(scale, 0.5, 3)) + (Math.abs(clamp(y, -40, 40)) * 2) + 8));
 }
 
-function previewCampaignLogoLayout({ scale, x, y, logoPushPortrait, portraitWidth }) {
+function previewCampaignLogoLayout({ scale, x, y, logoPushPortrait, showTitle, title, portraitWidth }) {
   const normalizedScale = clamp(scale, 0.5, 3);
   const normalizedX = clamp(x, -60, 60);
   const normalizedY = clamp(y, -40, 40);
@@ -153,7 +153,9 @@ function previewCampaignLogoLayout({ scale, x, y, logoPushPortrait, portraitWidt
   const reservedHeight = getCampaignLogoReservedHeight({
     scale: normalizedScale,
     y: normalizedY,
-    logoPushPortrait
+    logoPushPortrait,
+    showTitle,
+    title
   });
 
   for (const application of Object.values(ui.windows ?? {})) {
@@ -267,6 +269,8 @@ class CampaignIdentityConfig extends FormApplication {
       x: clamp(html.find('[name="logoPositionX"]').val(), -60, 60),
       y: clamp(html.find('[name="logoPositionY"]').val(), -40, 40),
       logoPushPortrait: html.find('[name="logoPushPortrait"]').is(":checked"),
+      showTitle: html.find('[name="showTitle"]').is(":checked"),
+      title: String(html.find('[name="title"]').val() ?? "").trim(),
       portraitWidth: clamp(html.find('[name="portraitWidth"]').val(), 20, 45)
     });
 
@@ -324,7 +328,7 @@ class CampaignIdentityConfig extends FormApplication {
       html.find('[name="portraitWidth"]').val(DEFAULT_CAMPAIGN_IDENTITY.portraitWidth);
       updatePreview();
     });
-    html.find('[name="logo"], [name="logoScale"], [name="logoPositionX"], [name="logoPositionY"], [name="logoPushPortrait"], [name="portraitWidth"]')
+    html.find('[name="logo"], [name="logoScale"], [name="logoPositionX"], [name="logoPositionY"], [name="logoPushPortrait"], [name="showTitle"], [name="title"], [name="portraitWidth"]')
       .on("input change", updatePreview);
     updatePreview();
   }
@@ -359,6 +363,8 @@ class CampaignIdentityConfig extends FormApplication {
         x: this._savedIdentity.logoPositionX,
         y: this._savedIdentity.logoPositionY,
         logoPushPortrait: this._savedIdentity.logoPushPortrait,
+        showTitle: this._savedIdentity.showTitle,
+        title: this._savedIdentity.title,
         portraitWidth: this._savedIdentity.portraitWidth
       });
     }

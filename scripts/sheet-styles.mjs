@@ -24,19 +24,19 @@ export function arrangeSheetStyle(root, layout) {
   if (layout === "saga") main.prepend(dossier);
   else shell.prepend(dossier);
 
-  const title = root.ownerDocument.createElement("span");
-  title.className = "t20ga-style-name";
-  title.setAttribute("aria-label", "Calistenia Studios");
-  title.title = "Calistenia Studios";
-  for (const [tone, file] of [["light", "isologo-white.png"], ["dark", "isologo-black.png"]]) {
+  if (layout === "legend") {
+    const title = root.ownerDocument.createElement("span");
+    title.className = "t20ga-style-name";
+    title.setAttribute("aria-label", "Calistenia Studios");
+    title.title = "Calistenia Studios";
     const mark = root.ownerDocument.createElement("img");
-    mark.className = `t20ga-studio-mark t20ga-studio-mark-${tone}`;
-    mark.src = `modules/tormenta20-ficha-heroica/assets/${file}`;
+    mark.className = "t20ga-studio-mark t20ga-studio-mark-light";
+    mark.src = "modules/tormenta20-ficha-heroica/assets/isologo-white.png";
     mark.alt = "";
     mark.setAttribute("aria-hidden", "true");
     title.append(mark);
+    brand.append(title);
   }
-  brand.append(title);
   if (layout !== "saga") main.prepend(brand);
   const config = brand.querySelector(".t20ga-brand-config");
   config?.setAttribute("title", "Personalizar aparência da ficha");

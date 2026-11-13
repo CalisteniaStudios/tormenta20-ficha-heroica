@@ -240,6 +240,18 @@
   border-top: 1px solid rgba(242, 215, 139, 0.56);
   border-bottom: 1px solid rgba(242, 215, 139, 0.3);
 }
+.t20ga-window form.t20ga-sheet .t20ga-shell:not(.t20ga-style-shell) .t20ga-brand:has(.t20ga-brand-caption) .t20ga-campaign-logo-frame {
+  overflow: hidden;
+}
+.t20ga-window form.t20ga-sheet .t20ga-shell:not(.t20ga-style-shell) .t20ga-brand-caption {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 6px auto 0;
+  overflow-wrap: anywhere;
+}
 
 .t20ga-window .t20ga-hero-frame {
   position: relative;
@@ -3633,9 +3645,9 @@
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-brand {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 0;
   width: 100%;
   min-height: 84px;
   padding: 0 0 10px;
@@ -3833,14 +3845,23 @@
   opacity: .12;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-character-header .t20ga-kicker {
-  color: #f6e7ca;
-  -webkit-text-stroke: .65px #17252a;
-  text-shadow: 0 1px 3px #081418, 0 0 6px #081418;
+  display: inline-block;
+  width: fit-content;
+  margin: 0 0 3px;
+  padding: 2px 6px;
+  color: #fff1d3;
+  background: #10252cde;
+  border-left: 2px solid #cf464a;
+  text-shadow: none;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-character-header .t20ga-kicker {
-  color: #ead5a6;
-  -webkit-text-stroke: .5px #17251b;
-  text-shadow: 0 1px 3px #07110d;
+  display: inline-block;
+  width: fit-content;
+  margin: 0 0 3px;
+  padding: 2px 5px;
+  color: #f5dfb0;
+  background: #1a3025;
+  text-shadow: none;
 }
 
 /* Grimório: the portrait is the opening illustration, with the editable name as its title. */
@@ -3893,9 +3914,16 @@
   background: transparent;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-cover-title .t20ga-kicker {
-  color: #fff1d2;
-  -webkit-text-stroke: .65px #57371f;
-  text-shadow: 0 1px 3px #3c2419, 0 0 5px #fff2d9;
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 3px;
+  padding: 2px 8px;
+  color: #4c2c1f;
+  background: #f5e3c8e8;
+  border: 1px solid #a78251;
+  border-radius: 2px;
+  text-shadow: none;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-cover-title h1.charname,
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-book-cover-title h1.charname input {
@@ -4109,9 +4137,10 @@
   flex: 0 0 auto;
   min-height: 0;
   padding: 0;
-  border: 0;
+  border: 0 !important;
   background: transparent;
-  box-shadow: none;
+  outline: 0 !important;
+  box-shadow: none !important;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .t20ga-section-ribbon {
   position: static;
@@ -4135,7 +4164,17 @@
   background: transparent !important;
   background-color: transparent !important;
   border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
   font: 12px/1.4 Georgia, serif;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-style-dossier::before,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey::before,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey::after,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .traits::before,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .traits::after {
+  display: none !important;
+  content: none !important;
 }
 .t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .traits > :is(h3,h4) {
   position: relative;
@@ -4157,13 +4196,13 @@
 .t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .traits > div {
   display: grid !important;
   flex: 0 0 auto;
-  grid-template-columns: minmax(78px, 35%) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 50%) minmax(0, 1fr);
   align-items: center;
-  gap: 6px;
-  min-height: 36px;
+  gap: 5px;
+  min-height: 30px;
   height: auto !important;
   width: 100%;
-  padding: 7px 0 !important;
+  padding: 4px 0 !important;
   color: #ead9b4 !important;
   border-bottom: 1px solid #94703d3b;
   background: transparent !important;
@@ -4171,6 +4210,7 @@
 .t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .traits :is(label,a,strong) {
   color: #d9c496 !important;
   font: 600 11px/1.3 Georgia, serif;
+  margin: 0 !important;
   text-shadow: none !important;
 }
 .t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-legend-journey .traits ul.trait-list {
