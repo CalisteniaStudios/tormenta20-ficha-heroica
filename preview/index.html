@@ -152,15 +152,31 @@
                       <div class="t20ga-section-ribbon">Traços e detalhes</div>
                       <div class="traits">
                         <h3>Outras características</h3>
-                        <div class="trait-row"><strong>Tamanho</strong><select><option>Pequeno</option></select></div>
-                        <div class="trait-row"><strong>Deslocamento</strong><ul class="trait-list"><li class="speedtag">9m</li></ul></div>
-                        <div class="trait-row"><strong>Sentidos</strong><ul class="trait-list"><li class="tag">Visão no escuro</li></ul></div>
+                        <div><label>Tamanho</label><select><option>Pequeno</option></select></div>
+                        <div><a><label>Deslocamento</label></a><ul class="trait-list"><li class="speedtag">9m</li></ul></div>
+                        <div><a><label>Resistências</label></a><ul class="trait-list"><li class="tag">Fogo 5</li></ul></div>
+                        <div><a><label>Imunidade a condições</label></a><ul class="trait-list"></ul></div>
+                        <div><a><label>Sentidos</label></a><ul class="trait-list"><li class="tag">Visão no escuro</li></ul></div>
                         <h3>Proficiências</h3>
-                        <div class="trait-row"><strong>Idiomas</strong><ul class="trait-list"><li class="tag">Comum</li><li class="tag">Goblin</li></ul></div>
+                        <div><a><label>Idiomas</label></a><ul class="trait-list"><li class="tag">Comum</li><li class="tag">Goblin</li></ul></div>
+                        <div><a><label>Armas</label></a><ul class="trait-list"><li class="tag">Armas simples</li><li class="tag">Armas marciais</li></ul></div>
+                        <div><a><label>Armaduras</label></a><ul class="trait-list"><li class="tag">Armaduras leves</li></ul></div>
                         <textarea>Sobreviveu às primeiras sombras da guerra e agora luta para decidir o destino de Arton.</textarea>
                       </div>
                     </section>
                   </div>
+                </div>
+
+                <div class="tab powers t20ga-card">
+                  <ul class="item-list">
+                    <li class="item flexrow item-header"><div class="item-name">Habilidades de classe</div><div class="item-activation">Ativação</div></li>
+                    <li class="item flexrow expanded"><div class="item-name flexrow rollable"><div class="item-image" style="background:radial-gradient(circle,#d1a243,#75111b)"></div><label>Golpe Divino</label></div><div class="item-activation">Livre, 2 PM</div><div class="item-controls">✎</div><div class="item-summary"><p>Quando faz um ataque corpo a corpo, você pode gastar 2 PM para desferir um golpe destruidor. Soma seu Carisma ao teste de ataque e +1d8 ao dano.</p></div></li>
+                    <li class="item flexrow"><div class="item-name flexrow rollable"><div class="item-image" style="background:radial-gradient(circle,#ebd288,#6b4b25)"></div><label>Abençoado</label></div><div class="item-activation">Passivo</div><div class="item-controls">✎</div></li>
+                    <li class="item flexrow"><div class="item-name flexrow rollable"><div class="item-image" style="background:radial-gradient(circle,#8ac1bd,#243d48)"></div><label>Código do Herói</label></div><div class="item-activation">Passivo</div><div class="item-controls">✎</div></li>
+                    <li class="item flexrow"><div class="item-name flexrow rollable"><div class="item-image" style="background:radial-gradient(circle,#d9be74,#4b2436)"></div><label>Direcionar</label></div><div class="item-activation">Passivo</div><div class="item-controls">✎</div></li>
+                    <li class="item flexrow"><div class="item-name flexrow rollable"><div class="item-image" style="background:radial-gradient(circle,#dfb578,#54241c)"></div><label>Melhor Amigo</label></div><div class="item-activation">Passivo</div><div class="item-controls">✎</div></li>
+                    <li class="item flexrow"><div class="item-name flexrow rollable"><div class="item-image" style="background:radial-gradient(circle,#87b77a,#274c3d)"></div><label>Domar Criatura</label></div><div class="item-activation">Movimento, 1 PM</div><div class="item-controls">✎</div></li>
+                  </ul>
                 </div>
 
                 <div class="tab effects t20ga-card">
@@ -224,6 +240,13 @@
         arrangeSheetStyle(previewWindow, style);
         for (const mark of previewWindow.querySelectorAll(".t20ga-studio-mark")) {
           mark.src = `../assets/${mark.classList.contains("t20ga-studio-mark-dark") ? "isologo-black.png" : "isologo-white.png"}`;
+        }
+        if (new URLSearchParams(location.search).has("journey")) {
+          requestAnimationFrame(() => { previewWindow.querySelector(".t20ga-style-dossier").scrollTop = 630; });
+        }
+        if (new URLSearchParams(location.search).has("powers")) {
+          previewWindow.querySelector(".t20ga-dashboard")?.classList.remove("active");
+          previewWindow.querySelector(".tab.powers")?.classList.add("active");
         }
       }
     </script>

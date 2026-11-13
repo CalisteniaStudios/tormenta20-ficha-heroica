@@ -147,6 +147,13 @@ function arrangeLegend(root, shell, dossier, main, hero, header, vitals) {
   const favorites = prepareFavorites(root, main);
   overview.insertBefore(favorites, overview.querySelector(".t20ga-legend-spells"));
   main.querySelector(".t20ga-dashboard")?.prepend(overview);
+
+  const traits = main.querySelector(".t20ga-traits-card");
+  if (traits) {
+    traits.classList.add("t20ga-legend-journey");
+    traits.querySelector(".t20ga-section-ribbon").textContent = "Traços & jornada";
+    dossier.append(traits);
+  }
 }
 
 function arrangeGrimoire(root, dossier, main, hero, header, vitals) {
@@ -158,6 +165,12 @@ function arrangeGrimoire(root, dossier, main, hero, header, vitals) {
     return el;
   };
   const top = make("div", "t20ga-book-identity");
+  // The original editable name becomes the title on the opening portrait.
+  const name = header.querySelector(".t20ga-name-block");
+  if (name) {
+    name.classList.add("t20ga-book-cover-title");
+    hero.append(name);
+  }
   for (const page of [dossier, main]) {
     const ornament = make("span", "t20ga-book-ornament");
     ornament.setAttribute("aria-hidden", "true");
