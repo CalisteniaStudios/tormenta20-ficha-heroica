@@ -241,6 +241,11 @@
         for (const mark of previewWindow.querySelectorAll(".t20ga-studio-mark")) {
           mark.src = `../assets/${mark.classList.contains("t20ga-studio-mark-dark") ? "isologo-black.png" : "isologo-white.png"}`;
         }
+        if (style === "grimoire") previewWindow.querySelector(".t20ga-studio-watermark").src = "../assets/isologo-black.png";
+        if (new URLSearchParams(location.search).has("campaignLogo")) {
+          const button = previewWindow.querySelector(".t20ga-brand-config");
+          button.innerHTML = '<span class="t20ga-campaign-logo-frame"><img class="t20ga-campaign-logo" src="../assets/LOGO.png" alt="Logo da campanha" /></span>';
+        }
         if (new URLSearchParams(location.search).has("journey")) {
           requestAnimationFrame(() => { previewWindow.querySelector(".t20ga-style-dossier").scrollTop = 630; });
         }

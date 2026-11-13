@@ -87,15 +87,12 @@ function arrangeLegend(root, shell, dossier, main, hero, header, vitals) {
     icon.setAttribute("aria-hidden", "true");
     vitals.querySelector(`.ability[data-item-id="${key}"]`)?.prepend(icon);
   }
-  for (const [key, label, iconName] of [["health", "PV", "heart"], ["mana", "PM", "tint"], ["defense", "Defesa", "shield-alt"]]) {
+  for (const [key, label] of [["health", "PV"], ["mana", "PM"], ["defense", "Defesa"]]) {
     const resource = vitals.querySelector(`.${key}`);
     const title = resource?.querySelector(".box-title");
     if (!title) continue;
     title.setAttribute("aria-label", title.textContent.trim());
     title.textContent = label;
-    const icon = make("i", `fas fa-${iconName} t20ga-legend-resource-icon`);
-    icon.setAttribute("aria-hidden", "true");
-    resource.append(icon);
   }
   vitals.querySelector(".t20ga-abilities")?.prepend(make("h3", "t20ga-legend-heading", "Atributos"));
 
@@ -165,6 +162,8 @@ function arrangeGrimoire(root, dossier, main, hero, header, vitals) {
     return el;
   };
   const top = make("div", "t20ga-book-identity");
+  const studioMark = hero.querySelector(".t20ga-studio-watermark");
+  if (studioMark) studioMark.src = "modules/tormenta20-ficha-heroica/assets/isologo-black.png";
   // The original editable name becomes the title on the opening portrait.
   const name = header.querySelector(".t20ga-name-block");
   if (name) {
