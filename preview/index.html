@@ -259,7 +259,7 @@
       }
       if (params.has("campaignLogo")) {
         const scale = Number(params.get("logoScale") ?? 1);
-        const reservedHeight = params.has("campaignTitle") ? Math.max(64, Math.ceil(64 * scale + 8)) : 64;
+        const reservedHeight = params.has("campaignTitle") ? Math.max(64, Math.ceil(64 * scale + 32)) : 64;
         const button = previewWindow.querySelector(".t20ga-brand-config");
         button.innerHTML = '<span class="t20ga-campaign-logo-frame"><img class="t20ga-campaign-logo" src="../assets/LOGO.png" alt="Logo da campanha" /></span>';
         const frame = button.querySelector(".t20ga-campaign-logo-frame");

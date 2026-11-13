@@ -240,9 +240,6 @@
   border-top: 1px solid rgba(242, 215, 139, 0.56);
   border-bottom: 1px solid rgba(242, 215, 139, 0.3);
 }
-.t20ga-window form.t20ga-sheet .t20ga-shell:not(.t20ga-style-shell) .t20ga-brand:has(.t20ga-brand-caption) .t20ga-campaign-logo-frame {
-  overflow: hidden;
-}
 .t20ga-window form.t20ga-sheet .t20ga-shell:not(.t20ga-style-shell) .t20ga-brand-caption {
   position: relative;
   z-index: 1;
@@ -2942,8 +2939,8 @@
   position: relative; z-index: 6; align-items: center; flex-direction: row; gap: 8px;
   width: 81%; min-width: 0; box-sizing: border-box; padding: 12px 14px; margin: 0; border: 0;
 }
-.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-brand-config { flex: 1 1 auto; width: auto; max-width: none; min-width: 0; overflow: hidden; }
-.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-campaign-logo-frame { width: 100%; max-width: 100%; overflow: hidden; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-brand-config { flex: 1 1 auto; width: auto; max-width: none; min-width: 0; overflow: visible; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-campaign-logo-frame { width: 100%; max-width: 100%; overflow: visible; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-campaign-logo { width: 100%; max-width: 100%; object-fit: contain; transform: none !important; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-style-name { color: #f3e9d0; font-size: 9px; letter-spacing: .2em; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-brand-placeholder { color: #f3e9d0; border-color: #f3e9d060; }
@@ -3657,13 +3654,13 @@
   max-width: none;
   min-width: 0;
   min-height: 76px;
-  overflow: hidden;
+  overflow: visible;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-campaign-logo-frame {
   width: 100%;
   height: 76px;
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-campaign-logo {
   width: 100%;
@@ -4113,13 +4110,13 @@
   max-width: none;
   min-width: 0;
   min-height: 77px;
-  overflow: hidden;
+  overflow: visible;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-campaign-logo-frame {
   width: 100%;
   max-width: 100%;
   height: 77px;
-  overflow: hidden;
+  overflow: visible;
 }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-campaign-logo {
   width: 100%;

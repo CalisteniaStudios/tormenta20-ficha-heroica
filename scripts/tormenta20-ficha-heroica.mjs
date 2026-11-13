@@ -142,7 +142,7 @@ function syncCampaignIdentityMenuPermission() {
 
 function getCampaignLogoReservedHeight({ scale, y, logoPushPortrait, showTitle, title }) {
   if (!logoPushPortrait && !(showTitle && title)) return 64;
-  return Math.max(64, Math.ceil((64 * clamp(scale, 0.5, 3)) + (Math.abs(clamp(y, -40, 40)) * 2) + 8));
+  return Math.max(64, Math.ceil((64 * clamp(scale, 0.5, 3)) + (Math.abs(clamp(y, -40, 40)) * 2) + 32));
 }
 
 function previewCampaignLogoLayout({ scale, x, y, logoPushPortrait, showTitle, title, portraitWidth }) {
