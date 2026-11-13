@@ -26,11 +26,16 @@ export function arrangeSheetStyle(root, layout) {
 
   const title = root.ownerDocument.createElement("span");
   title.className = "t20ga-style-name";
-  if (layout === "grimoire") {
-    title.textContent = "✦";
-    title.setAttribute("aria-label", "Calistenia Studios");
-    title.title = "Calistenia Studios";
-  } else title.textContent = "Calistenia Studios";
+  title.setAttribute("aria-label", "Calistenia Studios");
+  title.title = "Calistenia Studios";
+  for (const [tone, file] of [["light", "isologo-white.png"], ["dark", "isologo-black.png"]]) {
+    const mark = root.ownerDocument.createElement("img");
+    mark.className = `t20ga-studio-mark t20ga-studio-mark-${tone}`;
+    mark.src = `modules/tormenta20-ficha-heroica/assets/${file}`;
+    mark.alt = "";
+    mark.setAttribute("aria-hidden", "true");
+    title.append(mark);
+  }
   brand.append(title);
   if (layout !== "saga") main.prepend(brand);
   const config = brand.querySelector(".t20ga-brand-config");
@@ -162,7 +167,7 @@ function arrangeGrimoire(root, dossier, main, hero, header, vitals) {
   const details = make("div", "t20ga-book-details");
   details.append(header, vitals.querySelector(".t20ga-resources"));
   top.append(hero, details);
-  dossier.prepend(make("h2", "t20ga-book-heading", "Dossiê de aventureiro"), top);
+  dossier.prepend(top);
   const title = make("h2", "t20ga-book-heading t20ga-book-main-heading", "Equipamento & talentos");
   main.querySelector(".t20ga-brand")?.after(title);
   const traits = main.querySelector(".t20ga-traits-card");

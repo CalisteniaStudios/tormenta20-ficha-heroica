@@ -3740,6 +3740,55 @@
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-hero-panel { height: 300px; }
   .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="legend"] .t20ga-skills-card .skills-list { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Use the supplied Calistenia isologo, with contrast appropriate to each page. */
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-name,
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-style-name {
+  display: block;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  max-width: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-studio-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-studio-mark-dark { display: none; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-studio-mark-light { display: none; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-studio-mark-dark { display: block; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="saga"] .t20ga-style-name {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+/* The campaign mark fits its own area even when another style uses a large zoom. */
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .t20ga-campaign-logo {
+  transform: none;
+  transform-origin: center;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .header-exp .level {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 78px;
+  max-width: 120px;
+  min-height: 26px;
+  padding: 3px 9px;
+  font: bold 12px/18px Georgia, serif;
+  border: 1px solid #b58c45;
+  border-radius: 4px;
+}
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="grimoire"] .header-exp .charlevel {
+  justify-content: flex-start;
+}
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-description { flex: 1 1 0; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-description label { white-space: normal; overflow-wrap: anywhere; line-height: 1.3; }
 .t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell .t20ga-style-favorites .item-tipo { color: var(--t20ga-style-text); opacity: .8; }

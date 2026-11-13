@@ -222,6 +222,9 @@
         previewWindow.style.width = "min(1500px, calc(100vw - 32px))";
         previewWindow.style.height = "min(900px, calc(100vh - 32px))";
         arrangeSheetStyle(previewWindow, style);
+        for (const mark of previewWindow.querySelectorAll(".t20ga-studio-mark")) {
+          mark.src = `../assets/${mark.classList.contains("t20ga-studio-mark-dark") ? "isologo-black.png" : "isologo-white.png"}`;
+        }
       }
     </script>
   </body>
