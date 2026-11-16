@@ -1,5 +1,7 @@
 # Componentes de terceiros
 
+Os elementos gráficos e as fontes em `assets/iniciativa/`, exceto `calistenia-isologo-white.png`, vieram do **Kit da Iniciativa T20** fornecido pela Jambô Editora para criações da comunidade. O isologo é da Calistenia Studios. A interface usa esses arquivos originais, sem imagens geradas por IA.
+
 Os arquivos em `templates/vendor/tormenta20-1.5.015` foram derivados dos templates do sistema Tormenta20 v1.5.015, criado por Victor Hugo Paiva:
 
 - Projeto original: https://gitlab.com/vizael/Tormenta20

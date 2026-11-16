@@ -48,7 +48,8 @@ export const LAYOUT_PRESETS = Object.freeze({
   classic: { label: "Clássica (como a ficha original)" },
   legend: { label: "Lenda · Cinematográfica", description: "Arte central ampla, medalhões de recursos, atributos e perícias à esquerda e atalhos de equipamento à direita." },
   grimoire: { label: "Grimório · Livro de aventuras", description: "Livro aberto, retrato em destaque, atributos coloridos e abas como marcadores." },
-  saga: { label: "Saga · Fantasia em quadrinhos", description: "Arte integrada, traços de tinta, recursos em destaque e favoritos." }
+  saga: { label: "Saga · Fantasia em quadrinhos", description: "Arte integrada, traços de tinta, recursos em destaque e favoritos." },
+  initiative: { label: "Iniciativa T20 · HUD heroica", description: "Retrato e logo da campanha à esquerda, recursos no topo e navegação lateral com elementos do Kit da Iniciativa T20." }
 });
 
 export const BACKGROUND_PRESETS = Object.freeze({
@@ -105,6 +106,20 @@ export function normalizeCampaignIdentity(value = {}) {
     showTitle: value.showTitle !== false,
     showGroupName: value.showGroupName !== false,
     configured: Boolean(value.configured)
+  };
+}
+
+export function normalizePersonalLogoAdjustment(value = {}, identity = {}) {
+  const campaign = normalizeCampaignIdentity(identity);
+  const bounded = (input, minimum, maximum, fallback) => {
+    const parsed = Number(input);
+    return Number.isFinite(parsed) ? Math.min(maximum, Math.max(minimum, parsed)) : fallback;
+  };
+  return {
+    logo: campaign.logo,
+    logoScale: bounded(value.logoScale, 0.5, 3, campaign.logoScale),
+    logoPositionX: bounded(value.logoPositionX, -60, 60, campaign.logoPositionX),
+    logoPositionY: bounded(value.logoPositionY, -40, 40, campaign.logoPositionY)
   };
 }
 

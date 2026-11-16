@@ -1,4 +1,4 @@
-export const SHEET_STYLES = Object.freeze({ legend: "Lenda", grimoire: "Grimório", saga: "Saga" });
+export const SHEET_STYLES = Object.freeze({ legend: "Lenda", grimoire: "Grimório", saga: "Saga", initiative: "Iniciativa T20" });
 
 /** Reparent the original, already-bound controls. No actor fields or actions are duplicated. */
 export function arrangeSheetStyle(root, layout) {
@@ -14,6 +14,9 @@ export function arrangeSheetStyle(root, layout) {
 
   shell.classList.add("t20ga-style-shell");
   shell.dataset.style = layout;
+  if (layout === "initiative") {
+    arrangeInitiative(root, shell, hero, main, header, vitals);
+  } else {
   const dossier = root.ownerDocument.createElement("section");
   dossier.className = "t20ga-style-dossier";
   dossier.setAttribute("aria-label", "Identidade e atributos da personagem");
@@ -44,6 +47,7 @@ export function arrangeSheetStyle(root, layout) {
   if (layout === "saga") arrangeSaga(root, main, vitals);
   if (layout === "grimoire") arrangeGrimoire(root, dossier, main, hero, header, vitals);
   if (layout === "legend") arrangeLegend(root, shell, dossier, main, header, vitals);
+  }
 
   for (const key of ["pv", "pm"]) {
     const resource = shell.querySelector(key === "pv" ? ".health" : ".mana");
@@ -58,6 +62,66 @@ export function arrangeSheetStyle(root, layout) {
     current?.addEventListener("input", updateBar);
     maximum?.addEventListener("input", updateBar);
   }
+}
+
+function arrangeInitiative(root, shell, hero, main, header, vitals) {
+  const doc = root.ownerDocument;
+  const create = (tag, className, text = "") => {
+    const el = doc.createElement(tag);
+    el.className = className;
+    el.textContent = text;
+    return el;
+  };
+
+  // Move existing controls so actor editing, Foundry tabs and item actions keep their bindings.
+  hero.append(header);
+  hero.querySelector(".t20ga-preview-label")?.remove();
+  const resources = vitals.querySelector(".t20ga-resources");
+  if (resources) vitals.prepend(resources);
+  main.prepend(vitals);
+
+  const rail = create("aside", "t20ga-initiative-rail");
+  rail.setAttribute("aria-label", "Navegação e atalhos da ficha");
+  rail.append(create("div", "t20ga-initiative-rail-label", "Páginas da ficha"));
+  const nav = main.querySelector("nav.sheet-tabs");
+  if (nav) rail.append(nav);
+
+  const weaponRows = [...main.querySelectorAll(".tab.inventory .inventory-list > .item-list:first-child .item:not(.item-header)")]
+    .filter(row => row.querySelector(".item-name.rollable"))
+    .slice(0, 3);
+  if (weaponRows.length) {
+    const section = create("section", "t20ga-initiative-shortcuts");
+    section.append(create("h3", "", "Armas rápidas"));
+    for (const row of weaponRows) {
+      const original = row.querySelector(".item-name.rollable");
+      const name = original.querySelector("label")?.textContent.trim() || original.textContent.trim();
+      const button = create("button", "t20ga-initiative-shortcut");
+      button.type = "button";
+      button.setAttribute("aria-label", `Usar ${name}`);
+      const art = create("span", "t20ga-initiative-shortcut-art");
+      art.style.backgroundImage = row.querySelector(".item-image")?.style.backgroundImage || "none";
+      art.setAttribute("aria-hidden", "true");
+      const label = create("span", "t20ga-initiative-shortcut-label");
+      label.append(create("strong", "", name));
+      const detail = row.querySelector(".item-rolls")?.textContent.trim();
+      if (detail) label.append(create("small", "", detail));
+      button.append(art, label);
+      button.addEventListener("click", () => original.click());
+      section.append(button);
+    }
+    rail.append(section);
+  }
+  const marks = create("div", "t20ga-initiative-marks");
+  marks.setAttribute("aria-label", "Iniciativa T20 e Calistenia Studios");
+  const seal = create("img", "t20ga-initiative-seal-mark");
+  seal.src = "modules/tormenta20-ficha-heroica/assets/iniciativa/selo-iniciativa.png";
+  seal.alt = "Iniciativa T20";
+  const mark = create("img", "t20ga-initiative-studio-mark");
+  mark.src = "modules/tormenta20-ficha-heroica/assets/iniciativa/calistenia-isologo-white.png";
+  mark.alt = "Calistenia Studios";
+  marks.append(seal, mark);
+  rail.append(marks);
+  shell.append(rail);
 }
 
 function arrangeLegend(root, shell, dossier, main, header, vitals) {

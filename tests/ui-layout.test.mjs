@@ -27,7 +27,8 @@ assert.match(css, /\.t20ga-hero-art\s*\{[^}]*width:\s*var\(--t20ga-art-fit-width
 assert.match(characterSheet, /class="t20ga-hero-art-backdrop"/, "the hero frame has a full-bleed backdrop");
 assert.match(css, /\.t20ga-hero-art-backdrop\s*\{[^}]*object-fit:\s*cover;[^}]*filter:\s*blur\(12px\)[^;]*brightness\(0\.52\);/s, "the backdrop fills the frame without cropping the foreground art");
 assert.match(script, /DEFAULT_ART_POSITION = Object\.freeze\(\{ x: 0, y: 0, scale: 1 \}\)/, "art adjustment keeps the original scale and position controls");
-assert.match(script, /const coverScale = Math\.max\(stageWidth \/ imageWidth, stageHeight \/ imageHeight\);/, "the default 1x scale automatically fills the frame");
+assert.match(script, /mode === "contain"\s*\? Math\.min\(stageWidth \/ imageWidth, stageHeight \/ imageHeight\)\s*: Math\.max\(stageWidth \/ imageWidth, stageHeight \/ imageHeight\)/, "the portrait can fit completely in the Initiative frame while other styles keep their cover layout");
+assert.match(script, /heroFrame\.closest\('\.t20ga-style-shell\[data-style="initiative"\]'\) \? "contain" : "cover"/, "only the Initiative portrait uses the full-image fit");
 assert.match(script, /--t20ga-art-fit-width/, "the calculated cover size is applied without pre-cropping the image element");
 assert.match(script, /name="scale" min="0\.25" max="1\.8"/, "the slider can zoom out enough to reveal wide artwork");
 assert.doesNotMatch(script, /name="fit"/, "the art dialog does not expose a cropping mode");
@@ -51,8 +52,10 @@ assert.match(previewCss, /\.t20ga-preview-portrait/, "the preview uses a CSS-nat
 assert.doesNotMatch(script, /assets\/party/, "the runtime does not load bundled character artwork");
 assert.match(script, /scope: "world"[\s\S]*default: DEFAULT_CAMPAIGN_IDENTITY/, "campaign identity is stored in the world");
 assert.match(script, /restricted: !canModifyCampaignIdentity\(\)/, "campaign identity settings require permission to modify settings");
-assert.match(script, /PERSONAL_APPEARANCE_FLAG = "personalAppearanceByActor"/, "personal themes are stored on the user document");
-assert.match(script, /\[actorAppearanceKey\(actor\)\]: normalizePersonalAppearance\(appearance\)/, "personal themes are saved separately by actor");
+assert.match(script, /ACTOR_APPEARANCE_FLAG = "sheetAppearance"/, "sheet appearance is stored on the actor document");
+assert.match(script, /actor\.setFlag\(MODULE_ID, ACTOR_APPEARANCE_FLAG, normalizePersonalAppearance\(appearance\)\)/, "appearance changes are shared through the actor document");
+assert.match(script, /actor\.setFlag\(MODULE_ID, ACTOR_LOGO_FLAG, next\)/, "logo adjustments are shared through the actor document");
+assert.match(script, /this\.actor\.setFlag\(MODULE_ID, ACTOR_ART_POSITIONS_FLAG, positions\)/, "portrait positions are shared through the actor document");
 assert.match(script, /name="frame"/, "the logo dialog includes personal frame styles");
 assert.match(script, /name="layout"/, "the logo dialog includes a tabbed or classic layout choice");
 assert.match(script, /name="background"/, "the logo dialog includes personal sheet backgrounds");
@@ -107,13 +110,13 @@ assert.match(script, /"\.skills-list"/, "skill list scroll is preserved across a
 assert.match(script, /"\.t20ga-dashboard-side"/, "dashboard side panel scroll is preserved across actor updates");
 assert.match(script, /"\.t20ga-sheet-body > \.tab"/, "active tab scroll is preserved across actor updates");
 assert.match(manifest.version, /^\d+\.\d+\.\d+$/, "manifest declares a semantic release version");
-assert.equal(manifest.download, `https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/download/v${manifest.version}/tormenta20-ficha-heroica-v${manifest.version}.zip`, "download targets the declared version");
+assert.equal(manifest.download, `https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/download/foundry-v${manifest.version}/tormenta20-ficha-heroica-foundry-v${manifest.version}.zip`, "download targets the Foundry release of the declared version");
 assert.equal(manifest.compatibility.verified, "14.367", "Foundry 14 compatibility is declared");
 assert.equal(manifest.relationships.systems[0].compatibility.verified, "1.6.1", "Tormenta20 1.6.1 compatibility is declared");
 assert.equal(
   manifest.manifest,
-  "https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/latest/download/module.json",
-  "manifest updates avoid the raw GitHub endpoint"
+  "https://raw.githubusercontent.com/CalisteniaStudios/tormenta20-ficha-heroica/main/foundry/module.json",
+  "manifest tracks the Foundry catalog version"
 );
 
 console.log("Ficha Heroica UI regression checks passed");

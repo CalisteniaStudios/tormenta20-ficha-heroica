@@ -7,7 +7,8 @@ import {
   buildPalette,
   getCampaignLogoReservedHeight,
   normalizeCampaignIdentity,
-  normalizePersonalAppearance
+  normalizePersonalAppearance,
+  normalizePersonalLogoAdjustment
 } from "../scripts/preferences.mjs";
 
 test("mantém a identidade da campanha vazia até o mestre configurá-la", () => {
@@ -63,6 +64,18 @@ test("reserva espaço para logo ampliada e título ao abrir a ficha", () => {
   assert.equal(getCampaignLogoReservedHeight({ logoScale: 2.2, showTitle: false, title: "Guerra Artoniana" }), 64);
 });
 
+test("ajuste pessoal limita tamanho e posição sem substituir a imagem da campanha", () => {
+  const identity = { logo: "mundos/logo.png", logoScale: 1.4, logoPositionX: 5, logoPositionY: -2 };
+  assert.deepEqual(normalizePersonalLogoAdjustment({
+    logo: "outra-imagem.png", logoScale: 9, logoPositionX: -90, logoPositionY: "inválido"
+  }, identity), {
+    logo: "mundos/logo.png",
+    logoScale: 3,
+    logoPositionX: -60,
+    logoPositionY: -2
+  });
+});
+
 test("limita o tema pessoal a valores conhecidos e cores hexadecimais", () => {
   assert.deepEqual(normalizePersonalAppearance({ theme: "desconhecido", customColor: "red" }), DEFAULT_PERSONAL_APPEARANCE);
   assert.deepEqual(normalizePersonalAppearance({ theme: "custom", customColor: "#ABCDEF" }), {
@@ -98,8 +111,8 @@ test("aceita a organização clássica e migra a antiga página contínua", () =
 });
 
 
-test("mantém os três novos estilos e suas escolhas visuais após serialização", () => {
-  for (const layout of ["legend", "grimoire", "saga"]) {
+test("mantém os estilos alternativos e suas escolhas visuais após serialização", () => {
+  for (const layout of ["legend", "grimoire", "saga", "initiative"]) {
     const appearance = { theme: "custom", customColor: "#008080", layout, frame: "arcane", background: "night", backgroundImage: "" };
     assert.deepEqual(normalizePersonalAppearance(JSON.parse(JSON.stringify(appearance))), appearance);
   }

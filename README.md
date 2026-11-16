@@ -12,7 +12,7 @@ O módulo mantém as rolagens, recursos, inventário, poderes, magias, efeitos e
 
 Manifesto para instalação pelo Foundry VTT:
 
-`https://github.com/CalisteniaStudios/tormenta20-ficha-heroica/releases/latest/download/module.json`
+`https://raw.githubusercontent.com/CalisteniaStudios/tormenta20-ficha-heroica/main/foundry/module.json`
 
 1. Feche o Foundry VTT.
 2. Copie a pasta `tormenta20-ficha-heroica` para `Data/modules` dentro da pasta de dados do Foundry.
@@ -24,8 +24,8 @@ Para aproveitar o painel lateral, use a arte de corpo inteiro da personagem como
 - O seletor **Avatar/Token**, com um marcador geométrico, alterna entre a imagem da personagem e a imagem configurada no protótipo do token.
 - Clique na imagem grande ou no botão **Ajustar** para configurar a escala e a posição horizontal/vertical. Cada imagem mantém seu próprio enquadramento.
 - O mestre ou qualquer usuário com a permissão **Alterar configurações** configura a **logo da campanha**, seu tamanho e posição, o **título da campanha** e o **nome do grupo** em **Configurações do módulo → Identidade da campanha**. A ficha aberta acompanha todos os ajustes em tempo real. A escala amplia somente a logo e chega a **3×**; opcionalmente, esse usuário pode reservar espaço para que a logo empurre o retrato para baixo e também controlar a largura da área do retrato entre **20% e 45%**. Fechar a configuração sem salvar restaura o enquadramento anterior. Esses dados ficam salvos no mundo e são compartilhados com todos.
-- Clique na logo ou no espaço reservado para personalizar a aparência da ficha. Além dos temas Tormenta, Arcana, Mana, Adamante, Tibares e cor personalizada, você pode escolher entre molduras Heroica, Arcana, Forjada e Minimalista, aplicar fundos de pergaminho, couro, pedra ou noite e usar uma imagem própria do Foundry. No mesmo lugar, a ficha pode usar o modo com abas ou a organização clássica da ficha original, que reúne atributos, recursos, armas, perícias, inventário, poderes e magias na aba Ficha, mantendo Diário e Efeitos separados. Essas escolhas ficam salvas por usuário e personagem e não alteram a ficha vista pelos demais jogadores.
-- Em **Organização da ficha**, também estão disponíveis **Lenda**, com arte central ampla, medalhões de recursos, atributos e perícias à esquerda e atalhos de equipamento e magias e seus favoritos à direita; **Grimório**, com páginas de pergaminho, retrato em destaque, atributos coloridos e atalhos de armas e favoritos; e **Saga**, com arte integrada, traços de tinta e favoritos. A troca aparece como prévia na própria ficha; **Salvar aparência** mantém a escolha e **Cancelar** restaura a organização anterior.
+- Clique na logo para abrir a personalização da ficha. A janela reúne temas, molduras, fundos e organização com abas, clássica, Lenda, Grimório, Saga ou Iniciativa T20. Na parte inferior, controles de tamanho e posição ajustam a logo nessa personagem; a imagem continua sendo definida pelo mestre. A janela é rolável. Aparência, logo e enquadramento da arte ficam salvos na personagem no Foundry e são compartilhados entre jogador e mestre.
+- Em **Organização da ficha**, também estão disponíveis **Lenda**, com arte central ampla, medalhões de recursos, atributos e perícias à esquerda e atalhos de equipamento e magias e seus favoritos à direita; **Grimório**, com páginas de pergaminho, retrato em destaque, atributos coloridos e atalhos de armas e favoritos; **Saga**, com arte integrada, traços de tinta e favoritos; e **Iniciativa T20**, com retrato e logo da campanha à esquerda, PV e PM no topo, atributos centrais e navegação lateral. A troca aparece como prévia na própria ficha; **Salvar aparência** mantém a escolha e **Cancelar** restaura a organização anterior.
 - Armas, itens, poderes e magias marcados como favoritos aparecem na primeira aba da ficha, como na ficha padrão do Tormenta20. Nos estilos Lenda, Grimório e Saga, os destaques usam essa lista completa de favoritos, sem selecionar poderes automaticamente.
 - Perícias e efeitos de uso adotam automaticamente a estrutura correta do Tormenta20 1.5.015 ou 1.6.1.
 - A barra de categorias permanece centralizada mesmo quando uma aba opcional, como Magias, não está disponível.
@@ -43,8 +43,8 @@ Na configuração da ficha da personagem, selecione novamente **Ficha de Persona
 
 - Compatibilidade alvo: Foundry VTT 13–14 (verificada no build 14.367) e Tormenta20 1.5.015 ou superior.
 - A ficha foi criada como módulo separado para não ser sobrescrita por atualizações do sistema.
-- O pacote não inclui artes de personagens, logotipos ou símbolos oficiais; a ficha utiliza as imagens configuradas pelo próprio usuário no Foundry VTT.
-- O módulo não inclui o logotipo nem o símbolo oficial de Tormenta20. Tormenta20 é propriedade de seus respectivos titulares; este é um projeto de comunidade não oficial e sem afiliação ou endosso da Jambô Editora.
+- O pacote não inclui artes de personagens nem logos de campanhas; a ficha utiliza as imagens configuradas pelo próprio usuário no Foundry VTT.
+- A organização Iniciativa T20 utiliza elementos do kit disponibilizado pela Jambô Editora para criações da comunidade. Tormenta20 é propriedade de seus respectivos titulares; este é um projeto de comunidade não oficial e sem afiliação ou endosso da Jambô Editora.
 
 ## Licença
 

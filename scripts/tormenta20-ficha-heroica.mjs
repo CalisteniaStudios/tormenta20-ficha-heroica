@@ -13,7 +13,8 @@ import {
   getCampaignLogoReservedHeight,
   normalizeCampaignIdentity,
   normalizeHex,
-  normalizePersonalAppearance
+  normalizePersonalAppearance,
+  normalizePersonalLogoAdjustment
 } from "./preferences.mjs";
 
 const MODULE_ID = "tormenta20-ficha-heroica";
@@ -49,6 +50,9 @@ const VENDORED_TEMPLATES = Object.freeze({
 });
 const PREFERENCES_FLAG = "persistentPreferences";
 const PERSONAL_APPEARANCE_FLAG = "personalAppearanceByActor";
+const ACTOR_APPEARANCE_FLAG = "sheetAppearance";
+const ACTOR_LOGO_FLAG = "logoAdjustment";
+const ACTOR_ART_POSITIONS_FLAG = "artPositions";
 const APPEARANCE_MIGRATION_FLAG = "appearanceV2Migrated";
 const PERSISTENT_SETTING_KEYS = Object.freeze([
   "artPositions"
@@ -141,6 +145,101 @@ function syncCampaignIdentityMenuPermission() {
   if (menu) menu.restricted = !canModifyCampaignIdentity();
 }
 
+const campaignLogoCropCache = new Map();
+
+function croppedCampaignLogo(source) {
+  if (!campaignLogoCropCache.has(source)) {
+    campaignLogoCropCache.set(source, new Promise((resolve) => {
+      const image = new Image();
+      image.onload = async () => {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = image.naturalWidth;
+          canvas.height = image.naturalHeight;
+          const context = canvas.getContext("2d", { willReadFrequently: true });
+          context.drawImage(image, 0, 0);
+          const { data } = context.getImageData(0, 0, canvas.width, canvas.height);
+          let left = canvas.width;
+          let top = canvas.height;
+          let right = -1;
+          let bottom = -1;
+          for (let y = 0; y < canvas.height; y++) {
+            for (let x = 0; x < canvas.width; x++) {
+              if (!data[(y * canvas.width + x) * 4 + 3]) continue;
+              left = Math.min(left, x);
+              top = Math.min(top, y);
+              right = Math.max(right, x);
+              bottom = Math.max(bottom, y);
+            }
+          }
+          if (right < left) return resolve(null);
+          // Retain the faint outer shadow, including a small safety margin.
+          left = Math.max(0, left - 2);
+          top = Math.max(0, top - 2);
+          right = Math.min(canvas.width - 1, right + 2);
+          bottom = Math.min(canvas.height - 1, bottom + 2);
+          const width = right - left + 1;
+          const height = bottom - top + 1;
+          const output = document.createElement("canvas");
+          output.width = width;
+          output.height = height;
+          output.getContext("2d").drawImage(canvas, left, top, width, height, 0, 0, width, height);
+          const blob = await new Promise((done) => output.toBlob(done, "image/png"));
+          resolve(blob ? {
+            url: URL.createObjectURL(blob),
+            sourceWidth: canvas.width,
+            sourceHeight: canvas.height,
+            width,
+            height
+          } : null);
+        } catch (error) {
+          console.warn(`${MODULE_ID} | Não foi possível ajustar a transparência da logo.`, error);
+          resolve(null);
+        }
+      };
+      image.onerror = () => resolve(null);
+      image.src = source;
+    }));
+  }
+  return campaignLogoCropCache.get(source);
+}
+
+function sizeCroppedCampaignLogo(frame, crop) {
+  if (!frame?.isConnected || !crop) return;
+  const shell = frame.closest(".t20ga-style-shell[data-style]");
+  if (!shell) return;
+  const logo = frame.querySelector(".t20ga-campaign-logo");
+  if (!logo) return;
+  const baseHeight = parseFloat(getComputedStyle(shell).getPropertyValue("--t20ga-style-logo-height")) || 76;
+  const scale = clamp(frame.style.getPropertyValue("--t20ga-campaign-logo-scale"), 0.5, 3);
+  const availableWidth = frame.clientWidth || frame.parentElement?.clientWidth || 210;
+  const fit = Math.min(availableWidth / crop.sourceWidth, baseHeight * scale / crop.sourceHeight);
+  const visibleWidth = Math.max(1, crop.width * fit);
+  const visibleHeight = Math.max(1, crop.height * fit);
+  frame.style.setProperty("--t20ga-visible-logo-width", `${visibleWidth}px`);
+  frame.style.setProperty("--t20ga-visible-logo-height", `${visibleHeight}px`);
+  logo.dataset.t20gaOriginalSource = logo.dataset.t20gaOriginalSource || logo.getAttribute("src");
+  if (logo.getAttribute("src") !== crop.url) logo.src = crop.url;
+  logo.classList.add("t20ga-campaign-logo-cropped");
+}
+
+function fitCampaignLogos(root) {
+  for (const frame of root.querySelectorAll(".t20ga-style-shell[data-style] .t20ga-campaign-logo-frame")) {
+    const logo = frame.querySelector(".t20ga-campaign-logo");
+    const source = logo?.getAttribute("src");
+    if (!source) continue;
+    croppedCampaignLogo(source).then((crop) => {
+      if (!crop || !frame.isConnected) return;
+      sizeCroppedCampaignLogo(frame, crop);
+      if (globalThis.ResizeObserver) {
+        const observer = new ResizeObserver(() => sizeCroppedCampaignLogo(frame, crop));
+        observer.observe(frame.parentElement);
+        frame._t20gaLogoObserver = observer;
+      }
+    });
+  }
+}
+
 function previewCampaignLogoLayout({ scale, x, y, logoPushPortrait, showTitle, title, portraitWidth }) {
   const normalizedScale = clamp(scale, 0.5, 3);
   const normalizedX = clamp(x, -60, 60);
@@ -165,28 +264,43 @@ function previewCampaignLogoLayout({ scale, x, y, logoPushPortrait, showTitle, t
       frame.style.setProperty("--t20ga-campaign-logo-x", `${normalizedX}px`);
       frame.style.setProperty("--t20ga-campaign-logo-y", `${normalizedY}px`);
       frame.style.setProperty("--t20ga-campaign-logo-reserved-height", `${reservedHeight}px`);
+      const logo = frame.querySelector(".t20ga-campaign-logo");
+      const source = logo?.dataset.t20gaOriginalSource || logo?.getAttribute("src");
+      const crop = campaignLogoCropCache.get(source);
+      crop?.then((result) => sizeCroppedCampaignLogo(frame, result));
     }
   }
 }
 
 function getPersonalAppearance(actor) {
+  const shared = actor?.getFlag?.(MODULE_ID, ACTOR_APPEARANCE_FLAG);
+  if (shared) return normalizePersonalAppearance(shared);
   const stored = game.user?.getFlag?.(MODULE_ID, PERSONAL_APPEARANCE_FLAG) ?? {};
   const value = stored.actors?.[actorAppearanceKey(actor)] ?? stored.default;
   return normalizePersonalAppearance(value ?? DEFAULT_PERSONAL_APPEARANCE);
 }
 
 async function savePersonalAppearance(actor, appearance) {
-  if (typeof game.user?.setFlag !== "function") return;
-  const stored = game.user.getFlag?.(MODULE_ID, PERSONAL_APPEARANCE_FLAG) ?? {};
-  const next = {
-    schema: 1,
-    default: normalizePersonalAppearance(stored.default ?? DEFAULT_PERSONAL_APPEARANCE),
-    actors: {
-      ...(stored.actors ?? {}),
-      [actorAppearanceKey(actor)]: normalizePersonalAppearance(appearance)
-    }
-  };
-  await game.user.setFlag(MODULE_ID, PERSONAL_APPEARANCE_FLAG, next);
+  if (!actor?.isOwner || typeof actor.setFlag !== "function") throw new Error("Sem permissão para alterar esta ficha.");
+  await actor.setFlag(MODULE_ID, ACTOR_APPEARANCE_FLAG, normalizePersonalAppearance(appearance));
+}
+
+function getPersonalLogoAdjustment(actor, identity) {
+  const entry = actor?.getFlag?.(MODULE_ID, ACTOR_LOGO_FLAG);
+  return normalizePersonalLogoAdjustment(entry?.logo === identity.logo ? entry : {}, identity);
+}
+
+async function savePersonalLogoAdjustment(actor, identity, adjustment) {
+  if (!actor?.isOwner || typeof actor.setFlag !== "function") throw new Error("Sem permissão para alterar esta ficha.");
+  const next = normalizePersonalLogoAdjustment(adjustment, identity);
+  const campaign = normalizePersonalLogoAdjustment({}, identity);
+  if (next.logoScale === campaign.logoScale
+    && next.logoPositionX === campaign.logoPositionX
+    && next.logoPositionY === campaign.logoPositionY) {
+    if (actor.getFlag?.(MODULE_ID, ACTOR_LOGO_FLAG)) await actor.unsetFlag(MODULE_ID, ACTOR_LOGO_FLAG);
+  } else {
+    await actor.setFlag(MODULE_ID, ACTOR_LOGO_FLAG, next);
+  }
 }
 
 function rerenderHeroicSheets() {
@@ -475,6 +589,7 @@ Hooks.once("init", () => {
       const sheetData = await super.getData(options);
       const appearance = this._getAppearance();
       const identity = getCampaignIdentity();
+      const personalLogo = this._t20gaPreviewLogoAdjustment ?? getPersonalLogoAdjustment(this.actor, identity);
       let tokenDocument = this.token?.document ?? this.token ?? null;
 
       try {
@@ -508,10 +623,13 @@ Hooks.once("init", () => {
       sheetData.t20ga = {
         campaignLogo: identity.logo,
         campaignLogoAlt: identity.title || "Logo da campanha",
-        campaignLogoScale: identity.logoScale,
-        campaignLogoPositionX: identity.logoPositionX,
-        campaignLogoPositionY: identity.logoPositionY,
-        campaignLogoReservedHeight: getCampaignLogoReservedHeight(identity),
+        campaignLogoScale: personalLogo.logoScale,
+        campaignLogoPositionX: personalLogo.logoPositionX,
+        campaignLogoPositionY: personalLogo.logoPositionY,
+        campaignLogoReservedHeight: getCampaignLogoReservedHeight({
+          ...identity,
+          ...personalLogo
+        }),
         portraitWidth: identity.portraitWidth,
         campaignTitle: identity.showTitle ? identity.title : "",
         groupName: identity.showGroupName ? identity.groupName : "",
@@ -574,7 +692,26 @@ Hooks.once("init", () => {
       }
     }
 
+    _applyLogoAdjustment(identity, adjustment) {
+      const root = this.element?.[0] ?? this.element;
+      const frame = root?.querySelector?.(".t20ga-campaign-logo-frame");
+      if (!frame) return;
+      const position = normalizePersonalLogoAdjustment(adjustment, identity);
+      frame.style.setProperty("--t20ga-campaign-logo-scale", position.logoScale);
+      frame.style.setProperty("--t20ga-campaign-logo-x", `${position.logoPositionX}px`);
+      frame.style.setProperty("--t20ga-campaign-logo-y", `${position.logoPositionY}px`);
+      frame.style.setProperty("--t20ga-campaign-logo-reserved-height", `${getCampaignLogoReservedHeight({
+        ...identity,
+        ...position
+      })}px`);
+      campaignLogoCropCache.get(identity.logo)?.then((crop) => sizeCroppedCampaignLogo(frame, crop));
+    }
+
     _openAppearanceDialog(html) {
+      if (!this.actor?.isOwner) {
+        ui.notifications.warn("Você não tem permissão para alterar a aparência desta ficha.");
+        return;
+      }
       const DialogClass = globalThis.Dialog;
       if (!DialogClass) {
         ui.notifications.warn("A configuração visual não está disponível nesta versão do Foundry.");
@@ -582,6 +719,8 @@ Hooks.once("init", () => {
       }
 
       const original = this._getAppearance();
+      const identity = getCampaignIdentity();
+      const originalLogo = getPersonalLogoAdjustment(this.actor, identity);
       let saved = false;
       let saving = false;
       const options = Object.entries(THEME_PRESETS)
@@ -598,7 +737,7 @@ Hooks.once("init", () => {
         .join("");
       const content = `
         <form class="t20ga-theme-form">
-          <p class="t20ga-dialog-help">Escolha uma aparência pessoal para esta personagem. Esta mudança só será exibida para você.</p>
+          <p class="t20ga-dialog-help">Escolha a aparência desta personagem. O ajuste será salvo na ficha e exibido para todos que a abrirem.</p>
           <label class="t20ga-layout-field">
             <span>Organização da ficha</span>
             <select name="layout">${layoutOptions}</select>
@@ -638,8 +777,26 @@ Hooks.once("init", () => {
           <div class="t20ga-style-preview" data-frame="${original.frame}" data-background="${original.background}" aria-hidden="true">
             <span>Prévia da moldura e do fundo</span>
           </div>
-          <p class="t20ga-theme-note">A aparência fica salva somente para você e para esta personagem.</p>
+          <p class="t20ga-theme-note">A aparência fica salva na personagem e é exibida para todos que abrirem esta ficha.</p>
           <button class="t20ga-theme-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Restaurar aparência original</button>
+          ${identity.logo ? `
+          <fieldset class="t20ga-sheet-logo-adjustments">
+            <legend>Logo da campanha</legend>
+            <p>Altere somente o tamanho e a posição nesta ficha. A imagem é definida pelo mestre.</p>
+            <label>
+              <span>Tamanho <output data-logo-output="scale">${originalLogo.logoScale.toFixed(2)}×</output></span>
+              <input type="range" name="logoScale" min="0.5" max="3" step="0.01" value="${originalLogo.logoScale}">
+            </label>
+            <label>
+              <span>Posição horizontal <output data-logo-output="x">${originalLogo.logoPositionX}px</output></span>
+              <input type="range" name="logoPositionX" min="-60" max="60" step="1" value="${originalLogo.logoPositionX}">
+            </label>
+            <label>
+              <span>Posição vertical <output data-logo-output="y">${originalLogo.logoPositionY}px</output></span>
+              <input type="range" name="logoPositionY" min="-40" max="40" step="1" value="${originalLogo.logoPositionY}">
+            </label>
+            <button class="t20ga-logo-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Usar ajuste da campanha</button>
+          </fieldset>` : ""}
         </form>`;
 
       const readAppearance = (dialogHtml) => ({
@@ -650,6 +807,12 @@ Hooks.once("init", () => {
         background: String(dialogHtml.find('[name="background"]').val() ?? DEFAULT_PERSONAL_APPEARANCE.background),
         backgroundImage: String(dialogHtml.find('[name="backgroundImage"]').val() ?? "").trim()
       });
+
+      const readLogoAdjustment = (dialogHtml) => normalizePersonalLogoAdjustment({
+        logoScale: dialogHtml.find('[name="logoScale"]').val(),
+        logoPositionX: dialogHtml.find('[name="logoPositionX"]').val(),
+        logoPositionY: dialogHtml.find('[name="logoPositionY"]').val()
+      }, identity);
 
       const updatePreview = (dialogHtml) => {
         const appearance = normalizePersonalAppearance(readAppearance(dialogHtml));
@@ -680,6 +843,14 @@ Hooks.once("init", () => {
           }
         }
         this._applyAppearance(this.element, appearance);
+        if (identity.logo) {
+          const logo = readLogoAdjustment(dialogHtml);
+          this._t20gaPreviewLogoAdjustment = logo;
+          dialogHtml.find('[data-logo-output="scale"]').text(`${logo.logoScale.toFixed(2)}×`);
+          dialogHtml.find('[data-logo-output="x"]').text(`${logo.logoPositionX}px`);
+          dialogHtml.find('[data-logo-output="y"]').text(`${logo.logoPositionY}px`);
+          this._applyLogoAdjustment(identity, logo);
+        }
         if (previousLayout !== appearance.layout) this.render(false);
       };
 
@@ -695,17 +866,24 @@ Hooks.once("init", () => {
                 const appearance = normalizePersonalAppearance(readAppearance(dialogHtml));
                 saving = true;
                 try {
+                  if (identity.logo) await savePersonalLogoAdjustment(this.actor, identity, readLogoAdjustment(dialogHtml));
                   await savePersonalAppearance(this.actor, appearance);
                   saved = true;
                   delete this._t20gaPreviewAppearance;
+                  delete this._t20gaPreviewLogoAdjustment;
                   this._applyAppearance(this.element, appearance);
                   this.render(false);
                 } catch (error) {
+                  if (identity.logo) {
+                    await savePersonalLogoAdjustment(this.actor, identity, originalLogo).catch(() => {});
+                    this._applyLogoAdjustment(identity, originalLogo);
+                  }
                   delete this._t20gaPreviewAppearance;
+                  delete this._t20gaPreviewLogoAdjustment;
                   this._applyAppearance(this.element, original);
                   this.render(false);
-                  ui.notifications.error("Não foi possível salvar a aparência. A aparência anterior foi restaurada.");
-                  console.error(`${MODULE_ID} | Falha ao salvar aparência.`, error);
+                  ui.notifications.error("Não foi possível salvar as configurações da ficha.");
+                  console.error(`${MODULE_ID} | Falha ao salvar as configurações da ficha.`, error);
                 } finally {
                   saving = false;
                 }
@@ -755,13 +933,21 @@ Hooks.once("init", () => {
               dialogHtml.find('[name="backgroundImage"]').val(DEFAULT_PERSONAL_APPEARANCE.backgroundImage);
               updatePreview(dialogHtml);
             });
+            dialogHtml.find(".t20ga-logo-reset").on("click", () => {
+              dialogHtml.find('[name="logoScale"]').val(identity.logoScale);
+              dialogHtml.find('[name="logoPositionX"]').val(identity.logoPositionX);
+              dialogHtml.find('[name="logoPositionY"]').val(identity.logoPositionY);
+              updatePreview(dialogHtml);
+            });
             updatePreview(dialogHtml);
           },
           close: () => {
             if (!saved && !saving) {
               const layoutChanged = this._getAppearance().layout !== original.layout;
               delete this._t20gaPreviewAppearance;
+              delete this._t20gaPreviewLogoAdjustment;
               this._applyAppearance(this.element, original);
+              if (identity.logo) this._applyLogoAdjustment(identity, originalLogo);
               if (layoutChanged) this.render(false);
             }
           }
@@ -775,8 +961,11 @@ Hooks.once("init", () => {
     }
 
     _getArtPosition(src) {
-      const positions = game.settings.get(MODULE_ID, "artPositions") ?? {};
-      const saved = positions[this._artPositionKey(src)] ?? {};
+      const positions = this.actor?.getFlag?.(MODULE_ID, ACTOR_ART_POSITIONS_FLAG) ?? {};
+      const legacy = game.settings.get(MODULE_ID, "artPositions") ?? {};
+      const saved = positions[encodeURIComponent(String(src ?? ""))]
+        ?? legacy[this._artPositionKey(src)]
+        ?? {};
       return {
         x: saved.x ?? DEFAULT_ART_POSITION.x,
         y: saved.y ?? DEFAULT_ART_POSITION.y,
@@ -785,11 +974,10 @@ Hooks.once("init", () => {
     }
 
     async _saveArtPosition(src, position) {
-      const positions = foundry.utils.deepClone(
-        game.settings.get(MODULE_ID, "artPositions") ?? {}
-      );
-      positions[this._artPositionKey(src)] = position;
-      await savePersistentSetting("artPositions", positions);
+      if (!this.actor?.isOwner || typeof this.actor.setFlag !== "function") throw new Error("Sem permissão para alterar esta ficha.");
+      const positions = foundry.utils.deepClone(this.actor.getFlag?.(MODULE_ID, ACTOR_ART_POSITIONS_FLAG) ?? {});
+      positions[encodeURIComponent(String(src ?? ""))] = position;
+      await this.actor.setFlag(MODULE_ID, ACTOR_ART_POSITIONS_FLAG, positions);
     }
 
     _applyArtPosition(heroArt, src, override = null) {
@@ -800,7 +988,7 @@ Hooks.once("init", () => {
       heroArt.style.setProperty("--t20ga-art-scale", clamp(position.scale, 0.25, 1.8));
     }
 
-    _fitArtToStage(image, stage, widthVariable, heightVariable) {
+    _fitArtToStage(image, stage, widthVariable, heightVariable, mode = "cover") {
       if (!image || !stage) return () => {};
 
       const fit = () => {
@@ -810,9 +998,11 @@ Hooks.once("init", () => {
         const imageHeight = image.naturalHeight;
         if (!stageWidth || !stageHeight || !imageWidth || !imageHeight) return;
 
-        const coverScale = Math.max(stageWidth / imageWidth, stageHeight / imageHeight);
-        image.style.setProperty(widthVariable, `${Math.ceil(imageWidth * coverScale)}px`);
-        image.style.setProperty(heightVariable, `${Math.ceil(imageHeight * coverScale)}px`);
+        const fitScale = mode === "contain"
+          ? Math.min(stageWidth / imageWidth, stageHeight / imageHeight)
+          : Math.max(stageWidth / imageWidth, stageHeight / imageHeight);
+        image.style.setProperty(widthVariable, `${Math.ceil(imageWidth * fitScale)}px`);
+        image.style.setProperty(heightVariable, `${Math.ceil(imageHeight * fitScale)}px`);
       };
 
       if (image.complete && image.naturalWidth) fit();
@@ -822,11 +1012,13 @@ Hooks.once("init", () => {
 
     _fitHeroArt(heroArt, heroFrame) {
       if (!heroArt || !heroFrame) return;
+      const mode = heroFrame.closest('.t20ga-style-shell[data-style="initiative"]') ? "contain" : "cover";
       this._fitArtToStage(
         heroArt,
         heroFrame,
         "--t20ga-art-fit-width",
-        "--t20ga-art-fit-height"
+        "--t20ga-art-fit-height",
+        mode
       )();
     }
 
@@ -890,6 +1082,10 @@ Hooks.once("init", () => {
     }
 
     _openArtPositionDialog(src, label, heroArt) {
+      if (!this.actor?.isOwner) {
+        ui.notifications.warn("Você não tem permissão para ajustar esta ficha.");
+        return;
+      }
       const DialogClass = globalThis.Dialog;
       if (!DialogClass) {
         ui.notifications.warn("A janela de ajuste de arte não está disponível nesta versão do Foundry.");
@@ -949,10 +1145,16 @@ Hooks.once("init", () => {
               icon: '<i class="fa-solid fa-floppy-disk"></i>',
               label: "Salvar",
               callback: async (html) => {
-                saved = true;
                 const position = readPosition(html);
-                await this._saveArtPosition(src, position);
-                this._applyArtPosition(heroArt, src, position);
+                try {
+                  await this._saveArtPosition(src, position);
+                  saved = true;
+                  this._applyArtPosition(heroArt, src, position);
+                } catch (error) {
+                  this._applyArtPosition(heroArt, src, original);
+                  ui.notifications.error("Não foi possível salvar o ajuste da arte.");
+                  console.error(`${MODULE_ID} | Falha ao salvar o ajuste da arte.`, error);
+                }
               }
             },
             cancel: {
@@ -993,6 +1195,9 @@ Hooks.once("init", () => {
     }
 
     async close(options = {}) {
+      for (const frame of this.element?.[0]?.querySelectorAll?.(".t20ga-campaign-logo-frame") ?? []) {
+        frame._t20gaLogoObserver?.disconnect();
+      }
       const context = ui.context;
       if (context?.target && this.element?.[0]?.contains(context.target)) {
         await context.close({ animate: false });
@@ -1005,6 +1210,7 @@ Hooks.once("init", () => {
 
       this._applyAppearance(html, this._getAppearance());
       arrangeSheetStyle(html[0], this._getAppearance().layout);
+      fitCampaignLogos(html[0]);
 
       const heroArt = html.find(".t20ga-hero-art")[0];
       const heroArtBackdrop = html.find(".t20ga-hero-art-backdrop")[0];

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-test("registra identidade mundial e aparência pessoal persistente", async () => {
+test("registra identidade mundial e aparência compartilhada da ficha", async () => {
   const hooks = {};
   const settings = new Map();
   const definitions = new Map();
@@ -100,7 +100,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   assert.equal(sheetCloseCalls, 2);
   delete ui.context;
 
-  // Preview belongs to this user/actor, survives rerender and never writes actor data.
+  // Preview belongs to this actor, survives rerender and does not save until confirmed.
   let dialog;
   globalThis.Dialog = class {
     constructor(data) { dialog = data; }
@@ -117,7 +117,18 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
     };
   } };
   const visual = { dataset: {}, style: { setProperty() {}, removeProperty() {} } };
-  sheet.actor = { uuid: "Actor.style-test", img: "portrait.webp" };
+  const actorFlags = new Map();
+  sheet.actor = {
+    uuid: "Actor.style-test",
+    img: "portrait.webp",
+    isOwner: true,
+    getFlag: (_namespace, key) => actorFlags.get(key),
+    setFlag: async (_namespace, key, value) => {
+      actorFlags.set(key, structuredClone(value));
+      return value;
+    },
+    unsetFlag: async (_namespace, key) => actorFlags.delete(key)
+  };
   sheet.element = [visual];
   let renders = 0;
   sheet.render = () => { renders++; return sheet; };
@@ -134,6 +145,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   assert.equal(visual.dataset.t20gaLayout, "legend");
   assert.equal(renders, 1);
   assert.deepEqual(flags.get("personalAppearanceByActor"), beforePreview);
+  assert.equal(actorFlags.has("sheetAppearance"), false);
   dialog.close();
   assert.equal(sheet._getAppearance().layout, "classic");
   assert.equal(visual.dataset.t20gaLayout, "classic");
@@ -148,7 +160,7 @@ test("registra identidade mundial e aparência pessoal persistente", async () =>
   await saving;
   assert.equal(sheet._getAppearance().layout, "saga");
   assert.equal(sheet._t20gaPreviewAppearance, undefined);
-  assert.equal(flags.get("personalAppearanceByActor").actors["Actor.style-test"].layout, "saga");
+  assert.equal(actorFlags.get("sheetAppearance").layout, "saga");
   assert.deepEqual(flags.get("personalAppearanceByActor").default, beforePreview.default);
   flags.get("personalAppearanceByActor").actors = {};
   delete globalThis.Dialog;

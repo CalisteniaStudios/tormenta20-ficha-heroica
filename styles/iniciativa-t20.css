@@ -1,0 +1,604 @@
+@font-face { font-family: T20InitiativeSource; src: url('../assets/iniciativa/SourceSans-Regular.ttf'); }
+@font-face { font-family: T20InitiativeSource; src: url('../assets/iniciativa/SourceSans-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: T20InitiativeIowan; src: url('../assets/iniciativa/Iowan-Bold.otf'); font-weight: 700; }
+
+.t20ga-window:has(.t20ga-style-shell[data-style="initiative"]) .window-header {
+  background: linear-gradient(#402628, #27191b);
+  border-bottom-color: #a72e34;
+}
+.t20ga-window:has(.t20ga-style-shell[data-style="initiative"]) .window-content::before { display: none; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] {
+  --t20ga-theme-primary: #9d2c33;
+  --t20ga-theme-surface: #a83b3d;
+  --t20ga-theme-dark: #49191e;
+  --t20ga-gold: #ae7655;
+  grid-template-columns: minmax(245px, 25%) minmax(0, 1fr) minmax(190px, 18%);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+  color: #33211e;
+  font-family: T20InitiativeSource, sans-serif;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-hero-panel {
+  --t20ga-style-text: #e8cbb6;
+  --t20ga-style-muted: #d2a98d;
+  border-right: 3px solid #bd8b6c;
+  background: radial-gradient(circle at 54% 29%, #6a2023, #391517 59%, #210f13);
+  overflow: hidden;
+  padding: 16px 16px 18px 22px;
+  gap: 7px;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-hero-panel::before {
+  display: block;
+  inset: 0 auto 0 0;
+  width: 19px;
+  background: url('../assets/iniciativa/borda-esquerda.png') center / 100% 100%;
+  opacity: .8;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-hero-panel::after { display: none; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-brand {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 104px;
+  padding: 4px 4px 10px;
+  margin: 0 0 10px;
+  border: 0;
+  background: url('../assets/iniciativa/sublinha.png') center bottom / 100% 6px no-repeat;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-brand-config,
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-campaign-logo-frame {
+  width: 100%;
+  max-width: 100%;
+  height: 88px;
+  min-height: 0;
+  overflow: visible;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] button.t20ga-brand-config {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-campaign-logo {
+  width: 100%;
+  max-width: 100%;
+  height: 88px;
+  max-height: 88px;
+  object-fit: contain;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-brand-caption { display: none; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-hero-frame {
+  flex: 1 1 0;
+  min-height: 125px;
+  margin: 4px 9px 0;
+  border: 1px solid #b47b5d;
+  border-radius: 2px;
+  clip-path: polygon(50% 0, 100% 9%, 100% 91%, 50% 100%, 0 91%, 0 9%);
+  background: linear-gradient(145deg, #552026, #171013 63%);
+  box-shadow: inset 0 0 0 6px #260e13, 0 0 0 5px #9e674e;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-art-vignette { box-shadow: inset 0 -55px 45px #180a0cbb; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-studio-watermark { display: none; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-hero-caption { padding: 0 5px; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-art-controls { margin: 0; flex-wrap: wrap; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-art-controls button { color: #ffefdc; background: #3a171bc9; border-color: #a46754; }
+.t20ga-window.tormenta20.actor.sheet form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-character-header {
+  flex: 0 0 auto;
+  min-height: 0;
+  padding: 8px 8px 2px;
+  color: #fff4e6;
+  text-align: center;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-character-header::before,
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-character-header::after { display: none; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .general-information { display: flex; flex-direction: column; gap: 4px; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-name-block { width: 100%; min-width: 0; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-kicker {
+  color: #e6ac8c;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .17em;
+  text-shadow: 0 2px 3px #180409;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] h1.charname { width: 100%; margin: 0; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] h1.charname input {
+  width: 100%;
+  height: 37px;
+  color: #fff7eb;
+  font: 700 clamp(21px, 2.4cqw, 31px)/1 T20InitiativeIowan, Georgia, serif;
+  text-align: center;
+  text-shadow: 0 3px 4px #0a0205;
+  border: 0;
+  background: transparent;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .header-exp { width: 100%; margin: 3px 0 0; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .header-exp .charlevel { justify-content: center; flex-wrap: wrap; gap: 5px; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .header-exp .level {
+  color: #fff5e7;
+  background: #b12d34;
+  border: 0;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+  font: 700 12px T20InitiativeSource, sans-serif;
+  letter-spacing: .1em;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 7px;
+  margin-top: 8px;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .summary > li {
+  min-width: 0;
+  max-width: 100%;
+  color: #e6c8b5;
+  border: 0;
+  font-size: 11px;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .summary :is(input, select) { color: #e6c8b5; font-size: 11px; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-main {
+  padding: 16px 18px 15px;
+  background: linear-gradient(#faf7f0eb, #f7f0e5eb), url('../assets/iniciativa/papel.png') center / 680px auto repeat;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-main::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 25px;
+  content: "";
+  pointer-events: none;
+  background: url('../assets/iniciativa/rodape-esquerdo.png') center / 100% 100%;
+  opacity: .65;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-vitals {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0 0 10px;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 150px;
+  gap: 10px;
+  height: 118px;
+  overflow: visible;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > .attribute {
+  height: 118px;
+  overflow: visible;
+  color: #382320;
+  background: linear-gradient(150deg, #fffaf0, #ebd8c6);
+  border: 1px solid #9f6855;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 3px #fff7eb, 0 3px 5px #4d27202a;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > :is(.health, .mana, .defense)::before {
+  position: absolute;
+  top: 38px;
+  left: 9%;
+  width: 82%;
+  height: 48px;
+  content: "";
+  background: url('../assets/iniciativa/faixa-titulo.png') center / 100% 100% no-repeat;
+  opacity: .075;
+  pointer-events: none;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > :is(.health, .mana)::after {
+  height: 6px;
+  background: #a92e35;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > .mana::after {
+  background: #704359;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > .defense {
+  display: grid;
+  grid-template-rows: 29px minmax(0, 1fr) 28px;
+  height: 118px;
+  margin-top: 0;
+  padding: 0 0 8px;
+  color: #382320;
+  background: linear-gradient(150deg, #fffaf0, #e9d1bb);
+  border: 1px solid #9f6855;
+  clip-path: none;
+  box-shadow: inset 0 0 0 3px #fff7eb, 0 3px 5px #4d27202a;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > .defense::before {
+  top: 37px;
+  left: 50%;
+  width: 78%;
+  height: 45px;
+  background: linear-gradient(90deg, transparent, #ad735736 20%, #ad735736 80%, transparent);
+  clip-path: polygon(0 50%, 13% 0, 87% 0, 100% 50%, 87% 100%, 13% 100%);
+  opacity: 1;
+  transform: translateX(-50%);
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > .defense::after {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 0;
+  height: 7px;
+  content: "";
+  background: url('../assets/iniciativa/sublinha.png') center / 100% 100% no-repeat;
+  clip-path: none;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources > .defense > * { position: relative; z-index: 1; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources h4.box-title {
+  position: relative;
+  height: 29px;
+  flex: 0 0 29px;
+  color: #fff4e6;
+  font: 700 11px/29px T20InitiativeSource, sans-serif;
+  letter-spacing: .1em;
+  border: 0;
+  background: url('../assets/iniciativa/faixa-titulo.png') center / 100% 100% no-repeat;
+  text-shadow: 0 1px 2px #2c0c10;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .attribute-value {
+  min-height: 54px;
+  color: #37221e;
+  font: 700 31px/44px T20InitiativeIowan, Georgia, serif;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .attribute-value input {
+  height: 44px;
+  color: #37221e;
+  font: inherit;
+  background: transparent;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .attribute-footer {
+  height: 24px;
+  flex-basis: 24px;
+  color: #806054;
+  border: 0;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .attribute-footer :is(input, select) { color: inherit; background: transparent; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .defense h4.box-title,
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .defense .attribute-value,
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .defense .attribute-footer { color: #37221e; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .defense h4.box-title { color: #fff4e6; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .defense .attribute-value {
+  flex: none;
+  height: 100%;
+  min-height: 0;
+  font-size: 32px;
+  line-height: 1;
+  transform: translateY(4px);
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .defense :is(input, select) { color: #37221e !important; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .defense .attribute-footer {
+  position: relative;
+  width: calc(100% - 20px);
+  height: 28px;
+  flex: none;
+  margin: 0 10px;
+  overflow: visible;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .defense .attribute-footer .flexrow {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .defense .attribute-footer select {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 28px;
+  text-align: left;
+  appearance: none;
+  cursor: pointer;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .defense .attribute-footer::after {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  z-index: 2;
+  width: 6px;
+  height: 6px;
+  content: "";
+  border-right: 2px solid #8a3034;
+  border-bottom: 2px solid #8a3034;
+  transform: translateX(-50%) rotate(45deg);
+  pointer-events: none;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .defense .attribute-footer input[name="system.attributes.defesa.outros"] {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  z-index: 3;
+  width: 23px;
+  height: 100%;
+  text-align: center;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-abilities::before {
+  display: block;
+  height: 30px;
+  margin-bottom: 6px;
+  color: #fff4e5;
+  content: "ATRIBUTOS";
+  font: 700 16px/30px T20InitiativeIowan, Georgia, serif;
+  text-align: center;
+  background: url('../assets/iniciativa/faixa-titulo.png') center / 100% 100%;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .ability-scores { height: 92px; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .ability-scores .ability {
+  height: 92px;
+  background: #fffaf2;
+  border: 1px solid #b58d79;
+  border-top: 4px solid #b42e35;
+  border-radius: 0;
+  clip-path: polygon(0 0, 87% 0, 100% 13%, 100% 100%, 13% 100%, 0 87%);
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .ability-scores .ability h4.ability-name {
+  color: #962d32 !important;
+  font: 700 11px T20InitiativeSource, sans-serif;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .ability-scores .atributo-value { color: #37221e !important; font: 700 28px T20InitiativeIowan, Georgia, serif; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-sheet-body { padding-top: 5px; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-dashboard.active { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 11px; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-card {
+  border: 1px solid #c5a18c;
+  background: #fffaf0ca;
+  box-shadow: none;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-section-ribbon {
+  color: #79272c;
+  background: transparent;
+  font: 700 18px T20InitiativeIowan, Georgia, serif;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .skills-list { background: #fffaf1; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .skills-list .skill:not(.item-header):nth-child(even) { background: #eee3d6; }
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .skills-list .skill.item-header {
+  color: #fff5e5 !important;
+  background: linear-gradient(90deg, #5b1b20, #a83137 50%, #5b1b20) !important;
+  border: 1px solid #9f604e !important;
+  border-radius: 0 !important;
+  box-shadow: inset 0 1px #d99571, 0 2px #7a2529 !important;
+  text-shadow: none !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .skills-list .skill.item-header :is(span, a, label) {
+  color: #fff5e5 !important;
+  text-shadow: none !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits > h3 {
+  margin: 7px 0 8px !important;
+  padding: 5px 10px !important;
+  color: #fff5e5 !important;
+  background: linear-gradient(90deg, #5b1b20, #a83137 50%, #5b1b20) !important;
+  border: 1px solid #9f604e !important;
+  border-radius: 0 !important;
+  box-shadow: inset 0 1px #d99571, 0 2px #7a2529 !important;
+  text-shadow: none !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits select,
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits input {
+  color: #40201e !important;
+  background: #fff8ec !important;
+  border-color: #a77059 !important;
+  text-shadow: none !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits ul.trait-list > li:is(.tag, .speedtag) {
+  color: #fff5e5 !important;
+  background: #77282c !important;
+  border: 1px solid #ad7154 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits :is(textarea, .editor, .editor-content, .ProseMirror) {
+  color: #40201e !important;
+  background: #fff8ec !important;
+  border-color: #b88c74 !important;
+  text-shadow: none !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-sheet-body .item-list .item-header,
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-sheet-body .effects-list > .items-header {
+  color: #fff5e5 !important;
+  background: linear-gradient(90deg, #5b1b20, #a83137 50%, #5b1b20) !important;
+  border-color: #9f604e !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .encumbrance {
+  color: #4b2523 !important;
+  background: #ead8c7 !important;
+  border: 1px solid #9f604e !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .encumbrance .encumbrance-bar {
+  background: linear-gradient(90deg, #8d292e, #bd4744) !important;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .encumbrance .encumbrance-label,
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .encumbrance .encumbrance-label * {
+  color: #3d231f !important;
+  text-shadow: none !important;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-dashboard-side {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  align-items: stretch;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits { display: block; }
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits > div {
+  display: grid;
+  grid-template-columns: minmax(0, 88px) minmax(0, 1fr);
+  align-items: start;
+  column-gap: 5px;
+  min-width: 0;
+  max-width: 100%;
+  height: auto !important;
+  min-height: 22px;
+  margin-bottom: 7px;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits > div > :is(a, label, select, ul) {
+  min-width: 0;
+  max-width: 100%;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits ul.trait-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 0;
+  max-width: 100%;
+  height: auto !important;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+.t20ga-window.tormenta20.actor.sheet form.tormenta20.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card .traits ul.trait-list > li {
+  flex: 0 1 auto;
+  max-width: 100%;
+  min-height: 19px;
+  margin: 0 !important;
+  padding: 2px 5px !important;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-traits-card textarea { width: 100%; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 18px 19px 20px 16px;
+  color: #f6e6d4;
+  background: linear-gradient(120deg, #2b191b, #411719 46%, #211316);
+  border-left: 3px solid #a56b52;
+  overflow: auto;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-rail::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 100%;
+  content: "";
+  pointer-events: none;
+  background: url('../assets/iniciativa/borda-direita.png') center / 100% 100%;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-rail-label {
+  color: #d4a890;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin: 5px 0 10px;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] nav.sheet-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  clip-path: none;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] nav.sheet-tabs::before,
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] nav.sheet-tabs::after { display: none; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] nav.sheet-tabs .item {
+  flex: 0 0 40px;
+  justify-content: flex-start;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  color: #612027;
+  background: #f3e7d5;
+  border: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 7% 100%, 0 50%);
+  text-shadow: none;
+  font: 700 12px/40px T20InitiativeSource, sans-serif;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] nav.sheet-tabs .item.active { color: #fff8e9; background: #b52d35; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcuts {
+  margin-top: 20px;
+  padding-top: 17px;
+  background: url('../assets/iniciativa/sublinha.png') center top / 100% 6px no-repeat;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcuts h3 { margin: 0 0 9px; color: #fff3e4; font: 700 18px T20InitiativeIowan, Georgia, serif; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 47px;
+  margin: 0 0 7px;
+  padding: 5px;
+  color: #fff6e8;
+  text-align: left;
+  background: #f5eadb10;
+  border: 1px solid #aa685455;
+  box-shadow: none;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcut-art { flex: 0 0 33px; width: 33px; height: 33px; background: #962d33 center / cover no-repeat; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcut-label { min-width: 0; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcut-label strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 13px T20InitiativeSource, sans-serif; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcut-label small { display: block; overflow: hidden; color: #d8b7a0; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-marks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  min-height: 62px;
+  margin-top: auto;
+  padding-top: 15px;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-seal-mark {
+  display: block;
+  width: 47px;
+  height: 47px;
+  object-fit: contain;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-marks img {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+.t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-studio-mark {
+  display: block;
+  width: 46px;
+  height: 49px;
+  min-height: 49px;
+  object-fit: contain;
+  opacity: .78;
+}
+
+@container (max-width: 1050px) {
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] { grid-template-columns: minmax(210px, 26%) minmax(0, 1fr) minmax(155px, 17%); }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-main { padding: 12px 11px; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 5px; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .attribute-value { font-size: 23px; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-resources .attribute-value input { font-size: 18px; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-dashboard.active { grid-template-columns: minmax(0, 1fr); overflow: auto; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-rail { padding: 12px 12px 15px 9px; }
+}
+@container (max-width: 760px) {
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] { grid-template-columns: minmax(150px, 30%) minmax(0, 1fr); }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-rail { grid-column: 1 / -1; min-height: 72px; padding: 7px 12px; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-rail-label,
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-shortcuts,
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] .t20ga-initiative-marks { display: none; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] nav.sheet-tabs { flex-direction: row; overflow-x: auto; }
+  .t20ga-window form.t20ga-sheet .t20ga-style-shell[data-style="initiative"] nav.sheet-tabs .item { flex: 0 0 auto; width: auto; padding: 0 9px; }
+}
