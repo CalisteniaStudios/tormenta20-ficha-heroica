@@ -974,10 +974,19 @@ Hooks.once("init", () => {
       return `${this.actor.uuid ?? this.actor.id}:${encodeURIComponent(String(src ?? ""))}`;
     }
 
+    _artPositionSourceKey(src) {
+      // Foundry expands dots in object keys into nested paths during Document updates.
+      return encodeURIComponent(String(src ?? "")).replace(/\./g, "%2E");
+    }
+
     _getArtPosition(src) {
       const positions = this.actor?.getFlag?.(MODULE_ID, ACTOR_ART_POSITIONS_FLAG) ?? {};
       const legacy = game.settings.get(MODULE_ID, "artPositions") ?? {};
-      const saved = positions[encodeURIComponent(String(src ?? ""))]
+      const oldKey = encodeURIComponent(String(src ?? ""));
+      const oldNested = oldKey.split(".").reduce((value, part) => value?.[part], positions);
+      const saved = positions[this._artPositionSourceKey(src)]
+        ?? positions[oldKey]
+        ?? oldNested
         ?? legacy[this._artPositionKey(src)]
         ?? {};
       return normalizeArtPosition(saved);
@@ -986,7 +995,7 @@ Hooks.once("init", () => {
     async _saveArtPosition(src, position) {
       if (!this.actor?.isOwner || typeof this.actor.setFlag !== "function") throw new Error("Sem permissão para alterar esta ficha.");
       const positions = foundry.utils.deepClone(this.actor.getFlag?.(MODULE_ID, ACTOR_ART_POSITIONS_FLAG) ?? {});
-      positions[encodeURIComponent(String(src ?? ""))] = normalizeArtPosition(position);
+      positions[this._artPositionSourceKey(src)] = normalizeArtPosition(position);
       await this.actor.setFlag(MODULE_ID, ACTOR_ART_POSITIONS_FLAG, positions);
     }
 

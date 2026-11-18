@@ -186,8 +186,12 @@ test("registra identidade mundial e aparência compartilhada da ficha", async ()
   assert.equal(artStyles.get("--t20ga-art-x"), "175%");
   finishArtSave();
   await artSaving;
-  assert.deepEqual(actorFlags.get("artPositions")["portrait.webp"], { x: 175, y: -120, scale: 6.5 });
+  assert.deepEqual(actorFlags.get("artPositions")["portrait%2Ewebp"], { x: 175, y: -120, scale: 6.5 });
   assert.deepEqual(sheet._getArtPosition("portrait.webp"), { x: 175, y: -120, scale: 6.5 });
+  assert.equal(sheet._artPositionSourceKey("portrait.webp"), "portrait%2Ewebp");
+  actorFlags.set("artPositions", { portrait: { webp: { x: 31, y: -62, scale: 2.5 } } });
+  assert.deepEqual(sheet._getArtPosition("portrait.webp"), { x: 31, y: -62, scale: 2.5 },
+    "reads positions stored by Foundry as nested keys before this fix");
   flags.get("personalAppearanceByActor").actors = {};
   delete globalThis.Dialog;
 
