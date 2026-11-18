@@ -113,6 +113,20 @@ async function restorePersistentSettings() {
 
 const DEFAULT_ART_POSITION = Object.freeze({ x: 0, y: 0, scale: 1 });
 
+function normalizeArtPosition(position = {}, fallback = DEFAULT_ART_POSITION) {
+  const numberOr = (value, previous) => {
+    if (value === "" || value == null) return previous;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : previous;
+  };
+  const scale = numberOr(position.scale, fallback.scale);
+  return {
+    x: numberOr(position.x, fallback.x),
+    y: numberOr(position.y, fallback.y),
+    scale: scale > 0 ? scale : fallback.scale
+  };
+}
+
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, Number(value) || 0));
 }
@@ -966,26 +980,22 @@ Hooks.once("init", () => {
       const saved = positions[encodeURIComponent(String(src ?? ""))]
         ?? legacy[this._artPositionKey(src)]
         ?? {};
-      return {
-        x: saved.x ?? DEFAULT_ART_POSITION.x,
-        y: saved.y ?? DEFAULT_ART_POSITION.y,
-        scale: saved.scale ?? DEFAULT_ART_POSITION.scale
-      };
+      return normalizeArtPosition(saved);
     }
 
     async _saveArtPosition(src, position) {
       if (!this.actor?.isOwner || typeof this.actor.setFlag !== "function") throw new Error("Sem permissão para alterar esta ficha.");
       const positions = foundry.utils.deepClone(this.actor.getFlag?.(MODULE_ID, ACTOR_ART_POSITIONS_FLAG) ?? {});
-      positions[encodeURIComponent(String(src ?? ""))] = position;
+      positions[encodeURIComponent(String(src ?? ""))] = normalizeArtPosition(position);
       await this.actor.setFlag(MODULE_ID, ACTOR_ART_POSITIONS_FLAG, positions);
     }
 
     _applyArtPosition(heroArt, src, override = null) {
       if (!heroArt) return;
-      const position = override ?? this._getArtPosition(src);
-      heroArt.style.setProperty("--t20ga-art-x", `${clamp(position.x, -45, 45)}%`);
-      heroArt.style.setProperty("--t20ga-art-y", `${clamp(position.y, -30, 30)}%`);
-      heroArt.style.setProperty("--t20ga-art-scale", clamp(position.scale, 0.25, 1.8));
+      const position = normalizeArtPosition(override ?? this._getArtPosition(src));
+      heroArt.style.setProperty("--t20ga-art-x", `${position.x}%`);
+      heroArt.style.setProperty("--t20ga-art-y", `${position.y}%`);
+      heroArt.style.setProperty("--t20ga-art-scale", position.scale);
     }
 
     _fitArtToStage(image, stage, widthVariable, heightVariable, mode = "cover") {
@@ -1094,45 +1104,38 @@ Hooks.once("init", () => {
 
       const original = this._getArtPosition(src);
       let saved = false;
+      let saving = false;
+      let current = original;
       const safeSrc = escapeHtml(src);
       const safeLabel = escapeHtml(label);
       const content = `
         <form class="t20ga-art-position-form">
-          <p class="t20ga-dialog-help">Ajuste como <strong>${safeLabel}</strong> aparece na moldura lateral.</p>
+          <p class="t20ga-dialog-help">Arraste a arte para mover e use a roda do mouse para ampliar ou reduzir. Os campos aceitam qualquer valor finito; a escala deve ser maior que zero.</p>
           <div class="t20ga-dialog-art-stage">
             <img class="t20ga-dialog-art-backdrop" src="${safeSrc}" alt="" aria-hidden="true">
-            <img class="t20ga-dialog-art" src="${safeSrc}" alt="${safeLabel}">
+            <img class="t20ga-dialog-art" src="${safeSrc}" alt="${safeLabel}" draggable="false">
           </div>
-          <label>
-            <span>Escala <output data-output="scale">${Number(original.scale).toFixed(2)}×</output></span>
-            <input type="range" name="scale" min="0.25" max="1.8" step="0.01" value="${original.scale}">
-          </label>
-          <label>
-            <span>Posição horizontal <output data-output="x">${original.x}</output></span>
-            <input type="range" name="x" min="-45" max="45" step="1" value="${original.x}">
-          </label>
-          <label>
-            <span>Posição vertical <output data-output="y">${original.y}</output></span>
-            <input type="range" name="y" min="-30" max="30" step="1" value="${original.y}">
-          </label>
+          <div class="t20ga-art-position-fields">
+            <label><span>Escala (×)</span><input type="number" name="scale" step="any" value="${original.scale}"></label>
+            <label><span>Horizontal (%)</span><input type="number" name="x" step="any" value="${original.x}"></label>
+            <label><span>Vertical (%)</span><input type="number" name="y" step="any" value="${original.y}"></label>
+          </div>
           <button class="t20ga-dialog-reset" type="button"><i class="fa-solid fa-rotate-left"></i> Redefinir</button>
         </form>`;
 
-      const readPosition = (html) => ({
-        scale: clamp(html.find('[name="scale"]').val(), 0.25, 1.8),
-        x: clamp(html.find('[name="x"]').val(), -45, 45),
-        y: clamp(html.find('[name="y"]').val(), -30, 30)
-      });
+      const readPosition = (html) => normalizeArtPosition({
+        scale: html.find('[name="scale"]').val(),
+        x: html.find('[name="x"]').val(),
+        y: html.find('[name="y"]').val()
+      }, current);
 
       const updatePreview = (html) => {
         const position = readPosition(html);
+        current = position;
         const preview = html.find(".t20ga-dialog-art");
         preview.css("--dialog-art-scale", position.scale);
         preview.css("--dialog-art-x", `${position.x}%`);
         preview.css("--dialog-art-y", `${position.y}%`);
-        html.find('[data-output="scale"]').text(`${position.scale.toFixed(2)}×`);
-        html.find('[data-output="x"]').text(position.x);
-        html.find('[data-output="y"]').text(position.y);
         this._applyArtPosition(heroArt, src, position);
       };
 
@@ -1146,14 +1149,18 @@ Hooks.once("init", () => {
               label: "Salvar",
               callback: async (html) => {
                 const position = readPosition(html);
+                saving = true;
                 try {
                   await this._saveArtPosition(src, position);
                   saved = true;
                   this._applyArtPosition(heroArt, src, position);
+                  this.render(false);
                 } catch (error) {
                   this._applyArtPosition(heroArt, src, original);
                   ui.notifications.error("Não foi possível salvar o ajuste da arte.");
                   console.error(`${MODULE_ID} | Falha ao salvar o ajuste da arte.`, error);
+                } finally {
+                  saving = false;
                 }
               }
             },
@@ -1172,7 +1179,31 @@ Hooks.once("init", () => {
               "--dialog-art-fit-width",
               "--dialog-art-fit-height"
             );
-            html.find('input[type="range"]').on("input change", () => updatePreview(html));
+            html.find('input[type="number"]').on("input change", () => updatePreview(html));
+            let drag = null;
+            stage?.addEventListener("pointerdown", (event) => {
+              if (event.button !== 0) return;
+              drag = { id: event.pointerId, x: event.clientX, y: event.clientY, position: readPosition(html) };
+              stage.setPointerCapture(event.pointerId);
+              event.preventDefault();
+            });
+            stage?.addEventListener("pointermove", (event) => {
+              if (!drag || event.pointerId !== drag.id) return;
+              if (!stage.clientWidth || !stage.clientHeight) return;
+              html.find('[name="x"]').val(Number((drag.position.x + 100 * (event.clientX - drag.x) / stage.clientWidth).toFixed(2)));
+              html.find('[name="y"]').val(Number((drag.position.y + 100 * (event.clientY - drag.y) / stage.clientHeight).toFixed(2)));
+              updatePreview(html);
+            });
+            const stopDrag = () => { drag = null; };
+            stage?.addEventListener("pointerup", stopDrag);
+            stage?.addEventListener("pointercancel", stopDrag);
+            stage?.addEventListener("wheel", (event) => {
+              const scale = readPosition(html).scale * Math.exp(-event.deltaY / 500);
+              if (!Number.isFinite(scale) || scale <= 0) return;
+              html.find('[name="scale"]').val(Number(scale.toPrecision(8)));
+              updatePreview(html);
+              event.preventDefault();
+            }, { passive: false });
             html.find(".t20ga-dialog-reset").on("click", () => {
               html.find('[name="scale"]').val(DEFAULT_ART_POSITION.scale);
               html.find('[name="x"]').val(DEFAULT_ART_POSITION.x);
@@ -1182,7 +1213,7 @@ Hooks.once("init", () => {
             updatePreview(html);
           },
           close: () => {
-            if (!saved) this._applyArtPosition(heroArt, src, original);
+            if (!saved && !saving) this._applyArtPosition(heroArt, src, original);
           }
         },
         { classes: ["t20ga-art-config-dialog"], width: 520 }

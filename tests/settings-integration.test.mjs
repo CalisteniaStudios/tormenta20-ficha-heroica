@@ -113,7 +113,7 @@ test("registra identidade mundial e aparência compartilhada da ficha", async ()
     return {
       val(value) { if (arguments.length) values[key] = value; return values[key]; },
       on(event, callback) { listeners.set(`${selector}:${event}`, callback); return this; },
-      text() { return this; }, toggleClass() { return this; }, each() { return this; }
+      text() { return this; }, toggleClass() { return this; }, each() { return this; }, css() { return this; }
     };
   } };
   const visual = { dataset: {}, style: { setProperty() {}, removeProperty() {} } };
@@ -162,6 +162,32 @@ test("registra identidade mundial e aparência compartilhada da ficha", async ()
   assert.equal(sheet._t20gaPreviewAppearance, undefined);
   assert.equal(actorFlags.get("sheetAppearance").layout, "saga");
   assert.deepEqual(flags.get("personalAppearanceByActor").default, beforePreview.default);
+
+  // Foundry closes legacy dialogs before awaiting an async save. The preview must
+  // stay in place, and the persisted position may exceed the old slider limits.
+  let finishArtSave;
+  sheet.actor.setFlag = (_namespace, key, value) => new Promise((resolve) => {
+    finishArtSave = () => {
+      actorFlags.set(key, structuredClone(value));
+      resolve(value);
+    };
+  });
+  const artStyles = new Map();
+  const heroArt = { style: { setProperty(key, value) { artStyles.set(key, value); } } };
+  values.scale = "6.5";
+  values.x = "175";
+  values.y = "-120";
+  sheet._openArtPositionDialog("portrait.webp", "Retrato", heroArt);
+  assert.match(dialog.content, /type="number" name="scale" step="any"/);
+  dialog.render(dialogHtml);
+  const artSaving = dialog.buttons.save.callback(dialogHtml);
+  dialog.close();
+  assert.equal(artStyles.get("--t20ga-art-scale"), 6.5);
+  assert.equal(artStyles.get("--t20ga-art-x"), "175%");
+  finishArtSave();
+  await artSaving;
+  assert.deepEqual(actorFlags.get("artPositions")["portrait.webp"], { x: 175, y: -120, scale: 6.5 });
+  assert.deepEqual(sheet._getArtPosition("portrait.webp"), { x: 175, y: -120, scale: 6.5 });
   flags.get("personalAppearanceByActor").actors = {};
   delete globalThis.Dialog;
 

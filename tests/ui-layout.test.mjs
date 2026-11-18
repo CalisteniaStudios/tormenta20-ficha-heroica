@@ -30,7 +30,8 @@ assert.match(script, /DEFAULT_ART_POSITION = Object\.freeze\(\{ x: 0, y: 0, scal
 assert.match(script, /mode === "contain"\s*\? Math\.min\(stageWidth \/ imageWidth, stageHeight \/ imageHeight\)\s*: Math\.max\(stageWidth \/ imageWidth, stageHeight \/ imageHeight\)/, "the portrait can fit completely in the Initiative frame while other styles keep their cover layout");
 assert.match(script, /heroFrame\.closest\('\.t20ga-style-shell\[data-style="initiative"\]'\) \? "contain" : "cover"/, "only the Initiative portrait uses the full-image fit");
 assert.match(script, /--t20ga-art-fit-width/, "the calculated cover size is applied without pre-cropping the image element");
-assert.match(script, /name="scale" min="0\.25" max="1\.8"/, "the slider can zoom out enough to reveal wide artwork");
+assert.match(script, /type="number" name="scale" step="any"/, "the art dialog accepts a scale without a fixed zoom limit");
+assert.doesNotMatch(script, /clamp\(position\.(?:x|y|scale),/, "saved art positions are not silently restricted when applied");
 assert.doesNotMatch(script, /name="fit"/, "the art dialog does not expose a cropping mode");
 assert.match(css, /\.t20ga-dialog-art\s*\{[^}]*object-fit:\s*contain;/s, "the adjustment preview always shows the complete image");
 assert.match(script, /class="t20ga-dialog-art-backdrop"/, "the adjustment preview shows the same filled-frame treatment");
